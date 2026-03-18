@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent Frameworks — Interactive Guide 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #16161f;
+    --surface: #1c1c28;
+    --surface2: #222232;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8e8f0;
+    --text2: #9090a8;
+    --text3: #5a5a72;
+    --accent: #6c63ff;
+    --accent2: #a78bfa;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Mono', monospace; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.013) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.013) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; }
+  body::after { content: ''; position: fixed; top: -200px; left: 50%; transform: translateX(-50%); width: 800px; height: 500px; background: radial-gradient(ellipse, rgba(108,99,255,0.10) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+  .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+
+  header { padding: 60px 0 36px; border-bottom: 1px solid var(--border); }
+  .header-inner { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+  .header-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent2); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .header-label::before { content: ''; display: inline-block; width: 24px; height: 1px; background: var(--accent2); }
+  h1 { font-family: 'Syne', sans-serif; font-size: clamp(30px, 5vw, 60px); font-weight: 800; line-height: 1.0; letter-spacing: -0.03em; color: var(--text); }
+  h1 em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--accent2); }
+  .header-meta { text-align: right; }
+  .header-meta .count { font-family: 'Syne', sans-serif; font-size: 48px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .header-meta .count-label { font-size: 11px; color: var(--text3); letter-spacing: 0.1em; }
+  .accuracy-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 4px 12px; background: rgba(34,211,160,0.1); border: 1px solid rgba(34,211,160,0.3); border-radius: 20px; font-size: 10px; color: #22d3a0; letter-spacing: 0.08em; }
+  .accuracy-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #22d3a0; }
+
+  .nav-tabs { display: flex; gap: 2px; padding: 20px 0; overflow-x: auto; scrollbar-width: none; position: sticky; top: 0; background: var(--bg); z-index: 100; border-bottom: 1px solid var(--border); }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .tab-btn { padding: 8px 18px; background: none; border: 1px solid transparent; border-radius: 6px; color: var(--text3); font-family: 'DM Mono', monospace; font-size: 12px; cursor: pointer; white-space: nowrap; transition: all 0.2s; letter-spacing: 0.05em; }
+  .tab-btn:hover { color: var(--text2); border-color: var(--border2); }
+  .tab-btn.active { color: var(--text); background: var(--surface); border-color: var(--border2); }
+
+  .section { display: none; padding: 40px 0; }
+  .section.active { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .section-title { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text3); margin-bottom: 28px; display: flex; align-items: center; gap: 12px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .fw-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 2px; }
+  .fw-card { background: var(--surface); border: 1px solid var(--border); padding: 24px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+  .fw-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--card-color, var(--accent)) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s; }
+  .fw-card:hover::before { opacity: 0.05; }
+  .fw-card:hover { border-color: var(--border2); z-index: 1; }
+  .fw-card.active { border-color: var(--card-color, var(--accent)) !important; z-index: 2; }
+  .fw-card.active::before { opacity: 0.08; }
+  .fw-card:first-child { border-top-left-radius: 12px; }
+  .fw-card:nth-child(4) { border-top-right-radius: 12px; }
+  .fw-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+  .fw-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--card-color, var(--accent)); margin-top: 3px; flex-shrink: 0; }
+  .fw-maker { font-size: 10px; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; }
+  .fw-name { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.2; }
+  .fw-tagline { font-size: 12px; color: var(--text2); line-height: 1.6; }
+  .fw-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+  .fw-tag { font-size: 10px; padding: 3px 8px; border-radius: 4px; border: 1px solid; letter-spacing: 0.05em; opacity: 0.7; }
+
+  .detail-panel { margin-top: 2px; background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; overflow: hidden; display: none; }
+  .detail-panel.visible { display: block; animation: fadeIn 0.3s ease; }
+  .detail-header { padding: 32px; border-bottom: 1px solid var(--border); background: var(--surface2); display: flex; align-items: flex-start; gap: 24px; flex-wrap: wrap; }
+  .detail-color-bar { width: 4px; height: 60px; border-radius: 2px; flex-shrink: 0; }
+  .detail-title-block { flex: 1; min-width: 200px; }
+  .detail-fw-name { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: var(--text); line-height: 1; margin-bottom: 4px; }
+  .detail-fw-maker { font-size: 11px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+  .detail-fw-tagline { font-size: 14px; color: var(--text2); line-height: 1.6; max-width: 500px; }
+  .detail-scores { display: flex; gap: 24px; flex-wrap: wrap; }
+  .score-item { text-align: center; }
+  .score-num { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; line-height: 1; margin-bottom: 4px; }
+  .score-label { font-size: 10px; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; }
+  .detail-body { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1px; background: var(--border); }
+  .detail-col { background: var(--surface); padding: 28px; }
+  .detail-col-title { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text3); margin-bottom: 16px; }
+  .pros-list, .cons-list { list-style: none; }
+  .pros-list li, .cons-list li { font-size: 13px; color: var(--text2); padding: 6px 0; padding-left: 20px; position: relative; line-height: 1.5; border-bottom: 1px solid var(--border); }
+  .pros-list li:last-child, .cons-list li:last-child { border-bottom: none; }
+  .pros-list li::before { content: '+'; position: absolute; left: 0; color: #22d3a0; font-weight: 700; }
+  .cons-list li::before { content: '−'; position: absolute; left: 0; color: #f87171; font-weight: 700; }
+  .params-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+  .param-pill { font-size: 11px; padding: 4px 10px; background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; color: var(--text2); font-family: 'DM Mono', monospace; }
+  .rating-bars { display: flex; flex-direction: column; gap: 12px; }
+  .rating-row { display: flex; align-items: center; gap: 12px; }
+  .rating-label { font-size: 11px; color: var(--text3); width: 130px; flex-shrink: 0; }
+  .rating-track { flex: 1; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+  .rating-fill { height: 100%; border-radius: 2px; width: 0; transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+  .rating-val { font-size: 11px; color: var(--text3); width: 28px; text-align: right; }
+  .multimodal-note { margin-top: 16px; padding: 10px 14px; background: rgba(108,99,255,0.08); border: 1px solid rgba(108,99,255,0.2); border-radius: 6px; font-size: 11px; color: var(--text2); line-height: 1.5; }
+  .multimodal-note strong { color: var(--accent2); }
+
+  .comparison-wrapper { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th { background: var(--surface2); padding: 14px 14px; text-align: left; font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text3); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody td { padding: 12px 14px; color: var(--text2); vertical-align: middle; }
+  tbody td:first-child { font-family: 'Syne', sans-serif; font-size: 13px; color: var(--text); white-space: nowrap; }
+  .score-pill { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; font-family: 'Syne', sans-serif; }
+  .score-high { background: rgba(34,211,160,0.15); color: #22d3a0; }
+  .score-mid  { background: rgba(250,204,21,0.15); color: #facc15; }
+  .score-low  { background: rgba(248,113,113,0.15); color: #f87171; }
+  .check { color: #22d3a0; }
+  .cross { color: #f87171; }
+  .partial { color: #facc15; font-size: 11px; }
+  .scroll-hint { font-size: 11px; color: var(--text3); text-align: right; margin-bottom: 8px; }
+
+  .usecase-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+  .usecase-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; transition: border-color 0.2s; }
+  .usecase-card:hover { border-color: var(--border2); }
+  .usecase-icon { font-size: 22px; margin-bottom: 10px; }
+  .usecase-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .usecase-desc { font-size: 12px; color: var(--text2); line-height: 1.6; margin-bottom: 12px; }
+  .usecase-winners { display: flex; flex-wrap: wrap; gap: 6px; }
+  .usecase-fw-tag { font-size: 11px; padding: 3px 10px; border-radius: 4px; font-family: 'Syne', sans-serif; font-weight: 600; }
+
+  .decision-wrapper { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 32px; }
+  .decision-q { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 20px; }
+  .decision-options { display: flex; flex-wrap: wrap; gap: 10px; }
+  .decision-option { padding: 12px 20px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--text2); transition: all 0.2s; }
+  .decision-option:hover { background: var(--surface2); color: var(--text); border-color: var(--accent); }
+  .decision-result { margin-top: 24px; padding: 24px; background: var(--bg3); border-radius: 10px; border-left: 3px solid var(--accent); display: none; }
+  .decision-result.show { display: block; animation: fadeIn 0.3s ease; }
+  .result-rec { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+  .result-why { font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .breadcrumb { font-size: 11px; color: var(--text3); margin-bottom: 16px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .breadcrumb-item { color: var(--accent2); }
+  .back-btn { margin-top: 16px; padding: 8px 16px; background: none; border: 1px solid var(--border2); border-radius: 6px; color: var(--text3); font-family: 'DM Mono', monospace; font-size: 11px; cursor: pointer; transition: all 0.2s; }
+  .back-btn:hover { color: var(--text); border-color: var(--accent); }
+
+  .protocol-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 32px; }
+  .protocol-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .protocol-name { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .protocol-org { font-size: 11px; color: var(--text3); margin-bottom: 10px; }
+  .protocol-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+  .protocol-support { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .eco-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  @media (max-width: 768px) { .eco-grid { grid-template-columns: 1fr; } }
+  .eco-category { background: var(--surface); padding: 24px; border: 1px solid var(--border); }
+  .eco-category:first-child { border-radius: 12px 0 0 0; }
+  .eco-category:nth-child(3) { border-radius: 0 12px 0 0; }
+  .eco-category:nth-child(4) { border-radius: 0 0 0 12px; }
+  .eco-category:last-child { border-radius: 0 0 12px 0; }
+  .eco-cat-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .eco-cat-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .eco-item { font-size: 12px; color: var(--text2); padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .eco-item:last-child { border-bottom: none; }
+  .eco-item strong { color: var(--text); }
+
+  footer { margin-top: 60px; padding: 32px 0; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  footer p { font-size: 11px; color: var(--text3); }
+  @media (max-width: 900px) { .detail-body { grid-template-columns: 1fr; } .detail-header { flex-direction: column; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="header-inner">
+      <div>
+        <div class="header-label">Fact-checked Interactive Reference · March 2026</div>
+        <h1>AI Agent<br><em>Frameworks</em></h1>
+      </div>
+      <div class="header-meta">
+        <div class="count">8</div>
+        <div class="count-label">Frameworks Compared</div>
+        <div class="accuracy-badge">Accuracy-reviewed · March 2026</div>
+        <div style="margin-top:10px;font-size:11px;color:var(--text3)">LangGraph · CrewAI · AutoGen<br>OpenAI SDK · Google ADK · Bedrock<br>Semantic Kernel · LlamaIndex</div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-tabs">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="compare">Comparison Table</button>
+    <button class="tab-btn" data-tab="usecases">Use Cases</button>
+    <button class="tab-btn" data-tab="decider">Which One?</button>
+    <button class="tab-btn" data-tab="protocols">Protocols</button>
+    <button class="tab-btn" data-tab="ecosystem">Ecosystem</button>
+    <button class="tab-btn" data-tab="corrections">Corrections Log</button>
+  </nav>
+
+  <section class="section active" id="tab-overview">
+    <div class="section-title">All Frameworks — click any card to expand</div>
+    <div class="fw-grid" id="fw-grid"></div>
+    <div class="detail-panel" id="detail-panel">
+      <div class="detail-header">
+        <div class="detail-color-bar" id="d-bar"></div>
+        <div class="detail-title-block">
+          <div class="detail-fw-name" id="d-name"></div>
+          <div class="detail-fw-maker" id="d-maker"></div>
+          <div class="detail-fw-tagline" id="d-tagline"></div>
+        </div>
+        <div class="detail-scores" id="d-scores"></div>
+      </div>
+      <div class="detail-body">
+        <div class="detail-col">
+          <div class="detail-col-title">✦ Strengths</div>
+          <ul class="pros-list" id="d-pros"></ul>
+        </div>
+        <div class="detail-col">
+          <div class="detail-col-title">◈ Limitations</div>
+          <ul class="cons-list" id="d-cons"></ul>
+        </div>
+        <div class="detail-col">
+          <div class="detail-col-title">⬡ Ratings</div>
+          <div class="rating-bars" id="d-ratings"></div>
+          <div id="d-multimodal-note" class="multimodal-note" style="display:none"></div>
+          <div style="margin-top:24px">
+            <div class="detail-col-title">◎ Key Parameters</div>
+            <div class="params-cloud" id="d-params"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="tab-compare">
+    <div class="section-title">Head-to-head comparison — fact-checked March 2026</div>
+    <div class="scroll-hint">← scroll horizontally for all columns →</div>
+    <div class="comparison-wrapper"><table id="compare-table"></table></div>
+    <div style="margin-top:16px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text2);line-height:1.8">
+      <strong style="color:var(--text)">Key corrections from previous version:</strong><br>
+      <span style="color:#22d3a0">✓ Multimodal</span> is now correctly <strong style="color:var(--text)">✓ for all 8 frameworks</strong> — each has documented image (and in some cases audio/video) support via their respective APIs.<br>
+      <span style="color:#facc15">~</span> AutoGen .NET is <strong style="color:var(--text)">partial only</strong> (Python-first; .NET parity incomplete).<br>
+      OpenAI Agents SDK is <strong style="color:var(--text)">provider-agnostic</strong> (100+ LLMs), not OpenAI-only. AutoGen entered <strong style="color:#f87171">maintenance mode Oct 2025</strong>.
+    </div>
+  </section>
+
+  <section class="section" id="tab-usecases">
+    <div class="section-title">Project type → recommended framework</div>
+    <div class="usecase-grid" id="usecase-grid"></div>
+  </section>
+
+  <section class="section" id="tab-decider">
+    <div class="section-title">Interactive decision tree</div>
+    <div class="decision-wrapper">
+      <div class="breadcrumb" id="breadcrumb"></div>
+      <div class="decision-q" id="decision-q"></div>
+      <div class="decision-options" id="decision-options"></div>
+      <div class="decision-result" id="decision-result">
+        <div style="font-size:11px;color:var(--text3);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:8px">Recommended</div>
+        <div class="result-rec" id="result-rec"></div>
+        <div class="result-why" id="result-why"></div>
+      </div>
+      <button class="back-btn" id="back-btn" onclick="decisionBack()" style="display:none">← back</button>
+    </div>
+  </section>
+
+  <section class="section" id="tab-protocols">
+    <div class="section-title">Standards shaping the 2026 ecosystem</div>
+    <div class="protocol-cards" id="protocol-cards"></div>
+    <div class="section-title">Protocol support per framework</div>
+    <div class="comparison-wrapper"><table id="protocol-table"></table></div>
+  </section>
+
+  <section class="section" id="tab-ecosystem">
+    <div class="section-title">Full ecosystem map</div>
+    <div class="eco-grid" id="eco-grid"></div>
+  </section>
+
+  <section class="section" id="tab-corrections">
+    <div class="section-title">Accuracy corrections vs prior version</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:24px;padding:14px 18px;background:var(--surface);border:1px solid var(--border);border-radius:8px;line-height:1.7">
+      The previous version of this guide contained <strong style="color:#f87171">5 critical errors</strong> and <strong style="color:#fb923c">4 additional inaccuracies</strong>. All were found by cross-checking official documentation: AWS Prescriptive Guidance, Microsoft Learn, CrewAI official docs, AutoGen/AG2 docs, and recent framework comparison articles.
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px" id="corrections-log"></div>
+  </section>
+
+  <footer>
+    <p>AI Agent Frameworks Guide · Fact-checked March 2026 · Sources: Official docs, AWS Prescriptive Guidance, Microsoft Learn, CrewAI Docs, Langfuse, atla-ai.com</p>
+    <p>LangGraph · CrewAI · AutoGen · OpenAI Agents SDK · Google ADK · Bedrock · Semantic Kernel · LlamaIndex</p>
+  </footer>
+</div>
+
+<script>
+const FW = [
+  {
+    id:'langgraph', name:'LangGraph', maker:'LangChain Inc.', color:'#7c6fff',
+    tagline:'Graph-based stateful orchestration — the production standard for complex AI pipelines',
+    type:'Open-source (MIT)', language:'Python / TypeScript', license:'MIT', hosting:'Self-host / LangGraph Cloud',
+    bestFor:'Complex stateful workflows with branching & cycles',
+    tags:['Stateful','Graph-based','Production','MCP'],
+    pros:['Fine-grained control: every node, edge and transition is explicit','Built-in checkpointing and time-travel debugging','LangSmith tracing and evaluation — best-in-class observability','Handles cycles, conditional branching, and parallel nodes natively','True model-agnostic: works with Anthropic, OpenAI, Bedrock, Gemini, Ollama and more','Human-in-the-loop via interrupt_before / interrupt_after','LangChain MCP Adapters v0.2 adds full multimodal tool support (Feb 2026)','Streaming and async execution built in'],
+    cons:['Steep learning curve — requires state machine thinking','Very verbose for simple linear tasks','Large LangChain dependency surface','Debugging complex graphs can be disorienting','LangGraph Cloud (managed hosting) is a paid tier','Infrastructure management burden for self-hosting'],
+    params:['StateGraph','nodes','edges','conditional_edges','checkpointer','MemorySaver','interrupt_before','interrupt_after','stream_mode','recursion_limit','CompiledGraph','add_node()','add_edge()','human-in-the-loop','channel_values'],
+    ratings:{'Ease of use':45,'Production readiness':96,'Flexibility':95,'Community':90,'Observability':95,'Enterprise fit':88},
+    multimodal:true, managed:true, multiagent:true, rag:true, dotnet:false,
+    multimodalNote:'Text, image, and audio via multimodal LLMs. AWS Prescriptive Guidance explicitly lists "Multimodal processing — built-in support for text, image, and audio" as a key feature. LangChain MCP Adapters v0.2 (Feb 2026) adds full multimodal tool support.'
+  },
+  {
+    id:'crewai', name:'CrewAI', maker:'CrewAI Inc.', color:'#22d3a0',
+    tagline:'Role-based multi-agent teams — fastest time-to-production for business workflows',
+    type:'Open-source (MIT) + CrewAI+ SaaS', language:'Python', license:'MIT', hosting:'Self-host / CrewAI+ managed',
+    bestFor:'Rapid prototyping, content pipelines, business automation',
+    tags:['Multi-agent','Role-based','Fast setup','A2A'],
+    pros:['Lowest barrier to entry — working demo in hours','Intuitive role / goal / backstory agent definitions','Official multimodal: Agent(multimodal=True) + AddImageTool (documented Jan 2025)','A2A protocol support added 2026','CrewAI Flows: sequential/parallel pipelines with state, human handoff, audit logs','CrewAI+ managed platform available','Active development — largest community among multi-agent frameworks','Built-in audit logs and replay/debug capability'],
+    cons:['Role abstraction restricts highly novel architectures','Less execution control than LangGraph','No native equivalent of LangSmith for observability','Heavy reliance on LLM reasoning for coordination','Occasional truncated outputs for large tasks','Harder to debug inter-agent failures in production'],
+    params:['Agent(role,goal,backstory,multimodal)','Task(description,expected_output)','Crew(agents,tasks)','Process.sequential','Process.hierarchical','tools','memory','verbose','max_iter','allow_delegation','output_pydantic','cache','manager_llm','kickoff()','AddImageTool','Flow'],
+    ratings:{'Ease of use':93,'Production readiness':75,'Flexibility':65,'Community':82,'Observability':60,'Enterprise fit':68},
+    multimodal:true, managed:true, multiagent:true, rag:true, dotnet:false,
+    multimodalNote:'Agent(multimodal=True) automatically adds AddImageTool for image processing. Fully documented at docs.crewai.com/en/learn/multimodal-agents (released Jan 2025).'
+  },
+  {
+    id:'autogen', name:'AutoGen / AG2', maker:'Microsoft Research', color:'#f97316',
+    tagline:'Conversational multi-agent framework — in maintenance mode since Oct 2025; new dev on Microsoft Agent Framework',
+    type:'Open-source (CC-BY-4.0)', language:'Python (primary) / partial .NET', license:'CC-BY-4.0', hosting:'Self-host',
+    bestFor:'Agent-to-agent conversation, code generation & debugging',
+    tags:['Conversational','Code-gen','⚠ Maintenance mode'],
+    pros:['Best-in-class for agent-to-agent dialogue and group chat patterns','MultimodalConversableAgent for text + image inputs (GPT-4V, Claude Vision, Llama Vision)','AutoGen Studio no-code visual builder','Magentic-One: state-of-the-art multi-agent benchmark system','Human proxy agent for natural human-in-the-loop','Asynchronous, event-driven architecture reduces blocking','Strong for iterative code generation and review workflows'],
+    cons:['⚠ Entered maintenance mode Oct 2025 — security patches only, no new features','New development moved to Microsoft Agent Framework (AutoGen + Semantic Kernel merged)','Organizations using AutoGen should plan migration paths','Slower due to conversational overhead','Less structured outputs than LangGraph','Limited built-in persistence and checkpointing','.NET support is partial — Python-first framework'],
+    params:['AssistantAgent','UserProxyAgent','MultimodalConversableAgent','GroupChat','GroupChatManager','ConversableAgent','code_execution_config','human_input_mode','max_consecutive_auto_reply','system_message','llm_config','initiate_chat()','register_function()','is_termination_msg'],
+    ratings:{'Ease of use':70,'Production readiness':58,'Flexibility':74,'Community':68,'Observability':65,'Enterprise fit':55},
+    multimodal:true, managed:false, multiagent:true, rag:false, dotnet:'partial',
+    multimodalNote:'MultimodalConversableAgent supports text + image inputs. AWS Prescriptive Guidance lists "Multimodal processing — support for text and image processing" as a key AutoGen feature.'
+  },
+  {
+    id:'openai', name:'OpenAI Agents SDK', maker:'OpenAI', color:'#10b981',
+    tagline:'Minimal Python SDK — provider-agnostic (100+ LLMs), clean handoffs, built-in guardrails and tracing',
+    type:'Open-source (Apache 2.0)', language:'Python', license:'Apache 2.0', hosting:'Self-host / OpenAI Platform tracing',
+    bestFor:'Clean agentic pipelines — any LLM via OpenAI-compatible APIs',
+    tags:['Minimal','Handoffs','Provider-agnostic','Guardrails'],
+    pros:['Provider-agnostic: supports 100+ LLMs via OpenAI-compatible APIs (Anthropic, Gemini, Llama, etc.)','Clean explicit handoff primitive between agents','Built-in InputGuardrail / OutputGuardrail system','Automatic JSON schema generation from Pydantic models','Native tracing dashboard on OpenAI platform','Lowest latency on GPT-4o family','Simple, readable API with minimal boilerplate','Context variables passed cleanly between agents'],
+    cons:['Tracing dashboard works best with OpenAI-hosted models','Limited for complex stateful / cyclic workflows','Less flexible than LangGraph for complex branching','Smaller ecosystem of patterns vs LangGraph / CrewAI','No built-in vector store or RAG tooling','Agent state persistence requires manual implementation'],
+    params:['Agent(instructions,model,tools)','handoffs','Runner.run()','Runner.run_streamed()','Guardrail','InputGuardrail','OutputGuardrail','trace()','tool_choice','parallel_tool_calls','context_variables','max_turns','stream=True','RunResult','FunctionTool'],
+    ratings:{'Ease of use':86,'Production readiness':80,'Flexibility':65,'Community':82,'Observability':78,'Enterprise fit':70},
+    multimodal:true, managed:false, multiagent:true, rag:false, dotnet:false,
+    multimodalNote:'Provider-agnostic design supports any vision-capable model: GPT-4o, Claude 3.x, Gemini 1.5 Pro, Llama Vision — multimodal is model-dependent, not framework-limited.'
+  },
+  {
+    id:'googladk', name:'Google ADK', maker:'Google (released April 2025)', color:'#facc15',
+    tagline:'Enterprise multi-agent framework for Gemini + GCP — native multimodal, A2A protocol, and Vertex AI deploy',
+    type:'Open-source (Apache 2.0)', language:'Python', license:'Apache 2.0', hosting:'Self-host / Vertex AI Agent Engine',
+    bestFor:'GCP-hosted, multimodal & enterprise multi-agent systems',
+    tags:['Multimodal','Enterprise','A2A','GCP-native'],
+    pros:['Model-agnostic: Gemini, Claude, Llama, Mistral via LiteLLM connector','Native bidirectional audio/video streaming via Gemini Live API','Built-in evaluation and testing tooling — rare among frameworks','Vertex AI Agent Engine: one-click managed deployment','A2A protocol support — standardised cross-framework agent comms','Sub-agent delegation with hierarchical agent trees','Before/after model and tool callbacks for observability','Session management built in'],
+    cons:['Strong temptation toward GCP / Vertex AI lock-in','Smallest community of the major frameworks (released April 2025)','Native audio/video streaming only available with Gemini models','More boilerplate than OpenAI Agents SDK','Documentation still maturing','Evaluation tooling requires Google infrastructure'],
+    params:['Agent','Runner','InMemorySessionService','VertexAiSessionService','tools','sub_agents','instruction','model','before_model_callback','after_model_callback','after_tool_callback','LiteLLM connector','A2A protocol','generate_content_config','session_id'],
+    ratings:{'Ease of use':65,'Production readiness':86,'Flexibility':82,'Community':55,'Observability':80,'Enterprise fit':84},
+    multimodal:true, managed:true, multiagent:true, rag:true, dotnet:false,
+    multimodalNote:'Native bidirectional audio/video streaming via Gemini Live API. All supported models accept text/image. Deepest native multimodal of any framework.'
+  },
+  {
+    id:'semkernel', name:'Semantic Kernel', maker:'Microsoft', color:'#ec4899',
+    tagline:'Enterprise SDK for .NET, Python & Java — merging with AutoGen into Microsoft Agent Framework',
+    type:'Open-source (MIT)', language:'C# (primary) / Python / Java', license:'MIT', hosting:'Self-host / Azure',
+    bestFor:'.NET enterprise apps, regulated industries, Azure-native workflows',
+    tags:['.NET','Enterprise','Planner','Azure'],
+    pros:['First-class .NET / C# support — unique in the agent framework space','ImageContent + TextContent for multimodal chat completion (documented on Microsoft Learn)','Plan-and-Execute planner pattern built in (Sequential, Stepwise)','Deep Azure AD / enterprise security integration','C#, Python, and Java SDKs maintained','VectorStore memory for semantic search across providers','Kernel Filters for logging and policy enforcement','Being evolved into Microsoft Agent Framework with AutoGen'],
+    cons:['Python / Java parity lags behind C# — some connectors and features .NET-only','Python SK lacks auto-function-calling vs C# equivalent','Heavyweight for simple use cases','Planner can be brittle on less capable models','Best features favour Azure / Microsoft services','Smaller open-source community than LangGraph or CrewAI'],
+    params:['Kernel','KernelFunction','KernelPlugin','SequentialPlanner','StepwisePlanner','ChatCompletionService','PromptExecutionSettings','FunctionChoiceBehavior','IVectorStoreRecordCollection','KernelMemory','IFunctionInvocationFilter','AzureOpenAIChatCompletion','ImageContent','TextContent','AddFromType<>()'],
+    ratings:{'Ease of use':54,'Production readiness':85,'Flexibility':70,'Community':62,'Observability':74,'Enterprise fit':92},
+    multimodal:true, managed:false, multiagent:true, rag:true, dotnet:true,
+    multimodalNote:'Microsoft Learn explicitly documents ImageContent for multimodal chat completion in both C# and Python SDKs. Pass images + text together via ChatHistory.'
+  },
+  {
+    id:'llamaindex', name:'LlamaIndex', maker:'LlamaIndex Inc.', color:'#60a5fa',
+    tagline:'Data-centric RAG framework — best retrieval and knowledge-base tooling in the ecosystem',
+    type:'Open-source (MIT) + LlamaCloud SaaS', language:'Python / TypeScript', license:'MIT', hosting:'Self-host / LlamaCloud',
+    bestFor:'RAG pipelines, document Q&A, knowledge-intensive agents',
+    tags:['RAG','Retrieval-first','Data-centric','LlamaHub'],
+    pros:['Best-in-class RAG and data indexing in the ecosystem','100+ data source connectors via LlamaHub','MultiModalVectorStoreIndex for multimodal RAG (text + images from documents)','Works as retrieval layer inside LangGraph or CrewAI — a common production pattern','Structured query engine for SQL + semantic hybrid search','Sub-question query decomposition for complex questions','LlamaCloud managed platform available','TypeScript / Node.js SDK maintained alongside Python'],
+    cons:['Not ideal as a standalone primary orchestration layer','Less agent control flow than LangGraph for complex workflows','Configuring retriever pipelines can be verbose','Abstraction layers can obscure what is happening internally','Performance tuning requires deep framework knowledge','Limited built-in debugging vs dedicated agent frameworks'],
+    params:['VectorStoreIndex','SimpleDirectoryReader','QueryEngine','RetrieverQueryEngine','ReActAgent','FunctionTool','OpenAIAgent','ChatMemoryBuffer','NodePostprocessor','ResponseSynthesizer','similarity_top_k','SentenceSplitter','StorageContext','SubQuestionQueryEngine','MultiModalVectorStoreIndex'],
+    ratings:{'Ease of use':66,'Production readiness':80,'Flexibility':72,'Community':80,'Observability':66,'Enterprise fit':72},
+    multimodal:true, managed:true, multiagent:true, rag:true, dotnet:false,
+    multimodalNote:'MultiModalVectorStoreIndex processes text and images from documents together. Official multimodal RAG tutorials use Gemini 1.5 Flash / GPT-4V for image understanding alongside text retrieval.'
+  },
+  {
+    id:'bedrock', name:'AWS Bedrock Agents', maker:'Amazon Web Services', color:'#fb923c',
+    tagline:'Fully managed agentic infra on AWS — multimodal Knowledge Bases GA Nov 2025, Nova Embeddings Dec 2025',
+    type:'Managed SaaS', language:'AWS Console / Boto3 / SDKs (Python, Java, JS, .NET)', license:'Commercial', hosting:'AWS (fully managed)',
+    bestFor:'AWS-native, regulated industries, zero infra management',
+    tags:['Managed','AWS','Compliance','Multimodal KB'],
+    pros:['Zero infrastructure — fully hosted, managed, and scaled by AWS','Toggle-on guardrails: content filters, topic filters, PII detection','Multimodal Knowledge Bases: text, images, audio, video (GA Nov 2025)','Amazon Nova Multimodal Embeddings for cross-modal RAG (GA Dec 2025)','Claude 3.x/4.x, Titan, Llama, Mistral — wide model catalog','IAM, VPC, KMS, CloudTrail enterprise security stack','SOC 2, HIPAA, FedRAMP, PCI-DSS compliance built-in','Multi-agent collaboration feature GA March 2025'],
+    cons:['Hard AWS ecosystem dependency — significant vendor lock-in','Limited to models in the Bedrock catalog only','Much less workflow flexibility than open-source frameworks','Can be expensive at scale for high-volume agent calls','Customisation requires deep AWS / IAM expertise','Slow iteration cycle versus open-source','Limited community patterns outside AWS ecosystem'],
+    params:['AgentResource','ActionGroup (Lambda/OpenAPI)','KnowledgeBase','AliasId','SessionState','InlineSessionState','Guardrail (content/topic/word/PII)','PromptOverrideConfiguration','MemoryConfiguration','InvokeAgent','PrepareAgent','orchestrationType','enableTrace','BedrockFoundationModel','Nova Multimodal Embeddings'],
+    ratings:{'Ease of use':70,'Production readiness':90,'Flexibility':46,'Community':55,'Observability':82,'Enterprise fit':94},
+    multimodal:true, managed:true, multiagent:true, rag:true, dotnet:false,
+    multimodalNote:'Multimodal Knowledge Bases (text/image/audio/video) GA Nov 2025. Amazon Nova Multimodal Embeddings GA Dec 2025. Bedrock Agents invoke Claude / Nova models with image inputs natively.'
+  }
+];
+
+const USECASES = [
+  {icon:'⚙️',title:'Complex enterprise pipelines',desc:'Multi-step workflows with branching logic, retries, human approvals, and persistent state.',primary:{fw:'LangGraph',color:'#7c6fff'},secondary:['Semantic Kernel']},
+  {icon:'✍️',title:'Content creation workflows',desc:'Researcher → writer → editor → publisher chains with role-driven parallelism.',primary:{fw:'CrewAI',color:'#22d3a0'},secondary:['AutoGen','LangGraph']},
+  {icon:'💻',title:'Code generation & debugging',desc:'Iterative agents that write, test, review, and fix each other\'s code in multi-turn conversation.',primary:{fw:'AutoGen',color:'#f97316'},secondary:['OpenAI Agents SDK']},
+  {icon:'📚',title:'RAG & document Q&A',desc:'Knowledge retrieval over large corpora, PDFs, databases — hybrid semantic + structured search.',primary:{fw:'LlamaIndex',color:'#60a5fa'},secondary:['AWS Bedrock Agents','LangGraph']},
+  {icon:'🏢',title:'.NET / Azure enterprise apps',desc:'Line-of-business apps on Azure with Azure AD security and C# SDK.',primary:{fw:'Semantic Kernel',color:'#ec4899'},secondary:['AWS Bedrock Agents']},
+  {icon:'🎙️',title:'Multimodal — voice + video agents',desc:'Real-time bidirectional audio/video streaming agents and visual analysis pipelines.',primary:{fw:'Google ADK',color:'#facc15'},secondary:['OpenAI Agents SDK','AWS Bedrock Agents']},
+  {icon:'☁️',title:'AWS regulated systems',desc:'Healthcare, finance, government — managed with HIPAA, FedRAMP, SOC2 compliance.',primary:{fw:'AWS Bedrock Agents',color:'#fb923c'},secondary:['Semantic Kernel']},
+  {icon:'🚀',title:'Rapid MVP in hours',desc:'Fastest path from idea to working multi-agent demo. Optimise for speed.',primary:{fw:'CrewAI',color:'#22d3a0'},secondary:['OpenAI Agents SDK']},
+  {icon:'🔍',title:'Data analysis & SQL agents',desc:'Agents that query databases, generate SQL, run Python analysis, produce structured insights.',primary:{fw:'LangGraph',color:'#7c6fff'},secondary:['LlamaIndex','AutoGen']},
+  {icon:'🤖',title:'Agent-to-agent conversation',desc:'Debate, consensus-building, and multi-party LLM dialogue patterns.',primary:{fw:'AutoGen',color:'#f97316'},secondary:['CrewAI','Google ADK']},
+  {icon:'🌐',title:'GCP / Gemini-native projects',desc:'Systems deployed on Google Cloud with Vertex AI and Gemini models.',primary:{fw:'Google ADK',color:'#facc15'},secondary:['LangGraph']},
+  {icon:'🛡️',title:'Safety-critical / auditable AI',desc:'Systems where every decision must be logged, explainable, and reversible.',primary:{fw:'LangGraph',color:'#7c6fff'},secondary:['AWS Bedrock Agents','Semantic Kernel']},
+  {icon:'🖼️',title:'Image & visual analysis agents',desc:'Agents processing images, screenshots, charts, or video frames alongside text.',primary:{fw:'Google ADK',color:'#facc15'},secondary:['CrewAI','LlamaIndex','OpenAI Agents SDK']},
+  {icon:'🔄',title:'Cross-framework interoperability',desc:'Multiple agent frameworks or providers communicating via standard protocols.',primary:{fw:'Google ADK',color:'#facc15'},secondary:['CrewAI']}
+];
+
+const PROTOCOLS = [
+  {name:'MCP',full:'Model Context Protocol',org:'Anthropic → Linux Foundation / Agentic AI Foundation (2025)',color:'#7c6fff',desc:'Standardises how agents connect to external tools, APIs, and data sources. The dominant tool-connectivity standard. LangChain MCP Adapters v0.2 (Feb 2026) adds full multimodal tool support.',supporters:['LangGraph','OpenAI SDK','CrewAI','Google ADK','LlamaIndex','Semantic Kernel']},
+  {name:'A2A',full:'Agent-to-Agent Protocol',org:'Google + 50 technology partners (Salesforce, SAP, Accenture...)',color:'#facc15',desc:'Standardises HTTP-level communication between AI agents across different frameworks and providers. Enables cross-vendor agent interoperability. CrewAI and Google ADK have native support.',supporters:['Google ADK','CrewAI']},
+  {name:'OpenAPI 3.0',full:'OpenAPI Action Groups',org:'OpenAPI Initiative',color:'#10b981',desc:'Used by AWS Bedrock Agents to define agent capabilities via standard OpenAPI 3.0 schemas. Also used by OpenAI SDK and Google ADK for tool definitions.',supporters:['AWS Bedrock Agents','OpenAI Agents SDK','Google ADK','LangGraph']},
+  {name:'Pydantic',full:'Structured Output Validation',org:'Pydantic — Python ecosystem standard',color:'#60a5fa',desc:'De facto standard for structured agent output validation across Python frameworks. OpenAI Agents SDK auto-generates JSON schemas from Pydantic models. CrewAI supports output_pydantic on tasks.',supporters:['All Python frameworks']}
+];
+
+const ECOSYSTEM = [
+  {cat:'Orchestration',color:'#7c6fff',items:[{name:'LangGraph',detail:'Graph-based stateful (LangChain)'},{name:'CrewAI',detail:'Role-based multi-agent teams'},{name:'AutoGen / AG2',detail:'Conversational (maintenance mode Oct 2025)'},{name:'Microsoft Agent Framework',detail:'AutoGen + Semantic Kernel merged'}]},
+  {cat:'Managed Platforms',color:'#fb923c',items:[{name:'AWS Bedrock Agents',detail:'Fully managed on AWS'},{name:'Vertex AI Agent Engine',detail:'Managed ADK deploy target'},{name:'CrewAI+',detail:'Hosted CrewAI runtime'},{name:'LangGraph Cloud',detail:'Hosted LangGraph (paid)'}]},
+  {cat:'Provider SDKs',color:'#10b981',items:[{name:'OpenAI Agents SDK',detail:'Provider-agnostic, 100+ LLMs'},{name:'Google ADK',detail:'Gemini-native, A2A, multimodal'},{name:'Semantic Kernel',detail:'.NET-first, Azure integration'},{name:'Anthropic SDK',detail:'Tool use, extended thinking, MCP'}]},
+  {cat:'Data & Retrieval',color:'#60a5fa',items:[{name:'LlamaIndex',detail:'RAG framework, 100+ connectors'},{name:'Chroma',detail:'Lightweight vector store'},{name:'Pinecone',detail:'Managed vector database'},{name:'Weaviate',detail:'Hybrid vector + keyword search'}]},
+  {cat:'Observability',color:'#22d3a0',items:[{name:'LangSmith',detail:'Traces + evals (LangChain)'},{name:'Arize Phoenix',detail:'Open-source LLM observability'},{name:'Langfuse',detail:'Open-source eval + tracing'},{name:'OpenAI Tracing',detail:'Native to OpenAI Agents SDK'}]},
+  {cat:'Standards & Protocols',color:'#f97316',items:[{name:'MCP',detail:'Tool connectivity (Linux Foundation)'},{name:'A2A',detail:'Agent interop (Google + 50 partners)'},{name:'OpenAPI 3.0',detail:'Action group schemas'},{name:'Pydantic',detail:'Output validation (all Python FWs)'}]}
+];
+
+const CORRECTIONS = [
+  {severity:'critical',field:'Multimodal — LangGraph',old:'Marked ✗ — incorrectly stated LangGraph does not support multimodal',fixed:'✓ Multimodal. AWS Prescriptive Guidance on LangGraph explicitly lists "Multimodal processing — Built-in support for text, image, and audio processing" as a key feature. LangChain MCP Adapters v0.2 (Feb 2026) adds full multimodal tool support.',source:'docs.aws.amazon.com/prescriptive-guidance/latest/agentic-ai-frameworks/langchain-langgraph.html; LangChain Changelog Feb 2026'},
+  {severity:'critical',field:'Multimodal — CrewAI',old:'Marked ✗ — incorrectly stated CrewAI does not support multimodal',fixed:'✓ Multimodal. CrewAI officially documents Agent(multimodal=True) with AddImageTool for image processing. Feature page "Using Multimodal Agents" published on official CrewAI docs (Jan 2025).',source:'docs.crewai.com/en/learn/multimodal-agents'},
+  {severity:'critical',field:'Multimodal — AutoGen',old:'Marked ✗ — incorrectly stated AutoGen does not support multimodal',fixed:'✓ Multimodal. AutoGen has MultimodalConversableAgent for text + image inputs. AWS Prescriptive Guidance lists "Multimodal processing — Support for text and image processing" explicitly. AG2 docs show image-capable agents via Bedrock, GPT-4V, Claude Vision.',source:'docs.aws.amazon.com/prescriptive-guidance (AutoGen); docs.ag2.ai/0.8.2/docs/user-guide/models/amazon-bedrock/'},
+  {severity:'critical',field:'Multimodal — Semantic Kernel',old:'Marked ✗ — incorrectly stated Semantic Kernel does not support multimodal',fixed:'✓ Multimodal. Microsoft Learn documents ImageContent for multimodal chat completion in both C# and Python. Both images and text can be passed simultaneously to supported AI models.',source:'learn.microsoft.com/en-us/semantic-kernel/concepts/ai-services/chat-completion/multi-modal-chat-completion'},
+  {severity:'critical',field:'Multimodal — AWS Bedrock Agents',old:'Marked ✗ — incorrectly stated Bedrock Agents does not support multimodal',fixed:'✓ Multimodal. AWS announced GA of Multimodal Knowledge Bases (Nov 2025) supporting text, images, audio, and video. Amazon Nova Multimodal Embeddings GA Dec 2025. Bedrock Agents invoke Claude/Nova vision models with image inputs.',source:'AWS What\'s New Nov 2025 (Multimodal KB); AWS Blog Dec 2025 (Nova Multimodal Embeddings)'},
+  {severity:'high',field:'OpenAI Agents SDK — Provider lock-in',old:'Described as "OpenAI models only (officially)" in cons and tags',fixed:'The SDK is explicitly provider-agnostic and supports 100+ LLMs through OpenAI-compatible APIs including Anthropic, Gemini, Llama, and Mistral. Tracing works best with OpenAI but model choice is not locked.',source:'atla-ai.com/post/ai-agent-frameworks; official OpenAI Agents SDK docs (Apache 2.0)'},
+  {severity:'high',field:'AutoGen — Production readiness score',old:'Production readiness: 65 — did not account for maintenance mode',fixed:'Production readiness lowered to 58. AutoGen entered maintenance mode Oct 2025; only security patches going forward. Microsoft merged it with Semantic Kernel into Microsoft Agent Framework. Organizations should plan migration.',source:'jetthoughts.com/blog; Microsoft announcement Oct 2025'},
+  {severity:'medium',field:'AutoGen — .NET support',old:'Marked as ✗ (no .NET support at all)',fixed:'Changed to "~ partial" — AutoGen is Python-first with limited .NET parity. The old mark was too binary; partial acknowledgement is more accurate.',source:'Multiple framework comparison sources; AG2 documentation'},
+  {severity:'medium',field:'CrewAI — Missing Flows feature',old:'CrewAI described only through Agent/Task/Crew primitives',fixed:'CrewAI Flows (sequential/parallel pipelines with state management, human handoff, audit logs, and time-travel debug) added to feature list. This significantly strengthens production capabilities.',source:'zenml.io/blog/semantic-kernel-alternatives citing CrewAI docs'}
+];
+
+const TREE = {
+  q:'What is your primary deployment environment?',
+  options:[
+    {label:'AWS — especially regulated industries',next:{q:'How much infrastructure management do you want?',options:[
+      {label:'Zero — fully managed by AWS',result:{fw:'AWS Bedrock Agents',color:'#fb923c',why:'Fully managed on AWS with toggle-on HIPAA, FedRAMP, and SOC2 compliance. Multimodal Knowledge Bases (GA Nov 2025) for text/image/audio/video RAG. Multi-agent collaboration GA March 2025. No server management — the right choice for regulated, AWS-native environments.'}},
+      {label:'I will manage infra myself',result:{fw:'LangGraph',color:'#7c6fff',why:'Self-hosted LangGraph on AWS ECS/Lambda/Fargate gives maximum flexibility while keeping data in your VPC. Pair with LangSmith for compliance-grade audit trails. Use Bedrock-hosted Claude or Llama as your LLM. Model-agnostic and fully open-source.'}}
+    ]}},
+    {label:'Google Cloud / Vertex AI',result:{fw:'Google ADK',color:'#facc15',why:'Native Vertex AI Agent Engine deployment, built-in evaluation tooling, A2A protocol for agent interoperability, and bidirectional audio/video streaming via Gemini Live API. Model-agnostic via LiteLLM. Best multimodal and GCP-native agent experience.'}},
+    {label:'Azure / .NET enterprise',next:{q:'Primary language / stack?',options:[
+      {label:'.NET / C# first',result:{fw:'Semantic Kernel',color:'#ec4899',why:'First-class C# SDK with Azure AD security, VectorStore memory, Plan-and-Execute planner, and ImageContent for multimodal. Ideal for enterprise LOB apps on Azure. Being evolved into Microsoft Agent Framework — good long-term path.'}},
+      {label:'Python on Azure',result:{fw:'LangGraph',color:'#7c6fff',why:'LangGraph Python on Azure Container Apps with LangSmith for observability. More flexible and production-mature than AutoGen (maintenance mode since Oct 2025). Use LangChain\'s Azure OpenAI integration for model hosting.'}}
+    ]}},
+    {label:'Self-hosted / cloud-agnostic',next:{q:'What type of project?',options:[
+      {label:'Prototype / MVP — fast as possible',result:{fw:'CrewAI',color:'#22d3a0',why:'Fastest time-to-production. Define roles, goals, and tasks in plain Python. Working multi-agent demo in hours. Agent(multimodal=True) for image-aware agents. CrewAI+ for managed hosting. Best for proving concepts to stakeholders quickly.'}},
+      {label:'Complex stateful production pipeline',result:{fw:'LangGraph',color:'#7c6fff',why:'State machine graphs with checkpointing, time-travel debugging, and LangSmith tracing. Handles cycles, conditional branching, human-in-the-loop, and parallel execution. The production standard for complex agent workflows. 96/100 production readiness.'}},
+      {label:'RAG / document intelligence',result:{fw:'LlamaIndex',color:'#60a5fa',why:'100+ data connectors (LlamaHub), multimodal RAG for text + images, sub-question decomposition, and hybrid vector/keyword search. Often used as the retrieval layer inside LangGraph or CrewAI for best results in production.'}},
+      {label:'Agent conversation / code generation',result:{fw:'AutoGen',color:'#f97316',why:'Best for agent-to-agent dialogue and code review patterns. Strong for iterative code generation. Note: AutoGen is in maintenance mode since Oct 2025. Consider starting a new project on Microsoft Agent Framework instead for long-term support.'}}
+    ]}},
+    {label:'OpenAI API already subscribed',result:{fw:'OpenAI Agents SDK',color:'#10b981',why:'Lowest friction path. Clean handoff primitives, built-in guardrails, Pydantic output validation, native tracing. Important: provider-agnostic — supports 100+ LLMs including Anthropic, Gemini, Llama via compatible APIs. Not locked to OpenAI models.'}}
+  ]
+};
+
+function renderOverview() {
+  document.getElementById('fw-grid').innerHTML = FW.map(fw => `
+    <div class="fw-card" id="card-${fw.id}" style="--card-color:${fw.color}" onclick="showDetail('${fw.id}')">
+      <div class="fw-top">
+        <div class="fw-dot" style="background:${fw.color};box-shadow:0 0 8px ${fw.color}40"></div>
+        <div class="fw-maker">${fw.maker.split('(')[0].trim()}</div>
+      </div>
+      <div class="fw-name">${fw.name}</div>
+      <div class="fw-tagline">${fw.tagline}</div>
+      <div class="fw-tags">
+        ${fw.tags.map(t=>`<span class="fw-tag" style="border-color:${fw.color}40;color:${fw.color};background:${fw.color}10">${t}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+let activeCard=null;
+function showDetail(id){
+  const fw=FW.find(f=>f.id===id);
+  if(!fw)return;
+  if(activeCard===id){closeDetail();return;}
+  if(activeCard)document.getElementById('card-'+activeCard)?.classList.remove('active');
+  activeCard=id;
+  document.getElementById('card-'+id)?.classList.add('active');
+  document.getElementById('d-bar').style.background=fw.color;
+  document.getElementById('d-name').textContent=fw.name;
+  document.getElementById('d-maker').textContent=fw.maker+' · '+fw.type+' · '+fw.language;
+  document.getElementById('d-tagline').textContent=fw.tagline;
+  document.getElementById('d-scores').innerHTML=[['Ease',fw.ratings['Ease of use']],['Production',fw.ratings['Production readiness']],['Enterprise',fw.ratings['Enterprise fit']]].map(([l,v])=>`<div class="score-item"><div class="score-num" style="color:${fw.color}">${v}</div><div class="score-label">${l}</div></div>`).join('');
+  document.getElementById('d-pros').innerHTML=fw.pros.map(p=>`<li>${p}</li>`).join('');
+  document.getElementById('d-cons').innerHTML=fw.cons.map(c=>`<li>${c}</li>`).join('');
+  document.getElementById('d-ratings').innerHTML=Object.entries(fw.ratings).map(([label,val])=>`<div class="rating-row"><span class="rating-label">${label}</span><div class="rating-track"><div class="rating-fill" style="background:${fw.color}" data-val="${val}"></div></div><span class="rating-val">${val}</span></div>`).join('');
+  const mn=document.getElementById('d-multimodal-note');
+  mn.style.display='block';
+  mn.innerHTML=`<strong>Multimodal support:</strong> ${fw.multimodalNote}`;
+  document.getElementById('d-params').innerHTML=fw.params.map(p=>`<span class="param-pill">${p}</span>`).join('');
+  const panel=document.getElementById('detail-panel');
+  panel.classList.add('visible');
+  setTimeout(()=>panel.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+  setTimeout(()=>document.querySelectorAll('.rating-fill').forEach(el=>el.style.width=el.dataset.val+'%'),150);
+}
+function closeDetail(){
+  document.getElementById('detail-panel').classList.remove('visible');
+  if(activeCard)document.getElementById('card-'+activeCard)?.classList.remove('active');
+  activeCard=null;
+}
+
+function sp(v){const c=v>=80?'score-high':v>=60?'score-mid':'score-low';return `<span class="score-pill ${c}">${v}</span>`;}
+function cc(v){if(v===true)return '<span class="check">✓</span>';if(v===false)return '<span class="cross">✗</span>';if(v==='partial')return '<span class="partial">~ partial</span>';return v;}
+
+function renderCompareTable(){
+  const rows=[
+    ['Type',fw=>fw.type.replace('Open-source ','')],
+    ['Language',fw=>`<span style="font-size:11px">${fw.language}</span>`],
+    ['License',fw=>fw.license],
+    ['Hosting',fw=>`<span style="font-size:11px">${fw.hosting}</span>`],
+    ['Best for',fw=>`<span style="font-size:11px">${fw.bestFor}</span>`],
+    ['Ease of use',fw=>sp(fw.ratings['Ease of use'])],
+    ['Production readiness',fw=>sp(fw.ratings['Production readiness'])],
+    ['Flexibility',fw=>sp(fw.ratings['Flexibility'])],
+    ['Community',fw=>sp(fw.ratings['Community'])],
+    ['Observability',fw=>sp(fw.ratings['Observability'])],
+    ['Enterprise fit',fw=>sp(fw.ratings['Enterprise fit'])],
+    ['Multi-agent',fw=>cc(fw.multiagent)],
+    ['Multimodal ✓ (corrected)',fw=>cc(fw.multimodal)],
+    ['RAG built-in',fw=>cc(fw.rag)],
+    ['Managed option',fw=>cc(fw.managed)],
+    ['.NET support',fw=>cc(fw.dotnet)],
+  ];
+  const th=`<thead><tr><th>Dimension</th>${FW.map(fw=>`<th style="color:${fw.color}">${fw.name}</th>`).join('')}</tr></thead>`;
+  const tb='<tbody>'+rows.map(([label,fn])=>`<tr><td>${label}</td>${FW.map(fw=>`<td>${fn(fw)}</td>`).join('')}</tr>`).join('')+'</tbody>';
+  document.getElementById('compare-table').innerHTML=th+tb;
+}
+
+function renderUseCases(){
+  document.getElementById('usecase-grid').innerHTML=USECASES.map(u=>{
+    return `<div class="usecase-card">
+      <div class="usecase-icon">${u.icon}</div>
+      <div class="usecase-title">${u.title}</div>
+      <div class="usecase-desc">${u.desc}</div>
+      <div class="usecase-winners">
+        <span class="usecase-fw-tag usecase-primary" style="background:${u.primary.color};color:#0a0a0f">${u.primary.fw}</span>
+        ${u.secondary.map(s=>{const f=FW.find(fw=>fw.name===s||s.startsWith(fw.name.split(' ')[0]));const c=f?.color||'#888';return `<span class="usecase-fw-tag" style="border:1px solid ${c}40;color:${c}">${s}</span>`;}).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let ds={node:TREE,path:[]};
+function renderDecision(){
+  const node=ds.node;
+  document.getElementById('breadcrumb').innerHTML=ds.path.length>0?ds.path.map((p,i)=>`<span class="breadcrumb-item">${p}</span>${i<ds.path.length-1?'<span style="color:var(--text3)">›</span>':''}`).join(''):'';
+  document.getElementById('decision-result').classList.remove('show');
+  if(node.result){
+    document.getElementById('decision-q').textContent='✦ Recommendation';
+    document.getElementById('decision-options').innerHTML='';
+    document.getElementById('result-rec').textContent=node.result.fw;
+    document.getElementById('result-rec').style.color=node.result.color;
+    document.getElementById('result-why').textContent=node.result.why;
+    document.getElementById('decision-result').classList.add('show');
+    document.getElementById('back-btn').style.display='inline-block';
+  }else{
+    document.getElementById('decision-q').textContent=node.q;
+    document.getElementById('decision-options').innerHTML=node.options.map((opt,i)=>`<div class="decision-option" onclick="decisionChoose(${i})">${opt.label}</div>`).join('');
+    document.getElementById('back-btn').style.display=ds.path.length>0?'inline-block':'none';
+  }
+}
+function decisionChoose(i){const opt=ds.node.options[i];ds.path.push(opt.label);ds.node=opt.next||{result:opt.result};renderDecision();}
+function decisionBack(){if(!ds.path.length)return;ds.path.pop();let node=TREE;for(const label of ds.path){const opt=node.options.find(o=>o.label===label);node=opt.next||{result:opt.result};}ds.node=node;renderDecision();}
+
+function renderProtocols(){
+  document.getElementById('protocol-cards').innerHTML=PROTOCOLS.map(p=>`
+    <div class="protocol-card">
+      <div class="protocol-name" style="color:${p.color}">${p.name} <span style="font-family:'Instrument Serif',serif;font-size:14px;color:var(--text2);font-weight:400">— ${p.full}</span></div>
+      <div class="protocol-org">${p.org}</div>
+      <div class="protocol-desc">${p.desc}</div>
+      <div class="protocol-support">${p.supporters.map(s=>`<span class="fw-tag" style="border-color:${p.color}40;color:${p.color};background:${p.color}10;font-size:10px">${s}</span>`).join('')}</div>
+    </div>`).join('');
+  const cols=['MCP','A2A','OpenAPI Tools','Pydantic Output','Multimodal'];
+  const support={'LangGraph':[true,false,true,true,true],'CrewAI':[true,true,true,true,true],'AutoGen':[false,false,false,false,true],'OpenAI Agents SDK':[true,false,true,true,true],'Google ADK':[true,true,true,true,true],'Semantic Kernel':[true,false,true,true,true],'LlamaIndex':[true,false,false,true,true],'Bedrock Agents':[false,false,true,false,true]};
+  const th=`<thead><tr><th>Framework</th>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead>`;
+  const tb='<tbody>'+Object.entries(support).map(([fw,vals])=>{const color=FW.find(f=>fw.startsWith(f.name.split(' ')[0])||f.name.startsWith(fw.split(' ')[0]))?.color||'#888';return `<tr><td style="color:${color}">${fw}</td>${vals.map(v=>`<td>${cc(v)}</td>`).join('')}</tr>`;}).join('')+'</tbody>';
+  document.getElementById('protocol-table').innerHTML=th+tb;
+}
+
+function renderEcosystem(){
+  document.getElementById('eco-grid').innerHTML=ECOSYSTEM.map(cat=>`
+    <div class="eco-category">
+      <div class="eco-cat-title"><div class="eco-cat-dot" style="background:${cat.color};box-shadow:0 0 6px ${cat.color}60"></div>${cat.cat}</div>
+      ${cat.items.map(item=>`<div class="eco-item"><strong>${item.name}</strong> — ${item.detail}</div>`).join('')}
+    </div>`).join('');
+}
+
+function renderCorrections(){
+  const colors={critical:'#f87171',high:'#fb923c',medium:'#facc15',low:'#22d3a0'};
+  document.getElementById('corrections-log').innerHTML=CORRECTIONS.map(c=>`
+    <div style="background:var(--surface);border:1px solid var(--border);border-left:3px solid ${colors[c.severity]||'#888'};border-radius:10px;padding:20px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:10px;padding:2px 8px;border-radius:4px;background:${colors[c.severity]}20;color:${colors[c.severity]};text-transform:uppercase;letter-spacing:0.1em;font-weight:600">${c.severity}</span>
+        <span style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text)">${c.field}</span>
+      </div>
+      <div style="font-size:12px;color:#f87171;margin-bottom:6px"><strong>Before:</strong> ${c.old}</div>
+      <div style="font-size:12px;color:#22d3a0;margin-bottom:8px;line-height:1.6"><strong>Corrected to:</strong> ${c.fixed}</div>
+      <div style="font-size:11px;color:var(--text3)">Source: ${c.source}</div>
+    </div>`).join('');
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+renderOverview();renderCompareTable();renderUseCases();renderDecision();renderProtocols();renderEcosystem();renderCorrections();
+</script>
+</body>
+</html>

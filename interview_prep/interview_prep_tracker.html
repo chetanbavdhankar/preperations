@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Preparation Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .progress-summary {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .progress-card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px 25px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-card h3 {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .progress-card .number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .category {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .category-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .category-progress {
+            font-size: 0.9em;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .subcategory {
+            margin-bottom: 25px;
+        }
+
+        .subcategory-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .subcategory-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #764ba2;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+
+        .topic-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .topic-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .topic-item.completed {
+            background: #e8f5e9;
+            opacity: 0.7;
+        }
+
+        .topic-item.completed .topic-text {
+            text-decoration: line-through;
+            color: #666;
+        }
+
+        .checkbox {
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            margin-right: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox:checked {
+            background: #667eea;
+            border-color: #667eea;
+        }
+
+        .checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .topic-text {
+            flex: 1;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f1f3f5;
+            color: #495057;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .categories {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Interview Preparation Tracker</h1>
+            <div class="progress-summary">
+                <div class="progress-card">
+                    <h3>Total Topics</h3>
+                    <div class="number" id="totalTopics">0</div>
+                </div>
+                <div class="progress-card">
+                    <h3>Completed</h3>
+                    <div class="number" id="completedTopics">0</div>
+                </div>
+                <div class="progress-card">
+                    <h3>Progress</h3>
+                    <div class="number" id="progressPercentage">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="categories" id="categoriesContainer"></div>
+
+            <div class="controls">
+                <button class="btn btn-primary" onclick="saveProgress()">💾 Save Progress</button>
+                <button class="btn btn-secondary" onclick="resetProgress()">🔄 Reset All</button>
+                <button class="btn btn-secondary" onclick="exportProgress()">📥 Export to JSON</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const interviewData = {
+  "Data Science and Machine Learning": {
+    "A. Machine Learning Algorithms": [
+      {
+        "name": "Linear / Logistic Regression — assumptions, regularization (L1, L2)",
+        "completed": false
+      },
+      {
+        "name": "Decision Trees, Random Forest, XGBoost, LightGBM — bias-variance trade-off, feature importance",
+        "completed": false
+      },
+      {
+        "name": "SVM — kernel trick, hyperparameters",
+        "completed": false
+      },
+      {
+        "name": "kNN, Naive Bayes",
+        "completed": false
+      },
+      {
+        "name": "Clustering (K-means, DBSCAN, Hierarchical)",
+        "completed": false
+      },
+      {
+        "name": "PCA, t-SNE, UMAP",
+        "completed": false
+      }
+    ],
+    "B. Model Evaluation & Metrics": [
+      {
+        "name": "Classification metrics (precision, recall, F1, AUC)",
+        "completed": false
+      },
+      {
+        "name": "Regression metrics (RMSE, MAE, R²)",
+        "completed": false
+      },
+      {
+        "name": "Cross-validation, hyperparameter tuning",
+        "completed": false
+      },
+      {
+        "name": "Handling imbalance (SMOTE, class weights)",
+        "completed": false
+      }
+    ],
+    "C. Feature Engineering": [
+      {
+        "name": "Handling missing data, encoding categorical variables",
+        "completed": false
+      },
+      {
+        "name": "Feature scaling (standardization vs normalization)",
+        "completed": false
+      },
+      {
+        "name": "Time-series features (lag, rolling stats)",
+        "completed": false
+      },
+      {
+        "name": "Outlier detection",
+        "completed": false
+      }
+    ],
+    "D. Statistical Foundations": [
+      {
+        "name": "Hypothesis testing, p-values, confidence intervals",
+        "completed": false
+      },
+      {
+        "name": "Probability distributions (Normal, Binomial, Poisson)",
+        "completed": false
+      },
+      {
+        "name": "Bayesian inference basics",
+        "completed": false
+      }
+    ],
+    "E. Deep Learning": [
+      {
+        "name": "CNNs, RNNs, LSTMs, Transformers — key architectures and use cases",
+        "completed": false
+      },
+      {
+        "name": "Activation functions, loss functions",
+        "completed": false
+      },
+      {
+        "name": "Optimization (SGD, Adam)",
+        "completed": false
+      },
+      {
+        "name": "Regularization (dropout, batch norm)",
+        "completed": false
+      },
+      {
+        "name": "Transfer learning",
+        "completed": false
+      },
+      {
+        "name": "Frameworks: TensorFlow, PyTorch",
+        "completed": false
+      }
+    ]
+  },
+  "GenAI and LLM": {
+    "A. Foundation Models": [
+      {
+        "name": "What are LLMs? (architecture, pretraining, fine-tuning)",
+        "completed": false
+      },
+      {
+        "name": "GPT, LLaMA, Falcon, Mistral — differences and use cases",
+        "completed": false
+      },
+      {
+        "name": "Embeddings and vector databases (FAISS, Chroma, Pinecone)",
+        "completed": false
+      },
+      {
+        "name": "Prompt engineering & prompt tuning",
+        "completed": false
+      }
+    ],
+    "B. Fine-tuning Techniques": [
+      {
+        "name": "LoRA / QLoRA",
+        "completed": false
+      },
+      {
+        "name": "Instruction tuning, RLHF (Reinforcement Learning with Human Feedback)",
+        "completed": false
+      }
+    ],
+    "C. Practical Use Cases": [
+      {
+        "name": "Text summarization, classification, chatbots",
+        "completed": false
+      },
+      {
+        "name": "Document Q&A (RAG: Retrieval-Augmented Generation)",
+        "completed": false
+      },
+      {
+        "name": "Multimodal models (image + text)",
+        "completed": false
+      }
+    ],
+    "D. Tools & Frameworks": [
+      {
+        "name": "LangChain, LlamaIndex",
+        "completed": false
+      },
+      {
+        "name": "Hugging Face Transformers",
+        "completed": false
+      },
+      {
+        "name": "OpenAI API, Azure OpenAI, Vertex AI",
+        "completed": false
+      }
+    ]
+  },
+  "Coding": {
+    "A. Core Python Concepts": [
+      {
+        "name": "List/dict comprehensions, zip(), enumerate()",
+        "completed": false
+      },
+      {
+        "name": "map(), filter(), lambda functions",
+        "completed": false
+      },
+      {
+        "name": "File handling (open, reading JSON/CSV)",
+        "completed": false
+      },
+      {
+        "name": "Exception handling (try, except)",
+        "completed": false
+      },
+      {
+        "name": "Writing modular, reusable code (functions, classes)",
+        "completed": false
+      },
+      {
+        "name": "Decorators, generators, iterators — basic understanding",
+        "completed": false
+      }
+    ],
+    "B. Data Manipulation": [
+      {
+        "name": "Reading / writing data (CSV, JSON, Excel)",
+        "completed": false
+      },
+      {
+        "name": "Indexing and slicing DataFrames",
+        "completed": false
+      },
+      {
+        "name": "Filtering rows, selecting columns",
+        "completed": false
+      },
+      {
+        "name": "GroupBy aggregations",
+        "completed": false
+      },
+      {
+        "name": "Merging / joining DataFrames",
+        "completed": false
+      },
+      {
+        "name": "Pivot tables, reshaping (melt, pivot)",
+        "completed": false
+      },
+      {
+        "name": "Handling missing data",
+        "completed": false
+      },
+      {
+        "name": "Vectorized operations with numpy",
+        "completed": false
+      },
+      {
+        "name": "Applying functions across rows (apply, map)",
+        "completed": false
+      }
+    ]
+  }
+};
+
+        // Load saved progress from localStorage
+        function loadProgress() {
+            const saved = localStorage.getItem('interviewProgress');
+            if (saved) {
+                const savedData = JSON.parse(saved);
+                // Merge saved data with current data
+                for (const category in interviewData) {
+                    if (savedData[category]) {
+                        for (const subcategory in interviewData[category]) {
+                            if (savedData[category][subcategory]) {
+                                interviewData[category][subcategory].forEach((topic, index) => {
+                                    if (savedData[category][subcategory][index]) {
+                                        topic.completed = savedData[category][subcategory][index].completed;
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Save progress to localStorage
+        function saveProgress() {
+            localStorage.setItem('interviewProgress', JSON.stringify(interviewData));
+        }
+
+        // Reset all progress
+        function resetProgress() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                for (const category in interviewData) {
+                    for (const subcategory in interviewData[category]) {
+                        interviewData[category][subcategory].forEach(topic => {
+                            topic.completed = false;
+                        });
+                    }
+                }
+                localStorage.removeItem('interviewProgress');
+                renderCategories();
+                updateProgress();
+            }
+        }
+
+        // Export progress to JSON
+        function exportProgress() {
+            const dataStr = JSON.stringify(interviewData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'interview_prep_progress.json';
+            link.click();
+        }
+
+        // Toggle topic completion
+        function toggleTopic(categoryName, subcategoryName, topicIndex) {
+            const topic = interviewData[categoryName][subcategoryName][topicIndex];
+            topic.completed = !topic.completed;
+            updateProgress();
+            saveProgress();
+        }
+
+        // Update progress statistics
+        function updateProgress() {
+            let total = 0;
+            let completed = 0;
+
+            for (const category in interviewData) {
+                for (const subcategory in interviewData[category]) {
+                    interviewData[category][subcategory].forEach(topic => {
+                        total++;
+                        if (topic.completed) completed++;
+                    });
+                }
+            }
+
+            document.getElementById('totalTopics').textContent = total;
+            document.getElementById('completedTopics').textContent = completed;
+            document.getElementById('progressPercentage').textContent = 
+                total > 0 ? Math.round((completed / total) * 100) + '%' : '0%';
+
+            // Update category progress
+            for (const category in interviewData) {
+                let catTotal = 0;
+                let catCompleted = 0;
+                
+                for (const subcategory in interviewData[category]) {
+                    interviewData[category][subcategory].forEach(topic => {
+                        catTotal++;
+                        if (topic.completed) catCompleted++;
+                    });
+                }
+
+                const progressElement = document.getElementById(`progress-${category.replace(/\s+/g, '-')}`);
+                if (progressElement) {
+                    progressElement.textContent = `${catCompleted}/${catTotal}`;
+                }
+            }
+        }
+
+        // Render all categories
+        function renderCategories() {
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = '';
+
+            for (const [categoryName, subcategories] of Object.entries(interviewData)) {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category';
+
+                const categoryId = categoryName.replace(/\s+/g, '-');
+                
+                let categoryHTML = `
+                    <div class="category-header">
+                        <div class="category-title">${categoryName}</div>
+                        <div class="category-progress" id="progress-${categoryId}">0/0</div>
+                    </div>
+                `;
+
+                for (const [subcategoryName, topics] of Object.entries(subcategories)) {
+                    categoryHTML += `
+                        <div class="subcategory">
+                            <div class="subcategory-title">${subcategoryName}</div>
+                    `;
+
+                    topics.forEach((topic, index) => {
+                        const topicId = `${categoryId}-${subcategoryName.replace(/\s+/g, '-')}-${index}`;
+                        categoryHTML += `
+                            <div class="topic-item ${topic.completed ? 'completed' : ''}" 
+                                 onclick="toggleTopicUI('${categoryName}', '${subcategoryName}', ${index})">
+                                <input type="checkbox" 
+                                       class="checkbox" 
+                                       ${topic.completed ? 'checked' : ''}
+                                       onclick="event.stopPropagation(); toggleTopic('${categoryName}', '${subcategoryName}', ${index}); this.parentElement.classList.toggle('completed');">
+                                <div class="topic-text">${topic.name}</div>
+                            </div>
+                        `;
+                    });
+
+                    categoryHTML += `</div>`;
+                }
+
+                categoryDiv.innerHTML = categoryHTML;
+                container.appendChild(categoryDiv);
+            }
+
+            updateProgress();
+        }
+
+        // Toggle topic UI
+        function toggleTopicUI(categoryName, subcategoryName, topicIndex) {
+            toggleTopic(categoryName, subcategoryName, topicIndex);
+            renderCategories();
+        }
+
+        // Initialize on page load
+        loadProgress();
+        renderCategories();
+    </script>
+</body>
+</html>

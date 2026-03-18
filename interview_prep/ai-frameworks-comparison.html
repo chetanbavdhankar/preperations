@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent Frameworks — Complete Guide 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --surface3: #22222f;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8e8f0;
+    --text2: #9090a8;
+    --text3: #5a5a72;
+    --accent: #6c63ff;
+    --accent2: #00d4aa;
+    --accent3: #ff6b6b;
+    --accent4: #ffd166;
+    --ff-display: 'Syne', sans-serif;
+    --ff-body: 'Instrument Sans', sans-serif;
+    --ff-mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--ff-body);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity: 0.4;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    padding: 80px 5vw 60px;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  .header-glow {
+    position: absolute;
+    top: -100px; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 400px;
+    background: radial-gradient(ellipse, rgba(108,99,255,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+  }
+
+  .header-content { position: relative; max-width: 900px; }
+
+  .header-eyebrow {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    color: var(--accent2);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .header-eyebrow::before {
+    content: '';
+    display: block; width: 28px; height: 1px;
+    background: var(--accent2);
+  }
+
+  h1 {
+    font-family: var(--ff-display);
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin-bottom: 20px;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .header-desc {
+    color: var(--text2);
+    font-size: 17px;
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+
+  .header-stats {
+    display: flex; gap: 32px; flex-wrap: wrap;
+  }
+  .stat-item { }
+  .stat-num {
+    font-family: var(--ff-display);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .stat-label {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 5vw;
+    display: flex; gap: 0; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  nav::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 16px 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-tab:hover { color: var(--text2); }
+  .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* ── MAIN ── */
+  main { max-width: 1300px; margin: 0 auto; padding: 0 5vw; }
+
+  /* ── SECTIONS ── */
+  .section { padding: 60px 0; display: none; }
+  .section.active { display: block; }
+
+  .section-header {
+    margin-bottom: 40px;
+  }
+  .section-label {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    color: var(--accent2);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .section-title {
+    font-family: var(--ff-display);
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .section-desc { color: var(--text2); font-size: 15px; max-width: 600px; }
+
+  /* ── FRAMEWORK CARDS ── */
+  .fw-selector {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px;
+  }
+  .fw-chip {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    padding: 7px 16px;
+    border-radius: 99px;
+    border: 1px solid var(--border2);
+    background: var(--surface);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .fw-chip:hover { border-color: var(--accent); color: var(--text); }
+  .fw-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+  .fw-chip .dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  /* ── FW DETAIL ── */
+  .fw-detail { display: none; animation: fadeSlideUp 0.3s ease; }
+  .fw-detail.visible { display: block; }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fw-hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 36px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .fw-hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    opacity: 0.06;
+  }
+
+  .fw-hero-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 20px; flex-wrap: wrap; margin-bottom: 24px;
+  }
+
+  .fw-name-block { }
+  .fw-badge {
+    display: inline-block;
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    letter-spacing: 0.08em;
+  }
+  .fw-hero-name {
+    font-family: var(--ff-display);
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .fw-hero-maker { font-family: var(--ff-mono); font-size: 13px; color: var(--text3); }
+
+  .fw-score-ring {
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .fw-score-ring svg { display: block; }
+  .score-label { font-family: var(--ff-mono); font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
+
+  .fw-tagline {
+    font-size: 17px;
+    color: var(--text2);
+    line-height: 1.6;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .fw-metrics {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px;
+  }
+  .metric-bar { }
+  .metric-top { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .metric-name { font-family: var(--ff-mono); font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
+  .metric-val { font-family: var(--ff-mono); font-size: 12px; font-weight: 500; }
+  .metric-track { height: 4px; background: var(--surface3); border-radius: 2px; overflow: hidden; }
+  .metric-fill { height: 100%; border-radius: 2px; transition: width 0.6s cubic-bezier(0.4,0,0.2,1); }
+
+  /* ── TWO COLUMN GRID ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+  }
+  .info-card-title {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .info-card-title .icon { font-size: 14px; }
+
+  .pro-list, .con-list { list-style: none; }
+  .pro-list li, .con-list li {
+    font-size: 14px; color: var(--text2); padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex; gap: 10px; align-items: flex-start;
+    line-height: 1.5;
+  }
+  .pro-list li:last-child, .con-list li:last-child { border-bottom: none; }
+  .pro-list li::before { content: '+'; color: var(--accent2); font-family: var(--ff-mono); font-weight: 700; flex-shrink: 0; }
+  .con-list li::before { content: '−'; color: var(--accent3); font-family: var(--ff-mono); font-weight: 700; flex-shrink: 0; }
+
+  /* ── PARAMS ── */
+  .params-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .params-grid {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px;
+  }
+  .param-tag {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    color: var(--accent2);
+    background: rgba(0,212,170,0.07);
+    border: 1px solid rgba(0,212,170,0.15);
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: default;
+    transition: all 0.15s;
+  }
+  .param-tag:hover { background: rgba(0,212,170,0.14); }
+
+  /* ── USE CASES ── */
+  .use-cases-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .use-case-list { list-style: none; }
+  .use-case-list li {
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px; color: var(--text2);
+  }
+  .use-case-list li:last-child { border-bottom: none; }
+  .use-case-list li::before { content: '→'; font-family: var(--ff-mono); color: var(--accent); }
+
+  /* ── COMPARISON TABLE ── */
+  .compare-table-wrap { overflow-x: auto; }
+  .compare-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 13px;
+    min-width: 800px;
+  }
+  .compare-table th {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    padding: 14px 16px;
+    text-align: left;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border2);
+    position: sticky; top: 0;
+  }
+  .compare-table th:first-child { border-radius: 12px 0 0 0; }
+  .compare-table th:last-child { border-radius: 0 12px 0 0; }
+  .compare-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+    color: var(--text2);
+    background: var(--surface);
+    transition: background 0.15s;
+  }
+  .compare-table tr:hover td { background: var(--surface2); }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table td:first-child {
+    font-family: var(--ff-display);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .compare-table td:last-child { border-radius: 0; }
+
+  .score-pill {
+    display: inline-block;
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 99px;
+    min-width: 42px;
+    text-align: center;
+  }
+  .score-pill.high { background: rgba(0,212,170,0.12); color: var(--accent2); }
+  .score-pill.mid { background: rgba(255,209,102,0.12); color: var(--accent4); }
+  .score-pill.low { background: rgba(255,107,107,0.12); color: var(--accent3); }
+
+  .tier-badge {
+    font-family: var(--ff-mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── RECOMMENDER ── */
+  .recommender-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .rec-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .rec-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .rec-project {
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+  .rec-fw-name {
+    font-family: var(--ff-display);
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .rec-why { font-size: 13px; color: var(--text2); line-height: 1.5; }
+  .rec-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .rec-tag {
+    font-family: var(--ff-mono);
+    font-size: 10px;
+    color: var(--text3);
+    background: var(--surface2);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+
+  /* ── ECOSYSTEM ── */
+  .eco-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+  .eco-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 22px;
+  }
+  .eco-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+  .eco-name { font-family: var(--ff-display); font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .eco-desc { font-size: 13px; color: var(--text2); line-height: 1.55; }
+
+  /* ── TREND ── */
+  .trend-list { list-style: none; }
+  .trend-item {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+  .trend-item:last-child { border-bottom: none; }
+  .trend-num {
+    font-family: var(--ff-display);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+    padding-top: 3px;
+  }
+  .trend-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+  .trend-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
+
+  /* ── SEARCH ── */
+  .search-row {
+    display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .search-input {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: var(--ff-body);
+    font-size: 14px;
+    padding: 10px 16px;
+    outline: none;
+    width: 280px;
+    transition: border-color 0.2s;
+  }
+  .search-input::placeholder { color: var(--text3); }
+  .search-input:focus { border-color: var(--accent); }
+
+  .filter-select {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    color: var(--text2);
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    padding: 10px 14px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+  }
+
+  /* ── TOOLTIP ── */
+  [data-tip] { position: relative; cursor: help; }
+  [data-tip]:hover::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%; transform: translateX(-50%);
+    background: var(--surface3);
+    color: var(--text);
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    z-index: 200;
+    border: 1px solid var(--border2);
+  }
+
+  .compare-header-name { display: flex; align-items: center; gap: 6px; }
+  .compare-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .fw-intro-text {
+    font-size: 14px;
+    color: var(--text2);
+    line-height: 1.7;
+    margin-bottom: 20px;
+    padding: 18px 22px;
+    background: var(--surface2);
+    border-radius: 12px;
+    border-left: 3px solid;
+  }
+
+  .tag-list { display: flex; gap: 6px; flex-wrap: wrap; }
+  .small-tag {
+    font-family: var(--ff-mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border2);
+    color: var(--text3);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-grid"></div>
+  <div class="header-glow"></div>
+  <div class="header-content">
+    <div class="header-eyebrow">2026 Edition — Complete Reference</div>
+    <h1>AI Agent<br><span>Frameworks</span></h1>
+    <p class="header-desc">A comprehensive comparison of every major framework for building AI agents — from open-source orchestrators to first-party provider SDKs.</p>
+    <div class="header-stats">
+      <div class="stat-item"><div class="stat-num">8</div><div class="stat-label">Frameworks</div></div>
+      <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label">Parameters</div></div>
+      <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">Dimensions</div></div>
+      <div class="stat-item"><div class="stat-num">12</div><div class="stat-label">Use-case guides</div></div>
+    </div>
+  </div>
+</header>
+
+<nav id="main-nav">
+  <button class="nav-tab active" onclick="switchSection('overview')">Overview</button>
+  <button class="nav-tab" onclick="switchSection('deep-dive')">Deep Dive</button>
+  <button class="nav-tab" onclick="switchSection('compare')">Comparison Table</button>
+  <button class="nav-tab" onclick="switchSection('recommender')">Recommender</button>
+  <button class="nav-tab" onclick="switchSection('ecosystem')">Ecosystem</button>
+  <button class="nav-tab" onclick="switchSection('trends')">2026 Trends</button>
+</nav>
+
+<main>
+
+<!-- ═══════════════════════════════════════════════
+     OVERVIEW
+══════════════════════════════════════════════════ -->
+<section class="section active" id="section-overview">
+  <div class="section-header">
+    <div class="section-label">Landscape</div>
+    <h2 class="section-title">All Frameworks at a Glance</h2>
+    <p class="section-desc">Click any card to jump to its full deep dive.</p>
+  </div>
+  <div id="overview-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     DEEP DIVE
+══════════════════════════════════════════════════ -->
+<section class="section" id="section-deep-dive">
+  <div class="section-header">
+    <div class="section-label">Detailed Analysis</div>
+    <h2 class="section-title">Framework Deep Dive</h2>
+    <p class="section-desc">Select a framework below to explore every detail.</p>
+  </div>
+  <div class="fw-selector" id="fw-selector"></div>
+  <div id="fw-detail-container"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     COMPARISON TABLE
+══════════════════════════════════════════════════ -->
+<section class="section" id="section-compare">
+  <div class="section-header">
+    <div class="section-label">Side-by-Side</div>
+    <h2 class="section-title">Comparison Table</h2>
+    <p class="section-desc">All frameworks across every key dimension.</p>
+  </div>
+  <div class="compare-table-wrap">
+    <table class="compare-table" id="compare-table"></table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     RECOMMENDER
+══════════════════════════════════════════════════ -->
+<section class="section" id="section-recommender">
+  <div class="section-header">
+    <div class="section-label">Decision Guide</div>
+    <h2 class="section-title">What Should I Use?</h2>
+    <p class="section-desc">Find the right framework for your specific project type.</p>
+  </div>
+  <div class="search-row">
+    <input class="search-input" id="rec-search" type="text" placeholder="Search project type..." oninput="filterRecs()">
+    <select class="filter-select" id="rec-filter" onchange="filterRecs()">
+      <option value="">All categories</option>
+      <option value="enterprise">Enterprise</option>
+      <option value="prototype">Prototyping</option>
+      <option value="cloud">Cloud Native</option>
+      <option value="data">Data & RAG</option>
+      <option value="multiagent">Multi-agent</option>
+    </select>
+  </div>
+  <div class="recommender-grid" id="rec-grid"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     ECOSYSTEM
+══════════════════════════════════════════════════ -->
+<section class="section" id="section-ecosystem">
+  <div class="section-header">
+    <div class="section-label">Tools & Protocols</div>
+    <h2 class="section-title">Surrounding Ecosystem</h2>
+    <p class="section-desc">Key tools, protocols, and infrastructure that complement these frameworks.</p>
+  </div>
+  <div class="eco-grid" id="eco-grid"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     TRENDS
+══════════════════════════════════════════════════ -->
+<section class="section" id="section-trends">
+  <div class="section-header">
+    <div class="section-label">What's Changing</div>
+    <h2 class="section-title">2026 Trends</h2>
+    <p class="section-desc">The forces reshaping how AI agents are built today.</p>
+  </div>
+  <ul class="trend-list" id="trend-list"></ul>
+</section>
+
+</main>
+
+<script>
+// ──────────────────────────────────────────────
+//  DATA
+// ──────────────────────────────────────────────
+const FRAMEWORKS = [
+  {
+    id: 'langgraph',
+    name: 'LangGraph',
+    maker: 'LangChain',
+    tier: 'Open Source',
+    color: '#6c63ff',
+    badgeBg: 'rgba(108,99,255,0.15)',
+    badgeColor: '#9d97ff',
+    tagline: 'Graph-based stateful orchestration for complex pipelines',
+    intro: 'LangGraph models your agent as a directed graph of nodes and edges, with explicit state that flows between them. It is the most powerful open-source framework for production-grade agents — offering checkpointing, time-travel debugging, and first-class streaming. It requires the most upfront investment but pays off at scale.',
+    pros: [
+      'Fine-grained control over every step of execution',
+      'Built-in state checkpointing — resume after any failure',
+      'Time-travel debugging: rewind and replay any past run',
+      'LangSmith integration provides best-in-class observability',
+      'Handles cycles, conditional branching, parallel node execution',
+      'Model-agnostic — works with any LLM provider',
+      'Human-in-the-loop pause/resume built in',
+      'Huge open-source community and ecosystem',
+    ],
+    cons: [
+      'Steep learning curve — requires state machine knowledge',
+      'Verbose setup code for even simple tasks',
+      'Overkill for linear, single-agent workflows',
+      'Large dependency surface via LangChain',
+      'Debugging graph logic can be non-trivial',
+    ],
+    params: ['StateGraph', 'CompiledGraph', 'nodes', 'edges', 'conditional_edges', 'checkpointer', 'interrupt_before', 'interrupt_after', 'stream_mode', 'recursion_limit', 'input_schema', 'output_schema', 'human-in-the-loop', 'async_mode', 'MemorySaver', 'SqliteSaver'],
+    useCases: [
+      'Complex multi-step enterprise pipelines with branching logic',
+      'Agents that need to pause and wait for human approval',
+      'Long-running background workflows with failure recovery',
+      'Research agents that iterate and refine outputs',
+      'Code generation + testing loops',
+      'Regulatory-auditable AI with full execution trace',
+    ],
+    ratings: { 'Ease of use': 45, 'Production readiness': 95, 'Flexibility': 95, 'Community': 90, 'Observability': 95, 'Speed': 78 },
+    bestFor: 'Production pipelines, complex state machines',
+  },
+  {
+    id: 'crewai',
+    name: 'CrewAI',
+    maker: 'CrewAI Inc.',
+    tier: 'Open Source',
+    color: '#00d4aa',
+    badgeBg: 'rgba(0,212,170,0.12)',
+    badgeColor: '#00d4aa',
+    tagline: 'Role-based multi-agent teams — easiest path to production',
+    intro: 'CrewAI models agents as human-style roles on a team — each agent has a role, goal, and backstory. Tasks are assigned to agents and orchestrated as sequential or hierarchical workflows. It offers the fastest time-to-working-prototype of any framework, making it ideal for business automation and content workflows.',
+    pros: [
+      'Lowest barrier to entry — working agent in under 30 min',
+      'Intuitive role/backstory/goal syntax mirrors real org charts',
+      'Built-in memory (short-term, long-term, entity, knowledge)',
+      'Excellent for non-engineers to understand and modify',
+      'A2A (Agent-to-Agent) protocol support added in 2026',
+      'Flow-based event-driven orchestration available',
+      'Large library of pre-built tools',
+    ],
+    cons: [
+      'Role abstraction restricts novel agent architectures',
+      'Weak support for complex branching and cycles',
+      'Less observability depth than LangGraph',
+      'Outputs can be less deterministic and structured',
+      'Memory system has limitations with very long contexts',
+    ],
+    params: ['Agent(role, goal, backstory)', 'Task(description, expected_output)', 'Crew(agents, tasks)', 'Process(sequential/hierarchical)', 'tools', 'memory', 'verbose', 'max_iter', 'allow_delegation', 'output_pydantic', 'llm', 'step_callback', 'task_callback', 'manager_llm', 'planning', 'knowledge_sources'],
+    useCases: [
+      'Content creation: researcher → writer → editor pipelines',
+      'Market research and competitive analysis automation',
+      'Customer support with specialist sub-agents',
+      'Rapid MVP and proof-of-concept agents',
+      'Business process automation',
+      'Report generation from multiple data sources',
+    ],
+    ratings: { 'Ease of use': 92, 'Production readiness': 72, 'Flexibility': 62, 'Community': 78, 'Observability': 60, 'Speed': 70 },
+    bestFor: 'Fast prototyping, business workflows, non-engineer teams',
+  },
+  {
+    id: 'autogen',
+    name: 'AutoGen / AG2',
+    maker: 'Microsoft Research',
+    tier: 'Open Source',
+    color: '#ff6b6b',
+    badgeBg: 'rgba(255,107,107,0.12)',
+    badgeColor: '#ff8a8a',
+    tagline: 'Conversational multi-agent debates and dialogues',
+    intro: 'AutoGen (rebranded AG2 in the community fork) specializes in agent-to-agent conversation patterns — multiple agents debating, refining, or checking each other\'s work. AutoGen Studio adds a no-code UI for building these workflows visually. Best suited for code generation workflows where agent critiques improve output quality.',
+    pros: [
+      'Best framework for agent-to-agent conversation patterns',
+      'AutoGen Studio: no-code visual workflow builder',
+      'Code generation loops produce higher quality output',
+      'Group chat / debate / consensus-building built in',
+      'Supports .NET and Python',
+      'Strong for mixed human + AI collaboration',
+    ],
+    cons: [
+      'Microsoft has moved focus to broader Agent Framework',
+      'Conversation overhead slows throughput',
+      'Less structured outputs vs LangGraph',
+      'Feature development pace slowed significantly in 2026',
+      'Higher token usage due to verbose agent conversations',
+    ],
+    params: ['AssistantAgent', 'UserProxyAgent', 'ConversableAgent', 'GroupChat', 'GroupChatManager', 'code_execution_config', 'human_input_mode', 'max_consecutive_auto_reply', 'system_message', 'llm_config', 'function_map', 'is_termination_msg', 'max_turns', 'speaker_selection_method'],
+    useCases: [
+      'Automated code writing, testing, and debugging loops',
+      'Multi-expert panel discussions for research',
+      'Quality assurance with critic + reviewer agents',
+      'Complex reasoning that benefits from multiple perspectives',
+      'Automated software engineering workflows',
+    ],
+    ratings: { 'Ease of use': 68, 'Production readiness': 65, 'Flexibility': 75, 'Community': 72, 'Observability': 65, 'Speed': 58 },
+    bestFor: 'Code generation, agent debates, quality review loops',
+  },
+  {
+    id: 'openai',
+    name: 'OpenAI Agents SDK',
+    maker: 'OpenAI',
+    tier: 'First-party SDK',
+    color: '#74b9ff',
+    badgeBg: 'rgba(116,185,255,0.12)',
+    badgeColor: '#74b9ff',
+    tagline: 'Minimal Python SDK with handoffs, guardrails, and tracing',
+    intro: 'OpenAI\'s official agent SDK introduces clean primitives: Agents with instructions and tools, Handoffs for transferring control between agents, and Guardrails for input/output validation. It is purpose-built for the GPT model family and offers the lowest latency on OpenAI infrastructure. Tracing is built in and maps directly to the OpenAI dashboard.',
+    pros: [
+      'Lowest latency and tightest integration with GPT models',
+      'Clean handoff primitives — agents pass control explicitly',
+      'Built-in input/output guardrails with schema validation',
+      'Native Pydantic structured output support',
+      'Built-in tracing maps to the OpenAI dashboard',
+      'Minimal surface area — easy to learn and audit',
+    ],
+    cons: [
+      'Officially supports OpenAI models only',
+      'Limited for complex stateful or cyclic workflows',
+      'Less flexible than LangGraph for advanced patterns',
+      'Provider lock-in risk',
+      'Smaller ecosystem and community vs LangChain',
+    ],
+    params: ['Agent(instructions, model, tools)', 'handoffs', 'Runner.run()', 'Runner.run_streamed()', 'InputGuardrail', 'OutputGuardrail', 'trace()', 'tool_choice', 'parallel_tool_calls', 'context_variables', 'stream=True', 'max_turns', 'hooks', 'RunConfig', 'AgentOutputSchema'],
+    useCases: [
+      'OpenAI-native production deployments',
+      'Customer-facing chat agents with strict output control',
+      'Triage and routing workflows using handoffs',
+      'Any project already heavily invested in OpenAI stack',
+      'Simple to medium complexity agents needing low latency',
+    ],
+    ratings: { 'Ease of use': 85, 'Production readiness': 80, 'Flexibility': 55, 'Community': 82, 'Observability': 78, 'Speed': 90 },
+    bestFor: 'OpenAI-native projects, handoff routing, low-latency chat',
+  },
+  {
+    id: 'google_adk',
+    name: 'Google ADK',
+    maker: 'Google DeepMind',
+    tier: 'First-party SDK',
+    color: '#ffd166',
+    badgeBg: 'rgba(255,209,102,0.12)',
+    badgeColor: '#ffd166',
+    tagline: 'Enterprise multi-agent platform optimised for Gemini + GCP',
+    intro: 'Google\'s Agent Development Kit (ADK) is a fully open-source, model-agnostic framework optimized for Gemini but supporting Claude, Llama, and others via LiteLLM. It has first-class support for the A2A (Agent-to-Agent) protocol and excels at multimodal workflows including real-time audio/video streaming. Vertex AI enables one-click cloud deployment.',
+    pros: [
+      'Model-agnostic via LiteLLM (Gemini, Claude, Llama, etc.)',
+      'Native A2A protocol — industry-standard agent communication',
+      'Multimodal by default: text, audio, video streaming',
+      'Built-in evaluation and testing tooling',
+      'Vertex AI one-click deploy with managed scaling',
+      'Strong callback system for pre/post-processing',
+      'Open source — no vendor lock-in despite Google backing',
+    ],
+    cons: [
+      'Best features tempt Google Cloud lock-in',
+      'Smaller community compared to LangGraph/CrewAI',
+      'More boilerplate than OpenAI SDK for simple tasks',
+      'Documentation still maturing',
+    ],
+    params: ['Agent', 'Runner', 'session_service', 'tools', 'sub_agents', 'instruction', 'model', 'before_model_callback', 'after_model_callback', 'before_tool_callback', 'after_tool_callback', 'LiteLLM connector', 'InMemorySessionService', 'DatabaseSessionService', 'eval_dataset'],
+    useCases: [
+      'Multimodal agents processing audio, video, and text',
+      'GCP-native deployments with Vertex AI',
+      'Enterprise multi-agent hierarchies with A2A communication',
+      'Streaming real-time conversational agents',
+      'Projects requiring rigorous pre-deployment evaluation',
+      'Cross-provider agent systems using multiple LLMs',
+    ],
+    ratings: { 'Ease of use': 65, 'Production readiness': 85, 'Flexibility': 82, 'Community': 55, 'Observability': 80, 'Speed': 80 },
+    bestFor: 'GCP/Gemini projects, multimodal agents, A2A interop',
+  },
+  {
+    id: 'semantic_kernel',
+    name: 'Semantic Kernel',
+    maker: 'Microsoft',
+    tier: 'Enterprise SDK',
+    color: '#fd79a8',
+    badgeBg: 'rgba(253,121,168,0.12)',
+    badgeColor: '#fd79a8',
+    tagline: 'Enterprise SDK for .NET, Python, Java with Plan-then-Execute',
+    intro: 'Semantic Kernel is Microsoft\'s production-grade AI framework targeting enterprise .NET applications. It bridges conventional software engineering with LLM capabilities through a plugin architecture. Its Plan-and-Execute model is well-suited for multi-step enterprise tasks, and Azure AD integration makes it the default choice for regulated industries already on the Microsoft stack.',
+    pros: [
+      'Best-in-class .NET integration for enterprise teams',
+      'Multi-language: C#, Python, and Java all first-class',
+      'Plan-and-Execute pattern with sequential and stepwise planners',
+      'Azure AD security integration out of the box',
+      'Stable and mature — not subject to rapid breaking changes',
+      'Strong memory and vector store abstractions',
+    ],
+    cons: [
+      'Heavyweight for simple or one-off use cases',
+      'Less suited for dynamic real-time agent conversations',
+      'Smaller open-source community vs Python-native frameworks',
+      'Steeper learning curve for non-.NET developers',
+      'Planner quality lags behind pure LLM orchestration',
+    ],
+    params: ['Kernel', 'KernelFunction', 'KernelPlugin', 'SequentialPlanner', 'StepwisePlanner', 'ChatCompletionService', 'PromptExecutionSettings', 'FunctionChoiceBehavior', 'IVectorStore', 'IMemoryStore', 'Filters (IPromptRenderFilter)', 'AzureOpenAIChatCompletion', 'FunctionCallingStepwisePlanner', 'KernelArguments'],
+    useCases: [
+      'Enterprise .NET applications requiring LLM capabilities',
+      'Regulated industries needing Azure compliance toolchain',
+      'Multi-step task automation in existing C# codebases',
+      'Document processing and structured data extraction',
+      'Internal enterprise copilots with Azure AD access control',
+    ],
+    ratings: { 'Ease of use': 55, 'Production readiness': 88, 'Flexibility': 70, 'Community': 62, 'Observability': 75, 'Speed': 72 },
+    bestFor: '.NET enterprise apps, Azure-regulated industries',
+  },
+  {
+    id: 'llamaindex',
+    name: 'LlamaIndex',
+    maker: 'LlamaIndex',
+    tier: 'Open Source',
+    color: '#a29bfe',
+    badgeBg: 'rgba(162,155,254,0.12)',
+    badgeColor: '#a29bfe',
+    tagline: 'Data-centric RAG and retrieval-first agent framework',
+    intro: 'LlamaIndex began as a data framework for RAG (Retrieval-Augmented Generation) and has evolved into a full agent framework. It is uniquely strong at connecting agents to data: 100+ data source connectors, advanced chunking strategies, hybrid retrieval, and structured query engines. It pairs best with other orchestration frameworks as the data/memory layer.',
+    pros: [
+      'Best-in-class RAG pipeline construction',
+      '100+ built-in data source connectors',
+      'Advanced retrieval: hybrid, BM25, MMR, reranking',
+      'Excellent long-term agent memory via vector stores',
+      'Structured query engine for SQL + LLM hybrid queries',
+      'Works as sub-component inside LangGraph or CrewAI',
+    ],
+    cons: [
+      'Not ideal as the primary orchestration layer',
+      'Less agent control flow compared to LangGraph',
+      'Retriever configuration complexity can be high',
+      'Debugging multi-stage pipelines is challenging',
+      'Can add significant latency for complex retrieval chains',
+    ],
+    params: ['VectorStoreIndex', 'SummaryIndex', 'QueryEngine', 'RetrieverQueryEngine', 'ReActAgent', 'FunctionCallingAgent', 'FunctionTool', 'QueryEngineTool', 'ChatMemoryBuffer', 'VectorMemory', 'NodePostprocessor', 'ResponseSynthesizer', 'similarity_top_k', 'rerank_top_n', 'chunk_size'],
+    useCases: [
+      'Knowledge-intensive QA over large document corpora',
+      'Enterprise search combining structured and unstructured data',
+      'Agents that need deep, up-to-date domain knowledge',
+      'Multi-document summarization and synthesis',
+      'SQL + natural language hybrid data queries',
+      'RAG as a sub-component in larger agent pipelines',
+    ],
+    ratings: { 'Ease of use': 65, 'Production readiness': 80, 'Flexibility': 70, 'Community': 78, 'Observability': 65, 'Speed': 68 },
+    bestFor: 'RAG pipelines, knowledge retrieval, data-heavy agents',
+  },
+  {
+    id: 'bedrock',
+    name: 'AWS Bedrock Agents',
+    maker: 'Amazon Web Services',
+    tier: 'Managed Service',
+    color: '#81ecec',
+    badgeBg: 'rgba(129,236,236,0.12)',
+    badgeColor: '#81ecec',
+    tagline: 'Fully managed agents on AWS with built-in compliance guardrails',
+    intro: 'AWS Bedrock Agents is a fully managed serverless agent service — no infrastructure to provision or maintain. Agents are configured through the AWS console or SDK and automatically scale. Built-in guardrails provide toggle-on content filtering, topic blocking, PII redaction, and grounding checks. Ideal for enterprises already on AWS that need regulatory compliance out of the box.',
+    pros: [
+      'Fully managed — zero infrastructure overhead',
+      'Toggle-on compliance guardrails (content, PII, topic filtering)',
+      'Native integration with S3, DynamoDB, Lambda, OpenSearch',
+      'Enterprise security: IAM, VPC, AWS KMS encryption',
+      'Multi-model: Claude, Titan, Llama, Mistral on Bedrock',
+      'Built-in knowledge base with managed RAG',
+    ],
+    cons: [
+      'Locked to the AWS ecosystem and Bedrock model catalog',
+      'Less flexibility than open-source alternatives',
+      'Can be expensive at high scale vs self-hosted',
+      'Customisation limited by the managed abstraction',
+      'Debugging requires CloudWatch expertise',
+    ],
+    params: ['AgentResource', 'ActionGroup', 'KnowledgeBase', 'AliasId', 'SessionState', 'InlineSessionState', 'Guardrail (content/topic/word/grounding filters)', 'PromptOverrideConfiguration', 'MemoryConfiguration', 'InvokeAgent', 'ReturnControlResults', 'PrepareAgent', 'AgentVersion', 'OrchestrationType'],
+    useCases: [
+      'Regulated industries needing compliance-ready agents (HIPAA, SOC2)',
+      'Enterprise teams fully invested in AWS infrastructure',
+      'Customer-facing agents with strict content policies',
+      'Agents needing native access to existing AWS data services',
+      'Production systems where managed scaling is critical',
+    ],
+    ratings: { 'Ease of use': 70, 'Production readiness': 90, 'Flexibility': 48, 'Community': 58, 'Observability': 82, 'Speed': 75 },
+    bestFor: 'AWS-native regulated enterprise deployments',
+  },
+];
+
+const RECS = [
+  { project: 'Complex enterprise pipelines', fw: 'LangGraph', why: 'State machines, checkpointing, full execution observability, and human-in-the-loop support make it the gold standard for production.', tags: ['enterprise', 'production', 'complex'], category: 'enterprise' },
+  { project: 'Rapid prototype / MVP', fw: 'CrewAI', why: 'Lowest setup time — a working multi-agent crew in under an hour. Role-based syntax is readable by non-engineers.', tags: ['fast', 'mvp', 'easy'], category: 'prototype' },
+  { project: 'Content creation workflows', fw: 'CrewAI', why: 'The researcher → writer → editor crew pattern maps directly to CrewAI\'s role model. Delegation handles the handoffs.', tags: ['content', 'writing', 'workflow'], category: 'prototype' },
+  { project: 'Code generation & QA', fw: 'AutoGen', why: 'Multi-agent debates and critic loops produce measurably better code quality than single-agent approaches.', tags: ['coding', 'review', 'quality'], category: 'multiagent' },
+  { project: 'OpenAI-native products', fw: 'OpenAI Agents SDK', why: 'Best latency on GPT models, native handoff primitives, and direct integration with the OpenAI dashboard.', tags: ['openai', 'gpt', 'latency'], category: 'prototype' },
+  { project: 'GCP / Gemini projects', fw: 'Google ADK', why: 'Native Vertex AI deployment, multimodal support, and A2A protocol compatibility are unmatched in the GCP ecosystem.', tags: ['gcp', 'gemini', 'cloud'], category: 'cloud' },
+  { project: '.NET / enterprise apps', fw: 'Semantic Kernel', why: 'First-class C#, Azure AD integration, and Plan-Execute pattern fit perfectly into existing enterprise .NET codebases.', tags: ['dotnet', 'azure', 'enterprise'], category: 'enterprise' },
+  { project: 'RAG & knowledge retrieval', fw: 'LlamaIndex', why: '100+ data connectors, hybrid retrieval strategies, and structured query engines are purpose-built for this.', tags: ['rag', 'retrieval', 'data'], category: 'data' },
+  { project: 'AWS-hosted regulated systems', fw: 'AWS Bedrock Agents', why: 'Fully managed with toggle-on guardrails for HIPAA, SOC2, and content compliance. Zero infra management.', tags: ['aws', 'compliance', 'hipaa'], category: 'cloud' },
+  { project: 'Multimodal (voice/video)', fw: 'Google ADK', why: 'Bidirectional audio/video streaming with Live API support is built in — no other framework comes close.', tags: ['audio', 'video', 'multimodal'], category: 'multiagent' },
+  { project: 'Safety-critical, auditable AI', fw: 'LangGraph + Claude SDK', why: 'LangGraph\'s execution traces combined with Claude\'s Constitutional AI alignment gives the strongest safety guarantees.', tags: ['safety', 'audit', 'compliance'], category: 'enterprise' },
+  { project: 'Cross-framework agent interop', fw: 'Google ADK', why: 'Native A2A + MCP protocol support means agents built with different frameworks can communicate natively.', tags: ['interop', 'a2a', 'mcp'], category: 'multiagent' },
+];
+
+const ECO = [
+  { icon: '🔭', name: 'LangSmith', color: '#6c63ff', bg: 'rgba(108,99,255,0.12)', desc: 'The definitive observability platform for LangChain/LangGraph agents. Traces every node execution, token count, latency, and error. Supports replay and dataset management.' },
+  { icon: '🔌', name: 'MCP (Model Context Protocol)', color: '#00d4aa', bg: 'rgba(0,212,170,0.1)', desc: 'Anthropic-contributed open standard (now Linux Foundation) that defines how agents connect to tools and data sources. Becoming the universal tool plugin API.' },
+  { icon: '🤝', name: 'A2A Protocol', color: '#ffd166', bg: 'rgba(255,209,102,0.1)', desc: 'Google-launched Agent-to-Agent communication standard with 50+ partners. Enables agents built on different frameworks to hand off tasks to each other.' },
+  { icon: '🏃', name: 'E2B Sandboxes', color: '#fd79a8', bg: 'rgba(253,121,168,0.1)', desc: 'Secure cloud code execution sandboxes. Essential for any agent that runs generated code — each execution is isolated, fast to spin up, and killed after use.' },
+  { icon: '📦', name: 'Weaviate / Pinecone', color: '#74b9ff', bg: 'rgba(116,185,255,0.1)', desc: 'Vector databases that power long-term agent memory and RAG. Weaviate is open-source and self-hostable; Pinecone is fully managed with serverless options.' },
+  { icon: '⚡', name: 'Temporal / Inngest', color: '#a29bfe', bg: 'rgba(162,155,254,0.1)', desc: 'Durable workflow engines for production agent runs. Handle retries, timeouts, and failure recovery — often used alongside LangGraph for the execution layer.' },
+  { icon: '📊', name: 'Helicone / Braintrust', color: '#81ecec', bg: 'rgba(129,236,236,0.1)', desc: 'LLM observability and evaluation platforms. Track cost, latency, and quality across all models. Braintrust specialises in automated eval datasets.' },
+  { icon: '🔐', name: 'Portkey / LiteLLM', color: '#ff6b6b', bg: 'rgba(255,107,107,0.1)', desc: 'AI gateway layers providing model routing, rate limiting, cost tracking, and fallback logic. Essential for production multi-model deployments.' },
+  { icon: '🧠', name: 'Mem0 / Zep', color: '#fd79a8', bg: 'rgba(253,121,168,0.1)', desc: 'Dedicated agent memory services. Go beyond simple vector search — provide structured, queryable, temporally-aware memory across long-horizon agent sessions.' },
+];
+
+const TRENDS = [
+  { title: 'MCP & A2A protocol convergence', desc: 'The industry is coalescing around two open standards: MCP for tool integration and A2A for agent-to-agent communication. Frameworks that implement both natively will become the default choice for interoperable enterprise systems in 2026 and beyond.' },
+  { title: 'Agentic RAG replacing naive retrieval', desc: 'Simple vector search is no longer sufficient. Production agents now employ agentic RAG — iteratively refining retrieval queries, generating sub-questions, and synthesizing across multiple sources. LlamaIndex and LangGraph lead this space.' },
+  { title: 'Managed services eating open-source orchestration', desc: 'AWS Bedrock Agents, Google Vertex AI Agent Builder, and Azure AI Agent Service are accelerating. For enterprises, the appeal of zero-ops + compliance-baked-in is winning over the flexibility of open-source frameworks.' },
+  { title: 'Multimodal agents becoming mainstream', desc: 'With GPT-4o, Gemini 2.0, and Claude 3.5\'s vision capabilities stabilizing, the majority of new production agents in 2026 are multimodal. Voice and video agent interfaces are crossing the production threshold.' },
+  { title: 'Long-context models reducing retrieval complexity', desc: 'As context windows grow beyond 1M tokens (Gemini 2.0 Pro), some RAG pipelines are being replaced by direct long-context injection. This shifts architecture decisions and may reduce LlamaIndex\'s importance for certain use cases.' },
+  { title: 'Human-in-the-loop becoming the default pattern', desc: 'Post-deployment experience shows fully autonomous agents fail in unpredictable ways. LangGraph\'s interrupt primitives and the broader shift toward "agentic but supervised" is defining the 2026 production pattern.' },
+  { title: 'Agent evaluation tooling maturing rapidly', desc: 'The gap between building an agent and trusting it in production is being closed by evaluation frameworks (Braintrust, LangSmith datasets, Google ADK eval). Pre-deployment evals are becoming as standard as unit tests.' },
+  { title: 'Cost-aware orchestration emerging', desc: 'As agent runs rack up significant LLM costs, frameworks are adding cost-routing: automatically selecting cheaper models for simple tasks and expensive models only for complex reasoning. LiteLLM and Portkey pioneered this; native framework support is arriving.' },
+];
+
+// ──────────────────────────────────────────────
+//  RENDER OVERVIEW
+// ──────────────────────────────────────────────
+function renderOverview() {
+  const grid = document.getElementById('overview-grid');
+  grid.innerHTML = FRAMEWORKS.map(fw => {
+    const avgRating = Math.round(Object.values(fw.ratings).reduce((a, b) => a + b, 0) / Object.values(fw.ratings).length);
+    return `
+    <div onclick="jumpToFramework('${fw.id}')" style="
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+      position: relative;
+      overflow: hidden;
+    " onmouseover="this.style.borderColor='${fw.color}40';this.style.transform='translateY(-2px)'"
+       onmouseout="this.style.borderColor='var(--border)';this.style.transform='translateY(0)'">
+      <div style="position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:${fw.color};opacity:0.05;pointer-events:none"></div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px">
+        <div>
+          <span style="font-family:var(--ff-mono);font-size:10px;padding:3px 9px;border-radius:4px;background:${fw.badgeBg};color:${fw.badgeColor};letter-spacing:0.06em">${fw.tier}</span>
+          <div style="font-family:var(--ff-display);font-size:22px;font-weight:700;margin-top:8px;letter-spacing:-0.02em">${fw.name}</div>
+          <div style="font-family:var(--ff-mono);font-size:12px;color:var(--text3)">${fw.maker}</div>
+        </div>
+        <div style="text-align:center;flex-shrink:0">
+          <div style="font-family:var(--ff-display);font-size:28px;font-weight:800;color:${fw.color}">${avgRating}</div>
+          <div style="font-family:var(--ff-mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em">avg score</div>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.55;margin-bottom:16px">${fw.tagline}</div>
+      <div style="font-family:var(--ff-mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">Ratings</div>
+      ${Object.entries(fw.ratings).slice(0,4).map(([k,v]) => `
+        <div style="margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="font-size:11px;color:var(--text3)">${k}</span>
+            <span style="font-family:var(--ff-mono);font-size:11px;color:${v>79?'var(--accent2)':v>59?'var(--accent4)':'var(--accent3)'}">${v}</span>
+          </div>
+          <div style="height:3px;background:var(--surface3);border-radius:2px;overflow:hidden">
+            <div style="height:100%;width:${v}%;background:${fw.color};border-radius:2px;opacity:0.7"></div>
+          </div>
+        </div>
+      `).join('')}
+      <div style="margin-top:14px;font-family:var(--ff-mono);font-size:11px;color:${fw.color}">View deep dive →</div>
+    </div>`;
+  }).join('');
+}
+
+// ──────────────────────────────────────────────
+//  RENDER DEEP DIVE SELECTOR
+// ──────────────────────────────────────────────
+function renderSelector() {
+  const sel = document.getElementById('fw-selector');
+  sel.innerHTML = FRAMEWORKS.map(fw => `
+    <button class="fw-chip" id="chip-${fw.id}" onclick="showFW('${fw.id}')">
+      <span class="dot" style="background:${fw.color}"></span>${fw.name}
+    </button>
+  `).join('');
+}
+
+function showFW(id) {
+  document.querySelectorAll('.fw-chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('chip-' + id)?.classList.add('active');
+  document.querySelectorAll('.fw-detail').forEach(d => d.classList.remove('visible'));
+
+  let el = document.getElementById('fw-' + id);
+  if (!el) { el = buildFWDetail(id); }
+  el.classList.add('visible');
+}
+
+function buildFWDetail(id) {
+  const fw = FRAMEWORKS.find(f => f.id === id);
+  const container = document.getElementById('fw-detail-container');
+  const div = document.createElement('div');
+  div.className = 'fw-detail';
+  div.id = 'fw-' + id;
+
+  const ratingsHTML = Object.entries(fw.ratings).map(([k,v]) => `
+    <div class="metric-bar">
+      <div class="metric-top">
+        <span class="metric-name">${k}</span>
+        <span class="metric-val" style="color:${v>79?'var(--accent2)':v>59?'var(--accent4)':'var(--accent3)'}">${v}/100</span>
+      </div>
+      <div class="metric-track">
+        <div class="metric-fill" style="width:${v}%;background:${fw.color}"></div>
+      </div>
+    </div>
+  `).join('');
+
+  div.innerHTML = `
+    <div class="fw-hero" style="border-color:${fw.color}22">
+      <div style="position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;background:${fw.color};opacity:0.04;pointer-events:none"></div>
+      <div class="fw-hero-top">
+        <div class="fw-name-block">
+          <span class="fw-badge" style="background:${fw.badgeBg};color:${fw.badgeColor}">${fw.tier}</span>
+          <div class="fw-hero-name" style="color:${fw.color}">${fw.name}</div>
+          <div class="fw-hero-maker">${fw.maker}</div>
+        </div>
+      </div>
+      <div class="fw-tagline">${fw.tagline}</div>
+      <div class="fw-metrics">${ratingsHTML}</div>
+    </div>
+    <div class="fw-intro-text" style="border-left-color:${fw.color}">${fw.intro}</div>
+    <div class="two-col">
+      <div class="info-card">
+        <div class="info-card-title"><span class="icon">✦</span> Advantages</div>
+        <ul class="pro-list">${fw.pros.map(p=>`<li>${p}</li>`).join('')}</ul>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title"><span class="icon">◆</span> Limitations</div>
+        <ul class="con-list">${fw.cons.map(c=>`<li>${c}</li>`).join('')}</ul>
+      </div>
+    </div>
+    <div class="params-card">
+      <div class="info-card-title"><span class="icon">⟨⟩</span> Key Parameters &amp; Primitives</div>
+      <div class="params-grid">${fw.params.map(p=>`<span class="param-tag">${p}</span>`).join('')}</div>
+    </div>
+    <div class="use-cases-card">
+      <div class="info-card-title"><span class="icon">◎</span> Best Use Cases</div>
+      <ul class="use-case-list">${fw.useCases.map(u=>`<li>${u}</li>`).join('')}</ul>
+    </div>
+  `;
+
+  container.appendChild(div);
+  return div;
+}
+
+function jumpToFramework(id) {
+  switchSection('deep-dive');
+  setTimeout(() => showFW(id), 50);
+}
+
+// ──────────────────────────────────────────────
+//  COMPARISON TABLE
+// ──────────────────────────────────────────────
+function renderCompareTable() {
+  const table = document.getElementById('compare-table');
+  const dims = ['Ease of use', 'Production readiness', 'Flexibility', 'Community', 'Observability', 'Speed'];
+
+  const scoreClass = v => v > 79 ? 'high' : v > 59 ? 'mid' : 'low';
+
+  let html = `<thead><tr>
+    <th>Framework</th>
+    <th>Tier</th>
+    ${dims.map(d => `<th data-tip="${d}">${d.split(' ')[0]}</th>`).join('')}
+    <th>Best for</th>
+  </tr></thead><tbody>`;
+
+  FRAMEWORKS.forEach(fw => {
+    html += `<tr>
+      <td>
+        <div class="compare-header-name">
+          <span class="compare-dot" style="background:${fw.color}"></span>
+          ${fw.name}
+        </div>
+      </td>
+      <td><span class="tier-badge" style="background:${fw.badgeBg};color:${fw.badgeColor}">${fw.tier}</span></td>
+      ${dims.map(d => `<td><span class="score-pill ${scoreClass(fw.ratings[d]||0)}">${fw.ratings[d]||'—'}</span></td>`).join('')}
+      <td style="font-size:12px;color:var(--text3);max-width:180px">${fw.bestFor}</td>
+    </tr>`;
+  });
+
+  html += '</tbody>';
+  table.innerHTML = html;
+}
+
+// ──────────────────────────────────────────────
+//  RECOMMENDER
+// ──────────────────────────────────────────────
+function renderRecs(data) {
+  const grid = document.getElementById('rec-grid');
+  const items = data || RECS;
+  if (items.length === 0) {
+    grid.innerHTML = '<p style="color:var(--text3);font-size:14px;grid-column:1/-1">No matching recommendations.</p>';
+    return;
+  }
+  grid.innerHTML = items.map(r => {
+    const fw = FRAMEWORKS.find(f => f.name === r.fw || f.name.startsWith(r.fw.split('+')[0].trim()));
+    const color = fw ? fw.color : '#888';
+    return `
+    <div class="rec-card" onclick="jumpToFramework('${fw?.id||''}')">
+      <div class="rec-project">${r.project}</div>
+      <div class="rec-fw-name" style="color:${color}">${r.fw}</div>
+      <div class="rec-why">${r.why}</div>
+      <div class="rec-tags">${r.tags.map(t=>`<span class="rec-tag">${t}</span>`).join('')}</div>
+    </div>`;
+  }).join('');
+}
+
+function filterRecs() {
+  const q = document.getElementById('rec-search').value.toLowerCase();
+  const cat = document.getElementById('rec-filter').value;
+  const filtered = RECS.filter(r => {
+    const matchQ = !q || r.project.toLowerCase().includes(q) || r.fw.toLowerCase().includes(q) || r.tags.some(t => t.includes(q));
+    const matchCat = !cat || r.category === cat;
+    return matchQ && matchCat;
+  });
+  renderRecs(filtered);
+}
+
+// ──────────────────────────────────────────────
+//  ECOSYSTEM
+// ──────────────────────────────────────────────
+function renderEco() {
+  const grid = document.getElementById('eco-grid');
+  grid.innerHTML = ECO.map(e => `
+    <div class="eco-card">
+      <div class="eco-icon" style="background:${e.bg}">
+        <span style="font-size:18px">${e.icon}</span>
+      </div>
+      <div class="eco-name" style="color:${e.color}">${e.name}</div>
+      <div class="eco-desc">${e.desc}</div>
+    </div>
+  `).join('');
+}
+
+// ──────────────────────────────────────────────
+//  TRENDS
+// ──────────────────────────────────────────────
+function renderTrends() {
+  const list = document.getElementById('trend-list');
+  list.innerHTML = TRENDS.map((t, i) => `
+    <li class="trend-item">
+      <div class="trend-num">${String(i+1).padStart(2,'0')}</div>
+      <div>
+        <div class="trend-title">${t.title}</div>
+        <div class="trend-desc">${t.desc}</div>
+      </div>
+    </li>
+  `).join('');
+}
+
+// ──────────────────────────────────────────────
+//  NAV
+// ──────────────────────────────────────────────
+function switchSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('section-' + id)?.classList.add('active');
+  const tabs = document.querySelectorAll('.nav-tab');
+  const map = { overview: 0, 'deep-dive': 1, compare: 2, recommender: 3, ecosystem: 4, trends: 5 };
+  tabs[map[id]]?.classList.add('active');
+}
+
+// ──────────────────────────────────────────────
+//  INIT
+// ──────────────────────────────────────────────
+renderOverview();
+renderSelector();
+renderCompareTable();
+renderRecs();
+renderEco();
+renderTrends();
+showFW('langgraph');
+</script>
+</body>
+</html>

@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPAM Senior AI Engineer — Interview Command Center</title>
+<meta name="description" content="Comprehensive interview preparation dashboard for the EPAM Senior AI Engineer role, tailored to Chetan Bavdhankar's profile.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0e1a;--surface:#111827;--surface2:#1e293b;--border:#334155;--accent:#6366f1;--accent2:#818cf8;--accent-glow:rgba(99,102,241,.25);--green:#10b981;--amber:#f59e0b;--red:#ef4444;--cyan:#22d3ee;--text:#f1f5f9;--text2:#94a3b8;--text3:#64748b;--radius:12px;--mono:'JetBrains Mono',monospace;--sans:'Inter',system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6;display:flex;min-height:100vh}
+/* Sidebar */
+.sidebar{width:260px;background:var(--surface);border-right:1px solid var(--border);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;transition:transform .3s}
+.sidebar .logo{padding:24px 20px;font-weight:800;font-size:1.1rem;letter-spacing:-.5px;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sidebar nav a{display:flex;align-items:center;gap:10px;padding:11px 20px;color:var(--text2);text-decoration:none;font-size:.85rem;font-weight:500;border-left:3px solid transparent;transition:all .2s}
+.sidebar nav a:hover,.sidebar nav a.active{color:var(--text);background:var(--accent-glow);border-left-color:var(--accent)}
+.sidebar nav a span.icon{font-size:1.1rem}
+/* Main */
+main{margin-left:260px;flex:1;padding:32px 40px 80px;max-width:1100px}
+.section{margin-bottom:56px;animation:fadeUp .5s ease both}
+.section:nth-child(2){animation-delay:.1s}.section:nth-child(3){animation-delay:.2s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+h1{font-size:2rem;font-weight:800;margin-bottom:6px;background:linear-gradient(135deg,var(--accent),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{color:var(--text3);font-size:.9rem;margin-bottom:32px}
+h2{font-size:1.35rem;font-weight:700;margin-bottom:18px;color:var(--text);display:flex;align-items:center;gap:10px}
+h2 .badge{font-size:.65rem;padding:3px 10px;border-radius:20px;background:var(--accent);color:#fff;font-weight:600;letter-spacing:.5px}
+h3{font-size:1.05rem;font-weight:600;color:var(--accent2);margin:18px 0 10px}
+/* Cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:border-color .2s}
+.card:hover{border-color:var(--accent)}
+.card p,.card li{color:var(--text2);font-size:.88rem}
+.card ul{padding-left:18px;margin-top:8px}
+.card ul li{margin-bottom:6px}
+.card ul li::marker{color:var(--accent)}
+/* Code */
+pre{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:16px;overflow-x:auto;margin:12px 0;font-family:var(--mono);font-size:.8rem;color:#c9d1d9;line-height:1.55}
+code{font-family:var(--mono);font-size:.82rem;color:var(--cyan);background:rgba(34,211,238,.08);padding:1px 5px;border-radius:4px}
+/* Toggle */
+details{margin:10px 0}
+details summary{cursor:pointer;font-weight:600;font-size:.88rem;color:var(--accent2);padding:10px 14px;background:var(--surface2);border-radius:8px;list-style:none;display:flex;align-items:center;gap:8px;transition:background .2s;user-select:none}
+details summary:hover{background:var(--accent-glow)}
+details summary::before{content:'▶';font-size:.65rem;transition:transform .2s;display:inline-block}
+details[open] summary::before{transform:rotate(90deg)}
+details .inner{padding:14px 16px;border-left:2px solid var(--accent);margin:8px 0 8px 6px}
+/* Tags */
+.tag{display:inline-block;font-size:.7rem;padding:2px 9px;border-radius:20px;font-weight:600;margin:2px 4px 2px 0}
+.tag-green{background:rgba(16,185,129,.15);color:var(--green)}
+.tag-amber{background:rgba(245,158,11,.15);color:var(--amber)}
+.tag-red{background:rgba(239,68,68,.15);color:var(--red)}
+.tag-blue{background:rgba(99,102,241,.15);color:var(--accent2)}
+/* Alignment grid */
+.align-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.align-card{background:var(--surface2);border-radius:8px;padding:16px}
+.align-card h4{font-size:.82rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.align-card p{font-size:.85rem;color:var(--text2)}
+/* Complexity badge */
+.complexity{font-family:var(--mono);font-size:.75rem;padding:2px 8px;border-radius:6px;font-weight:700}
+.c-easy{background:rgba(16,185,129,.15);color:var(--green)}
+.c-med{background:rgba(245,158,11,.15);color:var(--amber)}
+.c-hard{background:rgba(239,68,68,.15);color:var(--red)}
+/* Responsive */
+@media(max-width:800px){.sidebar{transform:translateX(-100%)}.sidebar.open{transform:none}main{margin-left:0;padding:20px}.align-grid{grid-template-columns:1fr}.menu-btn{display:flex}}
+.menu-btn{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);cursor:pointer;font-size:1.2rem}
+/* Progress bar */
+.progress-bar{height:3px;background:var(--accent);position:fixed;top:0;left:0;z-index:999;transition:width .15s}
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progress"></div>
+<button class="menu-btn" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+<aside class="sidebar">
+  <div class="logo">⚡ EPAM Prep HQ</div>
+  <nav>
+    <a href="#knowledge" class="active"><span class="icon">🧠</span>Technical Knowledge</a>
+    <a href="#pandas"><span class="icon">🐼</span>Pandas Playground</a>
+    <a href="#coding"><span class="icon">💻</span>Live Coding Sim</a>
+    <a href="#alignment"><span class="icon">🎯</span>CV ↔ Job Alignment</a>
+    <a href="#qa"><span class="icon">❓</span>Q&A Bank (25+)</a>
+    <a href="#star"><span class="icon">⭐</span>STAR Stories</a>
+  </nav>
+</aside>
+
+<main>
+<!-- ==================== HEADER ==================== -->
+<div class="section">
+  <h1>EPAM Senior AI Engineer — Interview Command Center</h1>
+  <p class="subtitle">90-minute technical deep-dive prep · Live coding · Theory · STAR stories &nbsp;|&nbsp; Tailored for <strong>Chetan Bavdhankar</strong></p>
+</div>
+
+<!-- ==================== 1. TECHNICAL KNOWLEDGE ==================== -->
+<div class="section" id="knowledge">
+  <h2><span class="icon">🧠</span> Technical Knowledge Base <span class="badge">SENIOR DEPTH</span></h2>
+
+  <!-- Transformers & Attention -->
+  <div class="card">
+    <h3>1.1 — Transformer Architecture & Attention Mechanisms</h3>
+    <p>The Transformer (Vaswani et al., 2017) replaced recurrence with <strong>self-attention</strong>, enabling O(1) path length between any two tokens.</p>
+    <details><summary>Scaled Dot-Product Attention — Why √d<sub>k</sub>?</summary><div class="inner">
+      <p>Attention(Q,K,V) = softmax(QK<sup>T</sup> / √d<sub>k</sub>) · V</p>
+      <p>Without the scaling factor, dot products grow with dimensionality, pushing softmax into saturation regions where gradients vanish. Scaling by √d<sub>k</sub> keeps variance ≈ 1 regardless of head dimension.</p>
+      <p><strong>Senior insight:</strong> In Flash Attention (Dao et al.), the numerically-stable online softmax avoids materializing the full N×N attention matrix — reducing memory from O(N²) to O(N), enabling 128K+ context windows.</p>
+    </div></details>
+    <details><summary>Multi-Head Attention — What Do Heads Learn?</summary><div class="inner">
+      <p>Each head projects Q, K, V into a lower-dimensional subspace (d<sub>k</sub> = d<sub>model</sub>/h). Empirically, different heads specialize: positional attention, syntactic dependency, rare-token focus.</p>
+      <p><strong>Trade-off:</strong> More heads → richer representation but diminishing returns past ~16 heads for d=1024. Grouped Query Attention (GQA, used in Llama 2/3) shares K,V across head groups, cutting KV-cache by 4-8× with negligible quality loss.</p>
+    </div></details>
+    <details><summary>Positional Encoding — RoPE vs. ALiBi vs. Sinusoidal</summary><div class="inner">
+      <ul>
+        <li><strong>Sinusoidal (original):</strong> Fixed, cannot extrapolate beyond training length.</li>
+        <li><strong>RoPE (Rotary):</strong> Encodes position via rotation matrices in complex space. Naturally supports relative positions. Used in Llama, Mistral, Qwen.</li>
+        <li><strong>ALiBi:</strong> No positional embedding — adds linear bias to attention scores. Zero parameters, excellent extrapolation. Used in BLOOM, MPT.</li>
+      </ul>
+      <p><strong>Senior insight:</strong> RoPE + NTK-aware scaling allows fine-tuned context extension (e.g., 4K → 32K) without retraining from scratch. This is how Code Llama extended context cheaply.</p>
+    </div></details>
+    <details><summary>Decoder-Only vs. Encoder-Decoder — When to Choose What</summary><div class="inner">
+      <ul>
+        <li><strong>Decoder-only (GPT, Llama):</strong> Dominant for generation. Causal mask ensures autoregressive. Simpler to scale (one stack).</li>
+        <li><strong>Encoder-decoder (T5, BART):</strong> Superior for seq2seq tasks (translation, summarization) where full bidirectional context on input is valuable.</li>
+        <li><strong>Encoder-only (BERT):</strong> Bidirectional, best for classification/NER. Cannot generate fluently.</li>
+      </ul>
+      <p><strong>EPAM relevance:</strong> chatbot/Q&A platforms → decoder-only. Document processing pipelines → encoder-decoder may win on extraction quality.</p>
+    </div></details>
+  </div>
+
+  <!-- RAG -->
+  <div class="card">
+    <h3>1.2 — RAG Patterns & Vector Databases</h3>
+    <details><summary>Naïve RAG vs. Advanced RAG vs. Modular RAG</summary><div class="inner">
+      <ul>
+        <li><strong>Naïve RAG:</strong> Embed → Retrieve top-K → Stuff into prompt. Fails on multi-hop questions, irrelevant retrieval, and lost-in-the-middle.</li>
+        <li><strong>Advanced RAG:</strong> Adds query rewriting, HyDE (hypothetical document embeddings), re-ranking (cross-encoder), and chunk metadata filtering.</li>
+        <li><strong>Modular RAG:</strong> Full pipeline with routing (classify query → choose retrieval strategy), iterative retrieval (Self-RAG: retrieve → critique → retrieve again), and tool-augmented retrieval (SQL, API calls, knowledge graphs).</li>
+      </ul>
+      <p><strong>Senior insight:</strong> EPAM expects production RAG. That means: evaluation metrics (context precision, faithfulness via RAGAS), guardrails, latency budgets. Most RAG failures are retrieval failures — invest in chunking strategy + re-ranking before tuning the LLM.</p>
+    </div></details>
+    <details><summary>Vector DB Trade-offs: Qdrant vs. FAISS vs. Chroma vs. Pinecone</summary><div class="inner">
+      <ul>
+        <li><strong>FAISS:</strong> Facebook's library. Blazing fast (IVF-PQ index), but in-memory only, no metadata filtering natively. Best for batch/offline.</li>
+        <li><strong>Qdrant:</strong> Rust-based, production-grade. Supports payload filtering (combine vector + metadata search), scalar/binary quantization. EPAM lists this explicitly.</li>
+        <li><strong>Chroma:</strong> Developer-friendly, embedded-first. Good for prototyping, less battle-tested at scale.</li>
+        <li><strong>Pinecone:</strong> Fully managed SaaS. Zero-ops but vendor lock-in and cost at scale.</li>
+      </ul>
+      <p><strong>Embedding model choice matters more than DB choice.</strong> BGE-M3 (multilingual), text-embedding-3-large (OpenAI), and Cohere embed-v3 each have different dimension/performance trade-offs. Always benchmark on your domain data — general leaderboard rankings mislead.</p>
+    </div></details>
+    <details><summary>Chunking Strategies That Actually Matter</summary><div class="inner">
+      <ul>
+        <li><strong>Fixed-size (e.g., 512 tokens + 50 overlap):</strong> Simple, but splits mid-sentence/concept.</li>
+        <li><strong>Semantic chunking:</strong> Split on embedding similarity breakpoints. Better coherence, but slower.</li>
+        <li><strong>Recursive character splitting:</strong> LangChain default. Hierarchical separators (\n\n → \n → . → " "). Good balance.</li>
+        <li><strong>Document-aware:</strong> Use headers/sections as natural boundaries. Best for structured docs (manuals, legal).</li>
+        <li><strong>Parent-child (small-to-big):</strong> Retrieve on small chunks for precision, return parent chunk for context. Best of both worlds.</li>
+      </ul>
+    </div></details>
+  </div>
+
+  <!-- Fine-tuning vs Prompt Engineering -->
+  <div class="card">
+    <h3>1.3 — Fine-Tuning vs. Prompt Engineering — Decision Framework</h3>
+    <details><summary>When to Fine-Tune vs. When to Prompt</summary><div class="inner">
+      <table style="width:100%;border-collapse:collapse;font-size:.82rem;color:var(--text2)">
+        <tr style="border-bottom:1px solid var(--border)"><th style="text-align:left;padding:8px;color:var(--text)">Factor</th><th style="padding:8px;color:var(--green)">Prompt Engineering</th><th style="padding:8px;color:var(--amber)">Fine-Tuning</th></tr>
+        <tr><td style="padding:8px">Data available</td><td style="padding:8px">&lt;100 examples</td><td style="padding:8px">1,000+ labeled pairs</td></tr>
+        <tr><td style="padding:8px">Output format control</td><td style="padding:8px">JSON mode, few-shot</td><td style="padding:8px">Guaranteed schema adherence</td></tr>
+        <tr><td style="padding:8px">Domain vocabulary</td><td style="padding:8px">Existing in pre-train</td><td style="padding:8px">Novel jargon/language</td></tr>
+        <tr><td style="padding:8px">Latency</td><td style="padding:8px">Higher (long prompts)</td><td style="padding:8px">Lower (smaller model, shorter prompt)</td></tr>
+        <tr><td style="padding:8px">Cost to update</td><td style="padding:8px">Edit prompt text</td><td style="padding:8px">Retrain + evaluate</td></tr>
+        <tr><td style="padding:8px">Risk</td><td style="padding:8px">Prompt injection</td><td style="padding:8px">Catastrophic forgetting</td></tr>
+      </table>
+      <p style="margin-top:12px"><strong>Senior insight:</strong> The industry trend is away from full fine-tuning toward LoRA/QLoRA + RAG. Fine-tune for <em>style/format</em>, RAG for <em>knowledge</em>. EPAM clients typically want fast iteration → prompt engineering first, fine-tune only when measurable quality gap exists.</p>
+    </div></details>
+    <details><summary>LoRA, QLoRA & Adapter Patterns</summary><div class="inner">
+      <p><strong>LoRA</strong> (Low-Rank Adaptation): Freezes base weights, trains low-rank decomposition matrices (A·B) injected into attention layers. Typically rank 8-64. Reduces trainable params by 10,000×.</p>
+      <p><strong>QLoRA:</strong> 4-bit NormalFloat quantized base model + LoRA adapters in BF16. Enables fine-tuning 70B models on a single 48GB GPU.</p>
+      <p><strong>Your talking point:</strong> "I've fine-tuned LLaMA 2 and Mistral locally via Ollama — I understand the full pipeline from data preparation through GGUF quantization to inference optimization."</p>
+    </div></details>
+  </div>
+
+  <!-- Python Senior Concepts -->
+  <div class="card">
+    <h3>1.4 — Python "Senior" Concepts</h3>
+    <details><summary>Decorators — Beyond @staticmethod</summary><div class="inner">
+      <p>Decorators are higher-order functions that wrap callables. Senior-level usage:</p>
+<pre>import functools, time
+
+def retry(max_attempts=3, backoff=2.0):
+    """Exponential-backoff retry decorator with jitter."""
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            for attempt in range(1, max_attempts + 1):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    if attempt == max_attempts:
+                        raise
+                    wait = backoff ** attempt + random.uniform(0, 1)
+                    time.sleep(wait)
+        return wrapper
+    return decorator
+
+@retry(max_attempts=5)
+def call_llm_api(prompt: str) -> str: ...</pre>
+      <p><strong>Key:</strong> Always use <code>functools.wraps</code> to preserve <code>__name__</code>, <code>__doc__</code>, <code>__module__</code>. Without it, debugging and logging break silently.</p>
+    </div></details>
+    <details><summary>Generators & Memory Efficiency</summary><div class="inner">
+<pre>def stream_embeddings(texts: list[str], model, batch_size=32):
+    """Yield embeddings in batches — never loads full corpus into memory."""
+    for i in range(0, len(texts), batch_size):
+        batch = texts[i:i+batch_size]
+        yield model.encode(batch)  # returns ndarray, GC'd after consumer processes</pre>
+      <p><strong>Senior insight:</strong> Generators + <code>itertools.islice</code> are the backbone of memory-efficient data pipelines. In PySpark, the equivalent is lazy evaluation with <code>.transform()</code> chains — same philosophy, distributed.</p>
+    </div></details>
+    <details><summary>AsyncIO for Concurrent LLM Calls</summary><div class="inner">
+<pre>import asyncio, aiohttp
+
+async def fetch_completions(prompts: list[str], sem_limit=10):
+    sem = asyncio.Semaphore(sem_limit)  # rate-limit concurrency
+
+    async def _call(prompt):
+        async with sem:
+            async with aiohttp.ClientSession() as session:
+                async with session.post(URL, json={"prompt": prompt}) as resp:
+                    return await resp.json()
+
+    return await asyncio.gather(*[_call(p) for p in prompts])</pre>
+      <p><strong>Why this matters for EPAM:</strong> Production AI systems batch LLM calls. Asyncio with semaphore-based throttling prevents rate-limit 429s while maximizing throughput. This is how you process 10K documents through an LLM affordably.</p>
+    </div></details>
+    <details><summary>Type Hints, Protocols & Pydantic</summary><div class="inner">
+      <p>Senior Python means <strong>runtime validation</strong>, not just IDE hints:</p>
+<pre>from pydantic import BaseModel, Field, field_validator
+
+class RAGConfig(BaseModel):
+    chunk_size: int = Field(512, ge=64, le=4096)
+    overlap: int = Field(50, ge=0)
+    embedding_model: str = "text-embedding-3-small"
+    top_k: int = Field(5, ge=1, le=50)
+
+    @field_validator("overlap")
+    @classmethod
+    def overlap_lt_chunk(cls, v, info):
+        if v >= info.data.get("chunk_size", 512):
+            raise ValueError("overlap must be < chunk_size")
+        return v</pre>
+      <p><strong>Protocol classes</strong> (structural subtyping) over ABC when you don't control the classes — e.g., wrapping third-party LLM clients behind a common interface without forcing inheritance.</p>
+    </div></details>
+  </div>
+</div>
+
+<!-- ==================== 2. PANDAS PLAYGROUND ==================== -->
+<div class="section" id="pandas">
+  <h2><span class="icon">🐼</span> Pandas Playground <span class="badge">LOGIC & AGGREGATION</span></h2>
+
+  <div class="card">
+    <h3>Challenge 1 — Complex GroupBy with Multiple Aggregations</h3>
+    <p><strong>Problem:</strong> Given a DataFrame of customer transactions with columns <code>[customer_id, date, amount, category, country]</code>, find each customer's top spending category, their total spend, and the percentage each category represents.</p>
+    <details><summary>💡 Hint</summary><div class="inner"><p>Use <code>.groupby().agg()</code> with named aggregations, then <code>.transform()</code> to get group-level totals for percentage calculation.</p></div></details>
+    <details><summary>✅ Solution</summary><div class="inner">
+<pre>import pandas as pd
+
+# Spend per customer per category
+cat_spend = df.groupby(['customer_id', 'category'])['amount'].sum().reset_index()
+
+# Total spend per customer (for percentage)
+cat_spend['total'] = cat_spend.groupby('customer_id')['amount'].transform('sum')
+cat_spend['pct'] = (cat_spend['amount'] / cat_spend['total'] * 100).round(1)
+
+# Top category per customer
+top = cat_spend.loc[cat_spend.groupby('customer_id')['amount'].idxmax()]
+print(top[['customer_id', 'category', 'amount', 'pct']])</pre>
+      <p><span class="tag tag-green">O(n log n)</span> <span class="tag tag-blue">groupby + transform pattern</span></p>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Challenge 2 — Pivot Table with Fill & Margins</h3>
+    <p><strong>Problem:</strong> Create a pivot table showing monthly revenue by product line. Fill missing months with 0, add row/column totals, and highlight the top-performing product each month.</p>
+    <details><summary>💡 Hint</summary><div class="inner"><p>Use <code>pd.pivot_table()</code> with <code>margins=True</code>, fill_value=0, then <code>.idxmax(axis=0)</code> for top product per month.</p></div></details>
+    <details><summary>✅ Solution</summary><div class="inner">
+<pre>df['month'] = df['date'].dt.to_period('M')
+
+pivot = pd.pivot_table(
+    df, values='revenue', index='product_line',
+    columns='month', aggfunc='sum',
+    fill_value=0, margins=True, margins_name='TOTAL'
+)
+
+# Top product per month (exclude TOTAL row)
+data_rows = pivot.drop('TOTAL')
+top_products = data_rows.idxmax(axis=0)
+print(pivot)
+print("\nTop product per month:\n", top_products)</pre>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Challenge 3 — Missing Data: Intelligent Imputation</h3>
+    <p><strong>Problem:</strong> A sensor dataset has ~15% missing values in <code>temperature</code> and <code>humidity</code>. Missing values are not random — sensors fail during extreme weather. Implement a strategy that does NOT use simple <code>fillna(mean)</code>.</p>
+    <details><summary>💡 Hint</summary><div class="inner"><p>Use <code>.interpolate(method='time')</code> for time-indexed data, or <code>.groupby(sensor_id).transform(lambda g: g.fillna(g.rolling(24, min_periods=1).mean()))</code> for sensor-specific rolling imputation.</p></div></details>
+    <details><summary>✅ Solution</summary><div class="inner">
+<pre># Approach: Per-sensor rolling window imputation (captures local trends)
+for col in ['temperature', 'humidity']:
+    df[col] = df.groupby('sensor_id')[col].transform(
+        lambda s: s.fillna(s.rolling(window=24, min_periods=1, center=True).mean())
+    )
+
+# Fallback: any remaining NaNs → forward fill within group
+df[['temperature','humidity']] = df.groupby('sensor_id')[['temperature','humidity']].ffill()
+
+# Validate
+assert df[['temperature','humidity']].isna().sum().sum() == 0</pre>
+      <p><strong>Why not mean imputation?</strong> MNAR (Missing Not At Random) data biases the mean. Rolling window preserves temporal locality. This is the kind of nuance EPAM expects at L5+.</p>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Challenge 4 — Time-Series: Rolling Features + Resampling</h3>
+    <p><strong>Problem:</strong> Given 1-minute tick data for stock prices, calculate 5-minute OHLCV candles, a 20-period SMA, and Bollinger Bands (±2σ).</p>
+    <details><summary>💡 Hint</summary><div class="inner"><p>Use <code>.resample('5min').agg({'open':'first','high':'max','low':'min','close':'last','volume':'sum'})</code>, then <code>.rolling(20)</code>.</p></div></details>
+    <details><summary>✅ Solution</summary><div class="inner">
+<pre># Resample to 5-min OHLCV
+ohlcv = df.resample('5min').agg({
+    'price': ['first', 'max', 'min', 'last'],
+    'volume': 'sum'
+})
+ohlcv.columns = ['open', 'high', 'low', 'close', 'volume']
+
+# Bollinger Bands
+ohlcv['sma_20'] = ohlcv['close'].rolling(20).mean()
+ohlcv['std_20'] = ohlcv['close'].rolling(20).std()
+ohlcv['upper_band'] = ohlcv['sma_20'] + 2 * ohlcv['std_20']
+ohlcv['lower_band'] = ohlcv['sma_20'] - 2 * ohlcv['std_20']</pre>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Challenge 5 — Window Functions: Rank & Cumulative</h3>
+    <p><strong>Problem:</strong> For each department, rank employees by salary, compute cumulative salary percentage, and flag anyone in the top 10% of their department.</p>
+    <details><summary>✅ Solution</summary><div class="inner">
+<pre>df['dept_rank'] = df.groupby('department')['salary'].rank(ascending=False, method='dense').astype(int)
+df['dept_total'] = df.groupby('department')['salary'].transform('sum')
+df['cum_pct'] = df.sort_values('salary', ascending=False).groupby('department')['salary'].cumsum() / df['dept_total']
+df['top_10pct'] = df['dept_rank'] <= df.groupby('department')['salary'].transform(lambda x: max(1, int(len(x)*0.1)))</pre>
+    </div></details>
+  </div>
+</div>
+
+<!-- ==================== 3. LIVE CODING SIMULATOR ==================== -->
+<div class="section" id="coding">
+  <h2><span class="icon">💻</span> Live Coding Simulator <span class="badge">EPAM FOCUS</span></h2>
+
+  <div class="card">
+    <h3>Problem 1 — Build a Minimal RAG Pipeline <span class="complexity c-med">Medium</span></h3>
+    <p><strong>Task:</strong> Implement a function that takes a list of documents, builds a FAISS index, and answers a query using the top-K retrieved chunks + an LLM call.</p>
+    <p><span class="tag tag-blue">Time: O(n·d) build, O(log n) query</span> <span class="tag tag-green">Space: O(n·d)</span></p>
+    <details><summary>✅ Solution</summary><div class="inner">
+<pre>import faiss, numpy as np
+from sentence_transformers import SentenceTransformer
+
+class MiniRAG:
+    def __init__(self, docs: list[str], model_name="all-MiniLM-L6-v2"):
+        self.docs = docs
+        self.model = SentenceTransformer(model_name)
+        embeddings = self.model.encode(docs, normalize_embeddings=True)
+        self.index = faiss.IndexFlatIP(embeddings.shape[1])  # cosine via normalized IP
+        self.index.add(embeddings.astype('float32'))
+
+    def query(self, q: str, top_k=3) -> list[str]:
+        q_emb = self.model.encode([q], normalize_embeddings=True).astype('float32')
+        scores, indices = self.index.search(q_emb, top_k)
+        return [self.docs[i] for i in indices[0] if i < len(self.docs)]
+
+# Usage: context = rag.query("What is attention?")
+# Then: llm_call(f"Context: {context}\n\nQuestion: {q}")</pre>
+      <p><strong>Interviewer follow-up:</strong> "How would you handle updates?" → Use IndexIVFFlat with nprobe tuning, or switch to Qdrant for CRUD operations.</p>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Problem 2 — Async LLM Batch Processor with Rate Limiting <span class="complexity c-med">Medium</span></h3>
+    <p><strong>Task:</strong> Process 1,000 prompts through an LLM API with max 20 concurrent requests, exponential backoff on 429s, and result collection.</p>
+    <p><span class="tag tag-blue">Time: O(n/concurrency)</span> <span class="tag tag-green">Space: O(n)</span></p>
+    <details><summary>✅ Solution</summary><div class="inner">
+<pre>import asyncio, aiohttp, random
+
+async def process_batch(prompts, api_url, api_key, max_concurrent=20):
+    sem = asyncio.Semaphore(max_concurrent)
+    results = [None] * len(prompts)
+
+    async def _call(idx, prompt):
+        async with sem:
+            for attempt in range(5):
+                try:
+                    async with aiohttp.ClientSession() as s:
+                        async with s.post(api_url, json={"prompt": prompt},
+                            headers={"Authorization": f"Bearer {api_key}"}
+                        ) as r:
+                            if r.status == 429:
+                                wait = (2 ** attempt) + random.uniform(0, 1)
+                                await asyncio.sleep(wait)
+                                continue
+                            r.raise_for_status()
+                            results[idx] = await r.json()
+                            return
+                except aiohttp.ClientError:
+                    if attempt == 4: results[idx] = {"error": str(prompt[:50])}
+
+    await asyncio.gather(*[_call(i, p) for i, p in enumerate(prompts)])
+    return results</pre>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Problem 3 — Design a Prompt Router <span class="complexity c-hard">Hard</span></h3>
+    <p><strong>Task:</strong> Build a classifier that routes incoming queries to the cheapest capable model: GPT-4o for complex reasoning, GPT-4o-mini for simple Q&A, Claude for creative writing.</p>
+    <p><span class="tag tag-blue">Time: O(1) per query</span> <span class="tag tag-green">Space: O(1)</span></p>
+    <details><summary>✅ Solution</summary><div class="inner">
+<pre>from enum import Enum
+from pydantic import BaseModel
+
+class ModelTier(str, Enum):
+    MINI = "gpt-4o-mini"       # ~$0.15/1M tokens
+    FULL = "gpt-4o"            # ~$2.50/1M tokens
+    CREATIVE = "claude-sonnet" # best for nuanced writing
+
+class RouteDecision(BaseModel):
+    model: ModelTier
+    reason: str
+
+ROUTER_PROMPT = """Classify this query into one category:
+- SIMPLE: factual lookup, short answer, translation
+- COMPLEX: multi-step reasoning, code generation, analysis
+- CREATIVE: writing, brainstorming, storytelling
+
+Query: {query}
+Respond with just the category name."""
+
+async def route_query(query: str, router_llm) -> ModelTier:
+    # Use the cheapest model to classify
+    category = await router_llm.complete(
+        ROUTER_PROMPT.format(query=query), model="gpt-4o-mini"
+    )
+    mapping = {"SIMPLE": ModelTier.MINI, "COMPLEX": ModelTier.FULL,
+               "CREATIVE": ModelTier.CREATIVE}
+    return mapping.get(category.strip().upper(), ModelTier.FULL)</pre>
+      <p><strong>Cost insight:</strong> This meta-routing pattern can cut LLM costs by 60-80% in production. The classification call costs fractions of a cent.</p>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Problem 4 — Implement a Streaming Response Handler <span class="complexity c-med">Medium</span></h3>
+    <p><strong>Task:</strong> Build a FastAPI endpoint that streams LLM responses to the client using Server-Sent Events (SSE).</p>
+    <details><summary>✅ Solution</summary><div class="inner">
+<pre>from fastapi import FastAPI
+from fastapi.responses import StreamingResponse
+import openai, json
+
+app = FastAPI()
+
+async def generate_stream(prompt: str):
+    client = openai.AsyncOpenAI()
+    stream = await client.chat.completions.create(
+        model="gpt-4o", stream=True,
+        messages=[{"role": "user", "content": prompt}]
+    )
+    async for chunk in stream:
+        delta = chunk.choices[0].delta.content
+        if delta:
+            yield f"data: {json.dumps({'text': delta})}\n\n"
+    yield "data: [DONE]\n\n"
+
+@app.post("/chat/stream")
+async def chat_stream(prompt: str):
+    return StreamingResponse(
+        generate_stream(prompt),
+        media_type="text/event-stream"
+    )</pre>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Problem 5 — LLM Output Evaluator (RAGAS-style) <span class="complexity c-hard">Hard</span></h3>
+    <p><strong>Task:</strong> Implement a faithfulness scorer: given a context and an LLM answer, determine what fraction of answer claims are supported by the context.</p>
+    <details><summary>✅ Solution</summary><div class="inner">
+<pre>DECOMPOSE_PROMPT = """Break this answer into atomic factual claims (one per line):
+Answer: {answer}"""
+
+VERIFY_PROMPT = """Given this context, is the following claim supported?
+Context: {context}
+Claim: {claim}
+Reply ONLY 'supported' or 'unsupported'."""
+
+async def faithfulness_score(context: str, answer: str, llm) -> float:
+    # Step 1: decompose answer into claims
+    claims_raw = await llm.complete(DECOMPOSE_PROMPT.format(answer=answer))
+    claims = [c.strip() for c in claims_raw.strip().split('\n') if c.strip()]
+
+    if not claims:
+        return 1.0  # no claims = vacuously faithful
+
+    # Step 2: verify each claim against context
+    verdicts = await asyncio.gather(*[
+        llm.complete(VERIFY_PROMPT.format(context=context, claim=c))
+        for c in claims
+    ])
+
+    supported = sum(1 for v in verdicts if 'supported' in v.lower())
+    return supported / len(claims)  # 0.0 to 1.0</pre>
+      <p><strong>EPAM relevance:</strong> The JD explicitly mentions "evaluate generative AI quality using metrics such as retrieval and classification scores, as well as LLM-based evaluation methods." This is exactly that.</p>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Problem 6 — LangGraph Agent with Tool Calling <span class="complexity c-hard">Hard</span></h3>
+    <p><strong>Task:</strong> Implement a ReAct-style agent using LangGraph that can call a calculator tool and a web search tool, with proper state management.</p>
+    <details><summary>✅ Solution</summary><div class="inner">
+<pre>from langgraph.graph import StateGraph, START, END
+from langgraph.prebuilt import ToolNode
+from langchain_core.tools import tool
+from typing import TypedDict, Annotated
+import operator
+
+class AgentState(TypedDict):
+    messages: Annotated[list, operator.add]
+
+@tool
+def calculator(expression: str) -> str:
+    """Evaluate a math expression safely."""
+    allowed = set("0123456789+-*/.()")
+    if set(expression) - allowed:
+        return "Invalid expression"
+    return str(eval(expression))  # safe: charset-validated
+
+@tool
+def web_search(query: str) -> str:
+    """Search the web for current information."""
+    # In production: Tavily, SerpAPI, etc.
+    return f"Search results for: {query}"
+
+tools = [calculator, web_search]
+
+def should_continue(state):
+    last = state["messages"][-1]
+    return "tools" if last.tool_calls else END
+
+def agent_node(state):
+    response = llm_with_tools.invoke(state["messages"])
+    return {"messages": [response]}
+
+graph = StateGraph(AgentState)
+graph.add_node("agent", agent_node)
+graph.add_node("tools", ToolNode(tools))
+graph.add_edge(START, "agent")
+graph.add_conditional_edges("agent", should_continue, {"tools": "tools", END: END})
+graph.add_edge("tools", "agent")
+app = graph.compile()</pre>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Problem 7 — Data Pipeline: Parquet Partitioning <span class="complexity c-easy">Easy-Med</span></h3>
+    <p><strong>Task:</strong> Write a function that reads a large CSV, partitions it by date and country, and writes optimized Parquet files with snappy compression.</p>
+    <details><summary>✅ Solution</summary><div class="inner">
+<pre>import pandas as pd
+import pyarrow as pa, pyarrow.parquet as pq
+from pathlib import Path
+
+def csv_to_partitioned_parquet(csv_path: str, out_dir: str):
+    df = pd.read_csv(csv_path, parse_dates=['date'])
+    df['year_month'] = df['date'].dt.to_period('M').astype(str)
+
+    table = pa.Table.from_pandas(df)
+    pq.write_to_dataset(
+        table, root_path=out_dir,
+        partition_cols=['country', 'year_month'],
+        compression='snappy',
+        use_legacy_dataset=False
+    )
+    # Result: out_dir/country=US/year_month=2025-01/part-0.parquet
+    return Path(out_dir)</pre>
+      <p><strong>Your talking point:</strong> "At ING, I built cross-lake pipelines reading Parquet, Iceberg, and JSON — this is my daily bread."</p>
+    </div></details>
+  </div>
+</div>
+
+<!-- ==================== 4. CV ↔ JOB ALIGNMENT ==================== -->
+<div class="section" id="alignment">
+  <h2><span class="icon">🎯</span> Candidate-to-Job Alignment <span class="badge">STRATEGIC FIT</span></h2>
+
+  <div class="align-grid">
+    <div class="align-card">
+      <h4>🏢 EPAM Requires</h4>
+      <p>Design, implement, and maintain end-to-end AI applications including chatbots, Q&A platforms, and agent workflows</p>
+    </div>
+    <div class="align-card">
+      <h4>✅ Chetan Delivers</h4>
+      <p>Built Agentic RAG chatbot (vector DB, multi-turn, STT/TTS, public UI), AEGIS emergency system (Telegram + Mistral LLM + dashboard), ArxivGnosis (LangChain research agent)</p>
+    </div>
+
+    <div class="align-card">
+      <h4>🏢 EPAM Requires</h4>
+      <p>Familiarity with major LLM platforms (OpenAI, Anthropic, Bedrock, Gemini) and frameworks (LangGraph, LlamaIndex)</p>
+    </div>
+    <div class="align-card">
+      <h4>✅ Chetan Delivers</h4>
+      <p>Provider-agnostic routing across OpenAI, Anthropic, Google Gemini, Groq, xAI. Expert in LangChain & LangGraph. Built 5-agent LangGraph video pipeline</p>
+    </div>
+
+    <div class="align-card">
+      <h4>🏢 EPAM Requires</h4>
+      <p>Knowledge of RAG, Agents, Vector DBs (Qdrant, FAISS, Chroma)</p>
+    </div>
+    <div class="align-card">
+      <h4>✅ Chetan Delivers</h4>
+      <p>Production Agentic RAG with vector DB memory and context handling. Fine-tuned LLaMA 2 & Mistral via Ollama for low-latency local inference</p>
+    </div>
+
+    <div class="align-card">
+      <h4>🏢 EPAM Requires</h4>
+      <p>Strong Python, FastAPI, data pipelines, ML experience</p>
+    </div>
+    <div class="align-card">
+      <h4>✅ Chetan Delivers</h4>
+      <p>Expert Python (PySpark, Pandas, NumPy). Built pipelines in Parquet, Iceberg, JSON. Applied SVM, DBSCAN, RF, K-Means in production at ING</p>
+    </div>
+
+    <div class="align-card">
+      <h4>🏢 EPAM Requires</h4>
+      <p>Rapid UI prototyping (Streamlit, Gradio)</p>
+    </div>
+    <div class="align-card">
+      <h4>✅ Chetan Delivers</h4>
+      <p>Public Streamlit chatbot UI deployed. Also builds full web UIs (Hodophile in Vanilla JS) and Android apps (Jetpack Compose)</p>
+    </div>
+
+    <div class="align-card">
+      <h4>🏢 EPAM Requires</h4>
+      <p>Cloud experience (AWS, GCP, Azure)</p>
+    </div>
+    <div class="align-card">
+      <h4>✅ Chetan Delivers</h4>
+      <p>Infrastructure-aware across AWS & GCP. Deploy-ready but not infrastructure-obsessed — focuses on application layer where AI value lives</p>
+    </div>
+
+    <div class="align-card">
+      <h4>🏢 EPAM Requires</h4>
+      <p>Evaluate AI quality using retrieval scores, classification metrics, LLM-based evaluation</p>
+    </div>
+    <div class="align-card">
+      <h4>✅ Chetan Delivers</h4>
+      <p>Applied ML evaluation in production: SVM accuracy, DBSCAN cluster validation, silhouette analysis for K-Means segmentation on 100K+ records at ING</p>
+    </div>
+
+    <div class="align-card">
+      <h4>🏢 EPAM Requires</h4>
+      <p>Excellent communication — convey complex concepts to non-technical audiences</p>
+    </div>
+    <div class="align-card">
+      <h4>✅ Chetan Delivers</h4>
+      <p>Presents quarterly analytics reports to compliance stakeholders across 35+ international entities. Co-owns BackTesting codebase with full stakeholder management</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 5. Q&A BANK ==================== -->
+<div class="section" id="qa">
+  <h2><span class="icon">❓</span> Technical Q&A Bank <span class="badge">25+ QUESTIONS</span></h2>
+
+  <div class="card">
+    <h3>🟢 Foundational (Warm-up)</h3>
+
+    <details><summary>Q1: What is the difference between an embedding and a one-hot encoding?</summary><div class="inner">
+      <p>One-hot is sparse, high-dimensional, and captures no semantic similarity (orthogonal vectors). Embeddings are dense, learned representations where cosine similarity encodes semantic relationships. For a 50K token vocab, one-hot = 50K dims; embedding = 768-3072 dims. The embedding space is trained to cluster semantically similar tokens/sentences.</p>
+    </div></details>
+
+    <details><summary>Q2: Explain the difference between cosine similarity and dot product for retrieval.</summary><div class="inner">
+      <p>Cosine similarity normalizes by vector magnitude — it measures angle only. Dot product includes magnitude, so longer vectors score higher. For retrieval: if embeddings are L2-normalized, they're mathematically identical (cos_sim = dot_product). In practice, normalize embeddings and use inner product — it's faster (FAISS IndexFlatIP) and equivalent.</p>
+    </div></details>
+
+    <details><summary>Q3: What is temperature in LLM sampling? What happens at T=0 vs T=2?</summary><div class="inner">
+      <p>Temperature scales logits before softmax: softmax(logits/T). At T→0: argmax (greedy, deterministic). At T=1: standard distribution. At T=2: flattened distribution, more random/creative. For production Q&A systems, T=0-0.3. For creative tasks, T=0.7-1.0. T>1.5 usually degrades coherence.</p>
+    </div></details>
+
+    <details><summary>Q4: What is the context window and why does it matter for cost?</summary><div class="inner">
+      <p>Context window = max tokens (input + output) per call. Cost is proportional to token count. A 128K context GPT-4o call with 100K input tokens costs ~$0.25 just for input. Self-attention is O(n²) in memory — even with Flash Attention's IO optimization, long contexts are expensive. Design principle: minimize context via RAG instead of stuffing everything.</p>
+    </div></details>
+
+    <h3>🟡 Intermediate</h3>
+
+    <details><summary>Q5: How does RAG reduce hallucination? What are its failure modes?</summary><div class="inner">
+      <p>RAG grounds LLM responses in retrieved evidence, reducing fabrication. But failure modes include: (1) <strong>Retrieval failure:</strong> wrong chunks retrieved → LLM confidently cites irrelevant info. (2) <strong>Lost in the middle:</strong> LLM ignores information in the middle of long contexts. (3) <strong>Conflicting sources:</strong> retrieved chunks contradict each other. (4) <strong>Over-reliance:</strong> LLM parrots context even when its parametric knowledge is more accurate. Mitigations: re-ranking, source-conflict detection, faithfulness scoring.</p>
+    </div></details>
+
+    <details><summary>Q6: Compare LangChain vs. LlamaIndex vs. LangGraph for building agents.</summary><div class="inner">
+      <p><strong>LangChain:</strong> General-purpose orchestration. Good for chains and simple agents. Can become "spaghetti" at scale. <strong>LlamaIndex:</strong> Data-framework-first. Best for RAG pipelines with complex data connectors. Less flexible for non-retrieval agents. <strong>LangGraph:</strong> State-machine-based agent framework. Explicit graph topology, persistent state, human-in-the-loop. Best for production multi-step agents. EPAM will likely prefer LangGraph for its explicit control flow and debuggability.</p>
+    </div></details>
+
+    <details><summary>Q7: Explain the CAP theorem for vector databases.</summary><div class="inner">
+      <p>Like any distributed system, vector DBs face Consistency-Availability-Partition trade-offs. Qdrant (CP): strongly consistent, may sacrifice availability during network partition. Pinecone (AP): eventually consistent reads, always available. FAISS: single-node, no distribution → CAP doesn't apply. For RAG in production: eventual consistency is usually acceptable — a slightly stale index won't cause errors, just marginally less relevant retrieval.</p>
+    </div></details>
+
+    <details><summary>Q8: What is prompt injection and how do you prevent it?</summary><div class="inner">
+      <p>Prompt injection: user input manipulates the system prompt (e.g., "Ignore previous instructions…"). Defenses: (1) Input sanitization + blocklist. (2) Delimiter-based isolation: wrap user input in XML/markdown tags. (3) Dual-LLM architecture: one LLM classifies intent, another generates response. (4) Output validation: check response against expected schema. (5) Constitutional AI approaches: train models to refuse harmful instructions. No single defense is sufficient — layer them.</p>
+    </div></details>
+
+    <details><summary>Q9: How would you evaluate a chatbot's quality in production?</summary><div class="inner">
+      <p>Multi-dimensional: (1) <strong>Automated:</strong> RAGAS metrics (faithfulness, answer relevancy, context precision/recall), latency p50/p95/p99, cost per query. (2) <strong>Human:</strong> Likert-scale user ratings, CSAT, thumbs up/down. (3) <strong>Behavioral:</strong> conversation completion rate, escalation rate, repeat-question rate. (4) <strong>Safety:</strong> toxicity detection, PII leakage monitoring. Build a dashboard tracking all four categories. Alert on regression.</p>
+    </div></details>
+
+    <details><summary>Q10: What is the difference between HNSW and IVF indexes in vector search?</summary><div class="inner">
+      <p><strong>HNSW (Hierarchical Navigable Small World):</strong> Graph-based. O(log n) query, high recall (~99%+), but memory-hungry (stores full vectors + graph edges). Best for datasets <10M. <strong>IVF (Inverted File Index):</strong> Clustering-based. Partitions space into Voronoi cells, searches only nearby cells (nprobe parameter). Lower memory with PQ (Product Quantization) compression. Better for 10M+ vectors. Trade-off: HNSW = higher recall, IVF-PQ = lower memory.</p>
+    </div></details>
+
+    <h3>🔴 Senior-Level Deep Dives</h3>
+
+    <details><summary>Q11: You're deploying a RAG system for a bank. Walk me through security considerations.</summary><div class="inner">
+      <p>(1) <strong>Data isolation:</strong> Multi-tenant vector stores — row-level security or separate collections per tenant. (2) <strong>PII in embeddings:</strong> Embeddings can leak training data via inversion attacks. Use privacy-preserving embeddings or redact PII before embedding. (3) <strong>Prompt injection → data exfiltration:</strong> Attacker crafts queries that extract other users' data from context. Defense: strict metadata filtering + output scanning. (4) <strong>Audit trail:</strong> Log every retrieval + generation for regulatory compliance. (5) <strong>Model hosting:</strong> On-prem or VPC-deployed models for sensitive data — no external API calls. (6) <strong>Output guardrails:</strong> NeMo Guardrails or custom validators to block financial advice, PII in responses.</p>
+    </div></details>
+
+    <details><summary>Q12: How do you handle model drift in a production LLM application?</summary><div class="inner">
+      <p>LLMs themselves don't drift (weights are frozen), but the ecosystem drifts: (1) <strong>API model updates:</strong> OpenAI silently updates models. Pin model versions (e.g., gpt-4o-2024-08-06). (2) <strong>Data drift:</strong> User queries evolve. Monitor embedding distribution shifts with statistical tests (KS-test on embedding dimensions). (3) <strong>Quality drift:</strong> Run automated eval suites (golden datasets) on a schedule. Alert when faithfulness/relevancy drops below threshold. (4) <strong>Retrieval drift:</strong> Knowledge base grows stale. Implement freshness scoring in retrieval ranking.</p>
+    </div></details>
+
+    <details><summary>Q13: Design a multi-agent system for automated code review. What's your architecture?</summary><div class="inner">
+      <p>LangGraph state machine with specialized agents: (1) <strong>Planner:</strong> Parses diff, identifies changed files, routes to specialists. (2) <strong>Security Agent:</strong> Scans for vulnerabilities (SQL injection, hardcoded secrets, eval). (3) <strong>Style Agent:</strong> Checks PEP 8, naming conventions, docstrings. (4) <strong>Logic Agent:</strong> Analyzes algorithmic correctness, edge cases, complexity. (5) <strong>Synthesizer:</strong> Aggregates findings, deduplicates, ranks by severity, generates PR comment. State persists between nodes. Human-in-the-loop checkpoint before posting review. Evaluation: measure false positive rate against human reviewers on historical PRs.</p>
+    </div></details>
+
+    <details><summary>Q14: Explain Mixture of Experts (MoE) and why it matters for cost.</summary><div class="inner">
+      <p>MoE activates only a subset of parameters per token (e.g., Mixtral 8x7B: 47B total params, but only 13B active per forward pass). Router network selects top-K experts. Benefits: faster inference (fewer FLOPs), same quality as dense model 3-5x larger. Downsides: higher memory (all experts loaded), load balancing is tricky (expert collapse), harder to fine-tune. Cost implication: Mixtral gives GPT-3.5-level quality at ~3x lower inference cost.</p>
+    </div></details>
+
+    <details><summary>Q15: How would you reduce LLM inference costs by 80% without sacrificing quality?</summary><div class="inner">
+      <p>(1) <strong>Prompt routing:</strong> Classify query complexity, route simple ones to mini models (see Problem 3 above). (2) <strong>Caching:</strong> Semantic cache — embed query, check if similar query was answered recently (cosine > 0.95). (3) <strong>Prompt compression:</strong> LLMLingua or similar to remove redundant tokens from context. (4) <strong>Batch processing:</strong> Aggregate non-real-time requests. (5) <strong>Quantized self-hosted models:</strong> Run Mistral-7B-GPTQ for routine tasks, reserve API for complex ones. (6) <strong>Output length control:</strong> Set max_tokens strictly, use structured output to avoid rambling.</p>
+    </div></details>
+
+    <details><summary>Q16: What's the difference between function calling and tool use in modern LLMs?</summary><div class="inner">
+      <p>Functionally similar but architecturally distinct. <strong>Function calling</strong> (OpenAI): model outputs a JSON object specifying function name + args. Execution happens client-side. <strong>Tool use</strong> (Anthropic, LangChain): broader abstraction including APIs, code execution, file operations. The model generates a tool_use block, runtime executes it, returns tool_result. Key insight: neither actually "calls" anything — the model generates structured text that the orchestration layer interprets. Security: always validate tool args server-side, never trust model output as executable code without sandboxing.</p>
+    </div></details>
+
+    <details><summary>Q17: How do you implement guardrails for a production LLM?</summary><div class="inner">
+      <p>Layered approach: (1) <strong>Input:</strong> PII detection (Presidio), topic classification (block off-topic), prompt injection detection (fine-tuned classifier). (2) <strong>During generation:</strong> Constrained decoding (LMQL, Outlines) for schema compliance, token-level filtering. (3) <strong>Output:</strong> Fact-checking against retrieved sources, toxicity scoring, PII scanning on response, schema validation (Pydantic). (4) <strong>Operational:</strong> Rate limiting per user, cost caps, content moderation API calls, human escalation triggers. Framework options: NVIDIA NeMo Guardrails (programmable rails in Colang), Guardrails AI, or custom FastAPI middleware.</p>
+    </div></details>
+
+    <details><summary>Q18: Explain the attention sink phenomenon and its implications.</summary><div class="inner">
+      <p>In autoregressive transformers, the first token (often BOS/system prompt start) accumulates disproportionately high attention scores across all layers — an "attention sink." This happens because softmax must distribute probability mass somewhere, and the first token becomes a default dump. Implications: (1) Removing the first token crashes generation quality. (2) StreamingLLM exploits this: keep the first few "sink" tokens + a sliding window of recent tokens, enabling infinite-length generation with fixed KV-cache. (3) For RAG: critical context should NOT be placed at the very beginning — it competes with the attention sink.</p>
+    </div></details>
+
+    <details><summary>Q19: You have 1TB of enterprise documents. Design the ingestion pipeline for a RAG system.</summary><div class="inner">
+      <p>(1) <strong>Extract:</strong> Apache Tika / Unstructured.io for PDF, DOCX, PPTX → markdown. OCR via Tesseract for scanned docs. (2) <strong>Clean:</strong> Remove headers/footers, tables → markdown format, deduplication (MinHash). (3) <strong>Chunk:</strong> Semantic chunking with parent-child (retrieve small, return big). Average ~512 tokens. (4) <strong>Enrich:</strong> Generate title/summary per chunk (LLM), extract entities (NER), add metadata (source, date, access level). (5) <strong>Embed:</strong> Batch embed with GPU-accelerated model (BGE-M3 for multilingual). (6) <strong>Index:</strong> Qdrant with HNSW, payload indexes on metadata fields. (7) <strong>Orchestrate:</strong> Airflow DAG, incremental updates via change-data-capture. (8) <strong>Monitor:</strong> Track chunk count, embedding drift, query latency, retrieval recall on golden set.</p>
+    </div></details>
+
+    <details><summary>Q20: What are the trade-offs between OpenAI, Anthropic, and open-source models for enterprise?</summary><div class="inner">
+      <p><strong>OpenAI:</strong> Best tooling ecosystem (function calling, vision, fine-tuning API). Risk: single vendor, data privacy concerns. <strong>Anthropic:</strong> Best safety/alignment, excellent for long-context (200K). Constitutional AI approach. More limited tooling. <strong>Open-source (Llama, Mistral, Qwen):</strong> Full control, on-prem deployment, no data leaves your VPC. Trade-off: you own infra costs, need ML ops expertise, quality lag of ~3-6 months behind frontier. <strong>Enterprise recommendation:</strong> Multi-provider with abstraction layer (LiteLLM). Use proprietary for quality-critical paths, open-source for high-volume/sensitive data.</p>
+    </div></details>
+
+    <details><summary>Q21: How does KV-cache work and why should you care?</summary><div class="inner">
+      <p>During autoregressive generation, each new token attends to all previous tokens. Without caching, we'd recompute all K,V projections at every step → O(n²) per token. KV-cache stores computed K,V tensors for all previous tokens. Cost: O(n·d·L) memory (n=seq_len, d=head_dim, L=layers). For Llama-70B at 128K context: ~40GB just for KV-cache. Optimization techniques: GQA (share KV across head groups), KV-cache quantization (FP8/INT8), PagedAttention (vLLM — manage KV-cache like virtual memory pages, eliminating fragmentation).</p>
+    </div></details>
+
+    <details><summary>Q22: Explain chain-of-thought prompting and its engineering implications.</summary><div class="inner">
+      <p>CoT prompting (Wei et al.) elicits step-by-step reasoning, improving accuracy on math/logic by 20-40%. Engineering implications: (1) <strong>Token cost:</strong> CoT increases output length 3-5×. Budget accordingly. (2) <strong>Structured CoT:</strong> Use XML tags to separate reasoning from final answer → easy parsing. (3) <strong>Self-consistency:</strong> Generate N reasoning chains, majority-vote on final answer. Expensive but robust. (4) <strong>Tree-of-Thought:</strong> Branch exploration with backtracking. Most powerful but 10x+ cost. (5) <strong>For production:</strong> CoT in the reasoning model (o1, Claude thinking), keep the API output clean. Log the reasoning chain for debugging but don't show users.</p>
+    </div></details>
+
+    <details><summary>Q23: What's your approach to testing AI applications?</summary><div class="inner">
+      <p>Four-layer testing pyramid: (1) <strong>Unit tests:</strong> Mock LLM calls, test parsing, validation, routing logic deterministically. (2) <strong>Integration tests:</strong> Real LLM calls against golden test set. Assert on structure (JSON schema), not exact text. Use semantic similarity for content assertions. (3) <strong>Evaluation suite:</strong> RAGAS/DeepEval on 100+ representative queries. Track across deployments. Fail CI if metrics regress >5%. (4) <strong>Red-teaming:</strong> Adversarial prompt sets (jailbreaks, edge cases, multilingual). Run pre-release. Tools: pytest + deepeval + custom eval harness. Key principle: AI tests are statistical, not deterministic — design for confidence intervals, not exact assertions.</p>
+    </div></details>
+
+    <details><summary>Q24: How would you implement a feedback loop for continuous improvement?</summary><div class="inner">
+      <p>(1) <strong>Collect:</strong> Thumbs up/down, explicit corrections, implicit signals (conversation length, re-asks, escalations). (2) <strong>Analyze:</strong> Cluster bad-feedback queries by embedding similarity → identify systematic failure patterns. (3) <strong>Fix prioritization:</strong> Is it a retrieval failure (bad chunks) → fix chunking/indexing. Knowledge gap → update knowledge base. Format issue → fix prompt template. Hallucination → add guardrail or re-rank. (4) <strong>Iterate:</strong> A/B test fixes against baseline. Measure lift on the failure cluster. (5) <strong>Close loop:</strong> Retrained classifiers, updated prompts, expanded golden test set with failure cases.</p>
+    </div></details>
+
+    <details><summary>Q25: Describe the Agentic AI design patterns you've seen work in production.</summary><div class="inner">
+      <p>(1) <strong>ReAct (Reasoning + Acting):</strong> Think → Act → Observe loop. Works for tool-augmented Q&A. (2) <strong>Plan-and-Execute:</strong> LLM generates full plan, executor runs steps, re-planner adjusts. Good for multi-step workflows. (3) <strong>Multi-agent debate:</strong> Multiple LLMs critique each other's outputs. Expensive but high-quality for critical decisions. (4) <strong>Supervisor pattern:</strong> One agent routes tasks to specialist sub-agents (code, search, analysis). LangGraph excels here. (5) <strong>Human-in-the-loop:</strong> Agent proposes, human approves at checkpoints. Non-negotiable for production. My Astro Reels pipeline uses a 5-agent LangGraph setup with this exact supervisor pattern.</p>
+    </div></details>
+  </div>
+</div>
+
+<!-- ==================== 6. STAR STORIES ==================== -->
+<div class="section" id="star">
+  <h2><span class="icon">⭐</span> STAR Method Talking Points <span class="badge">YOUR STORIES</span></h2>
+
+  <div class="card">
+    <h3>Story 1 — "Tell me about a complex AI system you built end-to-end"</h3>
+    <details><summary>🎯 STAR Framework</summary><div class="inner">
+      <p><strong>Situation:</strong> Needed to automate production of educational astronomy videos in Marathi — a language with zero tools for this purpose.</p>
+      <p><strong>Task:</strong> Build a fully automated pipeline from research to finished video, eliminating manual production steps that took days per video.</p>
+      <p><strong>Action:</strong> Designed a 5-agent LangGraph pipeline: Research Agent (ArXiv API) → Content Agent (lyric generation) → Audio Agent (TTS + music alignment) → Visual Agent (image generation) → Assembly Agent (final video). Provider-agnostic LLM routing across OpenAI, Anthropic, Groq, xAI, Google Gemini.</p>
+      <p><strong>Result:</strong> Slashed production cost by 80%+ and time from days to under 15 minutes per video. Pipeline is repeatable and scalable to any topic/language.</p>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Story 2 — "Describe a time you led a critical analytical initiative"</h3>
+    <details><summary>🎯 STAR Framework</summary><div class="inner">
+      <p><strong>Situation:</strong> ING requires quarterly BackTesting across 35+ international entities for AML compliance — high regulatory stakes.</p>
+      <p><strong>Task:</strong> Co-own the entire process: codebase, task assignment, dev reviews, execution, stakeholder reporting.</p>
+      <p><strong>Action:</strong> Built robust data pipelines ingesting from multiple databases (Parquet, Iceberg, JSON). Applied ML techniques (SVM for text mining, DBSCAN for outlier detection, Random Forest for output sampling). Automated report generation for non-technical compliance stakeholders.</p>
+      <p><strong>Result:</strong> Zero missed quarterly deadlines. Codebase resilience eliminated manual interventions. Stakeholders across countries got actionable insights without needing to understand the underlying ML.</p>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Story 3 — "How do you handle ambiguous or novel technical challenges?"</h3>
+    <details><summary>🎯 STAR Framework</summary><div class="inner">
+      <p><strong>Situation:</strong> During astrophysics research, I needed unbiased supernova samples but real telescope data was systematically biased by observation selection effects.</p>
+      <p><strong>Task:</strong> Generate research-grade synthetic data that preserved real physical property correlations while removing systematic biases.</p>
+      <p><strong>Action:</strong> Designed a Monte Carlo simulation framework. Merged datasets from multiple telescope surveys. Used observed physical property correlations as constraints for the generative model. Trained SVM to validate synthetic vs. observed distributions.</p>
+      <p><strong>Result:</strong> Produced 10,000+ unbiased supernova samples — published-quality data. The approach of "simulate to debias" directly transferred to my financial crime work at ING, where I apply similar statistical thinking to detect anomalies in transaction data.</p>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Story 4 — "Tell me about your RAG / Chatbot experience"</h3>
+    <details><summary>🎯 STAR Framework</summary><div class="inner">
+      <p><strong>Situation:</strong> Wanted to build a conversational AI that works fully offline with voice interaction — no cloud dependency, no API costs.</p>
+      <p><strong>Task:</strong> Create an Agentic RAG chatbot with vector DB memory, multi-turn context handling, and speech-to-text/text-to-speech.</p>
+      <p><strong>Action:</strong> Fine-tuned LLaMA 2 and Mistral locally via Ollama. Implemented vector DB for persistent memory. Built public web UI with Streamlit. Added STT/TTS pipeline for voice-first interaction.</p>
+      <p><strong>Result:</strong> Fully functional offline chatbot with sub-second response times. Deployed publicly, demonstrating the full RAG pipeline from embedding to generation to evaluation — exactly the stack EPAM's JD describes.</p>
+    </div></details>
+  </div>
+
+  <div class="card">
+    <h3>Story 5 — "How have you driven AI adoption in your organization?"</h3>
+    <details><summary>🎯 STAR Framework</summary><div class="inner">
+      <p><strong>Situation:</strong> ING's analytics team was skeptical about AI tools — concerns about security, code quality, and "AI hype."</p>
+      <p><strong>Task:</strong> Demonstrate practical value of AI tools in daily workflows without triggering organizational resistance.</p>
+      <p><strong>Action:</strong> Participated in internal AI Guild. Conducted hands-on workshops with Ollama (local, data-stays-on-device — addressed security concerns). Integrated GitHub Copilot into team workflows. Created Power BI dashboards connected to AI analytics for non-technical stakeholders.</p>
+      <p><strong>Result:</strong> Converted skeptics into daily users. Team efficiency improved measurably. Approach of "show, don't tell" with local-first tools addressed every security objection.</p>
+    </div></details>
+  </div>
+
+  <div class="card" style="background:linear-gradient(135deg,rgba(99,102,241,.1),rgba(34,211,238,.08));border-color:var(--accent)">
+    <h3>🎤 "Tell me about yourself" — 60-Second Pitch</h3>
+    <p style="color:var(--text);font-size:.9rem;line-height:1.7;font-style:italic">"I'm an AI Engineer and Expert Data Scientist at ING in Warsaw — I build agentic AI systems, ML pipelines, and the occasional Android app. Before tech, I was in astrophysics, simulating supernovae at a nuclear research center. That background gave me two things: an obsession with clean data and the ability to stay calm when everything is on fire — sometimes literally, if we're talking stellar explosions. Right now, I lead quarterly compliance analytics across 35+ countries and build multi-agent LLM systems on the side. I'm looking for a role where I can do both at scale — and EPAM's focus on enterprise AI solutions for global clients is exactly that arena."</p>
+  </div>
+</div>
+
+</main>
+
+<script>
+// Scroll progress
+window.addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;
+  document.getElementById('progress').style.width=pct+'%';
+});
+// Active nav
+const sections=document.querySelectorAll('.section[id]');
+const navLinks=document.querySelectorAll('.sidebar nav a');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){
+    navLinks.forEach(l=>l.classList.remove('active'));
+    const link=document.querySelector(`.sidebar nav a[href="#${e.target.id}"]`);
+    if(link)link.classList.add('active');
+  }});
+},{threshold:0.15,rootMargin:'-80px 0px -60% 0px'});
+sections.forEach(s=>observer.observe(s));
+</script>
+</body>
+</html>
