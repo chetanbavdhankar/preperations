@@ -353,7 +353,9 @@
       margin: 12px 0;
       font-size: 12.5px;
       line-height: 1.7;
-      color: #e6edf3
+      color: #e6edf3;
+      white-space: pre-wrap;
+      word-break: break-word
     }
 
     .code-block .kw {
@@ -1069,6 +1071,32 @@
       color: var(--accent2)
     }
 
+    /* PANDAS CHEATSHEET */
+    .pd-cs-layout { display: flex; gap: 0; min-height: 460px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+    .pd-cs-sidebar { width: 200px; border-right: 1px solid var(--border); padding: 8px 0; overflow-y: auto; flex-shrink: 0; background: var(--surface); }
+    .pd-cs-sidebar-btn { display: block; width: 100%; text-align: left; padding: 9px 14px; background: transparent; border: none; border-left: 3px solid transparent; color: var(--text2); cursor: pointer; font-size: 12px; line-height: 1.4; font-family: 'Inter', sans-serif; transition: all .12s; }
+    .pd-cs-sidebar-btn:hover { background: var(--surface2); color: var(--text); }
+    .pd-cs-sidebar-btn.active { background: var(--surface2); border-left-color: var(--accent); color: var(--text); font-weight: 600; }
+    .pd-cs-main { flex: 1; overflow: auto; padding: 20px 24px; }
+    .pd-cs-topic-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 16px; }
+    .pd-cs-code-wrap { background: var(--code-bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+    .pd-cs-code-header { display: flex; justify-content: space-between; align-items: center; padding: 6px 14px; background: var(--surface3); border-bottom: 1px solid var(--border); }
+    .pd-cs-code-header span { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
+    .pd-cs-copy-btn { background: transparent; border: 1px solid var(--border); color: var(--text3); padding: 2px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; font-family: 'DM Mono', monospace; transition: all .2s; }
+    .pd-cs-copy-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+    .pd-cs-code-wrap pre { margin: 0; padding: 16px 18px; font-size: 12.5px; line-height: 1.7; overflow-x: auto; color: #e6edf3; white-space: pre-wrap; word-break: break-word; }
+    .pd-cs-note { border-left: 3px solid var(--accent2); background: rgba(0,212,170,.07); border-radius: 0 8px 8px 0; padding: 10px 14px; font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 16px; }
+    .pd-cs-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; gap: 12px; }
+    .pd-cs-nav-btn { padding: 7px 16px; border-radius: 6px; font-size: 12px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text2); font-family: 'Inter', sans-serif; transition: all .2s; }
+    .pd-cs-nav-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .pd-cs-nav-btn:disabled { opacity: .3; cursor: default; }
+    .pd-cs-nav-counter { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; }
+    .pd-cs-section-tabs { display: flex; gap: 4px; margin-bottom: 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 4px; width: fit-content; flex-wrap: wrap; }
+    .pd-cs-section-tab { padding: 7px 14px; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; background: transparent; color: var(--text2); transition: all .2s; font-family: 'Inter', sans-serif; letter-spacing: .3px; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+    .pd-cs-section-tab:hover { color: var(--text); }
+    .pd-cs-section-tab.active { color: #fff; }
+    @media(max-width:900px) { .pd-cs-sidebar { width: 160px; } .pd-cs-layout { min-height: 360px; } }
+
     /* TRIVIA mode toggle */
     .mode-toggle {
       display: flex;
@@ -1185,7 +1213,7 @@
       #sidebar {
         transform: translateX(-100%);
         transition: transform 0.3s ease;
-        box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
       }
 
       #sidebar.open {
@@ -1438,33 +1466,33 @@
             <h4 class="mini-title">TransformerBlock (PyTorch)</h4>
             <div class="code-block"><span class="kw">import</span> torch.nn <span class="kw">as</span> nn
 
-              <span class="kw">class</span> <span class="cls">TransformerBlock</span>(nn.Module):
-              <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, d_model,
-              n_heads, ffn_dim, dropout=<span class="num">0.1</span>):
-              <span class="kw">super</span>().__init__()
-              <span class="kw">self</span>.norm1 = nn.LayerNorm(d_model)
-              <span class="kw">self</span>.norm2 = nn.LayerNorm(d_model)
-              <span class="kw">self</span>.attn = nn.MultiheadAttention(
-              d_model, n_heads, dropout=dropout, batch_first=<span class="kw">True</span>
-              )
-              <span class="kw">self</span>.ffn = nn.Sequential(
-              nn.Linear(d_model, ffn_dim),
-              nn.GELU(),
-              nn.Linear(ffn_dim, d_model),
-              nn.Dropout(dropout)
-              )
-              <span class="kw">self</span>.drop = nn.Dropout(dropout)
+<span class="kw">class</span> <span class="cls">TransformerBlock</span>(nn.Module):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, d_model,
+        n_heads, ffn_dim, dropout=<span class="num">0.1</span>):
+            <span class="kw">super</span>().__init__()
+            <span class="kw">self</span>.norm1 = nn.LayerNorm(d_model)
+            <span class="kw">self</span>.norm2 = nn.LayerNorm(d_model)
+            <span class="kw">self</span>.attn = nn.MultiheadAttention(
+            d_model, n_heads, dropout=dropout, batch_first=<span class="kw">True</span>
+            )
+            <span class="kw">self</span>.ffn = nn.Sequential(
+            nn.Linear(d_model, ffn_dim),
+            nn.GELU(),
+            nn.Linear(ffn_dim, d_model),
+            nn.Dropout(dropout)
+            )
+            <span class="kw">self</span>.drop = nn.Dropout(dropout)
 
-              <span class="kw">def</span> <span class="fn">forward</span>(<span class="kw">self</span>, x, mask=<span
-                class="kw">None</span>):
-              <span class="cm"># Pre-LayerNorm + residual</span>
-              normed = <span class="kw">self</span>.norm1(x)
-              attn_out, _ = <span class="kw">self</span>.attn(normed, normed, normed, attn_mask=mask)
-              x = x + <span class="kw">self</span>.drop(attn_out) <span class="cm"># residual</span>
-              x = x + <span class="kw">self</span>.ffn(<span class="kw">self</span>.norm2(x)) <span class="cm">#
-                residual</span>
-              <span class="kw">return</span> x
-            </div>
+    <span class="kw">def</span> <span class="fn">forward</span>(<span class="kw">self</span>, x, mask=<span
+        class="kw">None</span>):
+            <span class="cm"># Pre-LayerNorm + residual</span>
+            normed = <span class="kw">self</span>.norm1(x)
+            attn_out, _ = <span class="kw">self</span>.attn(normed, normed, normed, attn_mask=mask)
+            x = x + <span class="kw">self</span>.drop(attn_out) <span class="cm"># residual</span>
+            x = x + <span class="kw">self</span>.ffn(<span class="kw">self</span>.norm2(x)) <span class="cm">#
+            residual</span>
+            <span class="kw">return</span> x
+</div>
           </div>
         </div>
 
@@ -1496,18 +1524,18 @@
           </tr>
         </table>
         <div class="code-block"><span class="kw">class</span> <span class="cls">RMSNorm</span>(nn.Module):
-          <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, dim, eps=<span
-            class="num">1e-6</span>):
-          <span class="kw">super</span>().__init__()
-          <span class="kw">self</span>.weight = nn.Parameter(torch.ones(dim))
-          <span class="kw">self</span>.eps = eps
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, dim, eps=<span
+        class="num">1e-6</span>):
+            <span class="kw">super</span>().__init__()
+            <span class="kw">self</span>.weight = nn.Parameter(torch.ones(dim))
+            <span class="kw">self</span>.eps = eps
 
-          <span class="kw">def</span> <span class="fn">forward</span>(<span class="kw">self</span>, x):
-          rms = x.norm(<span class="num">2</span>, dim=-<span class="num">1</span>, keepdim=<span
-            class="kw">True</span>) * (x.shape[-<span class="num">1</span>] ** -<span class="num">0.5</span>)
-          <span class="kw">return</span> <span class="kw">self</span>.weight * x / (rms + <span
-            class="kw">self</span>.eps)
-        </div>
+    <span class="kw">def</span> <span class="fn">forward</span>(<span class="kw">self</span>, x):
+        rms = x.norm(<span class="num">2</span>, dim=-<span class="num">1</span>, keepdim=<span
+        class="kw">True</span>) * (x.shape[-<span class="num">1</span>] ** -<span class="num">0.5</span>)
+        <span class="kw">return</span> <span class="kw">self</span>.weight * x / (rms + <span
+        class="kw">self</span>.eps)
+</div>
 
         <h3 class="subsection">SwiGLU vs GELU Activation</h3>
         <div class="insight yellow"><strong>SwiGLU</strong> (used in LLaMA, PaLM): SwiGLU(x,W,V,b,c) = Swish(xW+b) ⊙
@@ -1553,19 +1581,19 @@
           pushing softmax into regions of near-zero gradients (saturation). Dividing by √d_k keeps variance ≈ 1
           regardless of dimension.</div>
         <div class="code-block"><span class="kw">import</span> torch
-          <span class="kw">import</span> torch.nn.functional <span class="kw">as</span> F
+<span class="kw">import</span> torch.nn.functional <span class="kw">as</span> F
 
-          <span class="kw">def</span> <span class="fn">scaled_dot_product_attention</span>(Q, K, V, mask=<span
-            class="kw">None</span>):
-          <span class="st">"""Q,K,V: (batch, heads, seq_len, d_k)"""</span>
-          d_k = Q.size(-<span class="num">1</span>)
-          scores = torch.matmul(Q, K.transpose(-<span class="num">2</span>, -<span class="num">1</span>)) / (d_k **
-          <span class="num">0.5</span>)
-          <span class="kw">if</span> mask <span class="kw">is not None</span>:
-          scores = scores.masked_fill(mask == <span class="num">0</span>, <span class="num">-1e9</span>)
-          attn_weights = F.softmax(scores, dim=-<span class="num">1</span>)
-          <span class="kw">return</span> torch.matmul(attn_weights, V), attn_weights
-        </div>
+<span class="kw">def</span> <span class="fn">scaled_dot_product_attention</span>(Q, K, V, mask=<span
+    class="kw">None</span>):
+        <span class="st">"""Q,K,V: (batch, heads, seq_len, d_k)"""</span>
+        d_k = Q.size(-<span class="num">1</span>)
+        scores = torch.matmul(Q, K.transpose(-<span class="num">2</span>, -<span class="num">1</span>)) / (d_k **
+        <span class="num">0.5</span>)
+        <span class="kw">if</span> mask <span class="kw">is not None</span>:
+            scores = scores.masked_fill(mask == <span class="num">0</span>, <span class="num">-1e9</span>)
+            attn_weights = F.softmax(scores, dim=-<span class="num">1</span>)
+            <span class="kw">return</span> torch.matmul(attn_weights, V), attn_weights
+</div>
 
         <h3 class="subsection">MHA vs MQA vs GQA</h3>
         <table class="comp-table">
@@ -1634,26 +1662,26 @@
         <h4 class="mini-title">RoPE Implementation</h4>
         <div class="code-block"><span class="kw">import</span> torch
 
-          <span class="kw">def</span> <span class="fn">rotate_half</span>(x):
-          x1, x2 = x[..., :x.shape[-<span class="num">1</span>]//<span class="num">2</span>], x[..., x.shape[-<span
-            class="num">1</span>]//<span class="num">2</span>:]
-          <span class="kw">return</span> torch.cat([-x2, x1], dim=-<span class="num">1</span>)
+<span class="kw">def</span> <span class="fn">rotate_half</span>(x):
+    x1, x2 = x[..., :x.shape[-<span class="num">1</span>]//<span class="num">2</span>], x[..., x.shape[-<span
+    class="num">1</span>]//<span class="num">2</span>:]
+    <span class="kw">return</span> torch.cat([-x2, x1], dim=-<span class="num">1</span>)
 
-          <span class="kw">def</span> <span class="fn">apply_rotary_emb</span>(q, k, cos, sin):
-          <span class="st">"""cos, sin: (seq_len, d_k/2) precomputed"""</span>
-          q_rot = (q * cos) + (rotate_half(q) * sin)
-          k_rot = (k * cos) + (rotate_half(k) * sin)
-          <span class="kw">return</span> q_rot, k_rot
+<span class="kw">def</span> <span class="fn">apply_rotary_emb</span>(q, k, cos, sin):
+    <span class="st">"""cos, sin: (seq_len, d_k/2) precomputed"""</span>
+    q_rot = (q * cos) + (rotate_half(q) * sin)
+    k_rot = (k * cos) + (rotate_half(k) * sin)
+    <span class="kw">return</span> q_rot, k_rot
 
-          <span class="kw">def</span> <span class="fn">precompute_rope</span>(seq_len, d_k, base=<span
-            class="num">10000</span>):
-          theta = <span class="num">1.0</span> / (base ** (torch.arange(<span class="num">0</span>, d_k, <span
-            class="num">2</span>).float() / d_k))
-          t = torch.arange(seq_len)
-          freqs = torch.outer(t, theta)
-          freqs = torch.cat([freqs, freqs], dim=-<span class="num">1</span>)
-          <span class="kw">return</span> freqs.cos(), freqs.sin()
-        </div>
+<span class="kw">def</span> <span class="fn">precompute_rope</span>(seq_len, d_k, base=<span
+    class="num">10000</span>):
+        theta = <span class="num">1.0</span> / (base ** (torch.arange(<span class="num">0</span>, d_k, <span
+        class="num">2</span>).float() / d_k))
+        t = torch.arange(seq_len)
+        freqs = torch.outer(t, theta)
+        freqs = torch.cat([freqs, freqs], dim=-<span class="num">1</span>)
+        <span class="kw">return</span> freqs.cos(), freqs.sin()
+</div>
 
         <h3 class="subsection">Flash Attention</h3>
         <div class="insight"><strong>Flash Attention</strong> (Dao et al. 2022): Reorders the attention computation to
@@ -1830,30 +1858,30 @@
 
         <h4 class="mini-title">LoRA Setup with PEFT</h4>
         <div class="code-block"><span class="kw">from</span> peft <span class="kw">import</span> LoraConfig,
-          get_peft_model, TaskType
-          <span class="kw">from</span> transformers <span class="kw">import</span> AutoModelForCausalLM
+get_peft_model, TaskType
+<span class="kw">from</span> transformers <span class="kw">import</span> AutoModelForCausalLM
 
-          <span class="cm"># Load base model (in 4-bit for QLoRA)</span>
-          model = AutoModelForCausalLM.from_pretrained(
-          <span class="st">"meta-llama/Llama-3-8B"</span>,
-          load_in_4bit=<span class="kw">True</span>, <span class="cm"># QLoRA: 4-bit NF4</span>
-          device_map=<span class="st">"auto"</span>,
-          )
+<span class="cm"># Load base model (in 4-bit for QLoRA)</span>
+model = AutoModelForCausalLM.from_pretrained(
+<span class="st">"meta-llama/Llama-3-8B"</span>,
+load_in_4bit=<span class="kw">True</span>, <span class="cm"># QLoRA: 4-bit NF4</span>
+device_map=<span class="st">"auto"</span>,
+)
 
-          lora_config = LoraConfig(
-          task_type=TaskType.CAUSAL_LM,
-          r=<span class="num">16</span>, <span class="cm"># rank</span>
-          lora_alpha=<span class="num">32</span>, <span class="cm"># scaling factor (alpha/r = effective lr)</span>
-          target_modules=[<span class="st">"q_proj"</span>, <span class="st">"v_proj"</span>, <span
-            class="st">"k_proj"</span>, <span class="st">"o_proj"</span>],
-          lora_dropout=<span class="num">0.05</span>,
-          bias=<span class="st">"none"</span>,
-          )
+lora_config = LoraConfig(
+task_type=TaskType.CAUSAL_LM,
+r=<span class="num">16</span>, <span class="cm"># rank</span>
+lora_alpha=<span class="num">32</span>, <span class="cm"># scaling factor (alpha/r = effective lr)</span>
+target_modules=[<span class="st">"q_proj"</span>, <span class="st">"v_proj"</span>, <span
+class="st">"k_proj"</span>, <span class="st">"o_proj"</span>],
+lora_dropout=<span class="num">0.05</span>,
+bias=<span class="st">"none"</span>,
+)
 
-          model = get_peft_model(model, lora_config)
-          model.print_trainable_parameters()
-          <span class="cm"># trainable params: 6,553,600 || all params: 8,037,375,488 || trainable: 0.08%</span>
-        </div>
+model = get_peft_model(model, lora_config)
+model.print_trainable_parameters()
+<span class="cm"># trainable params: 6,553,600 || all params: 8,037,375,488 || trainable: 0.08%</span>
+</div>
 
         <h3 class="subsection">Alignment Methods</h3>
         <table class="comp-table">
@@ -1917,51 +1945,51 @@
 
         <h3 class="subsection">Production Pipeline Code</h3>
         <div class="code-block"><span class="kw">from</span> langchain.text_splitter <span class="kw">import</span>
-          RecursiveCharacterTextSplitter
-          <span class="kw">from</span> qdrant_client <span class="kw">import</span> QdrantClient
-          <span class="kw">from</span> qdrant_client.models <span class="kw">import</span> Distance, VectorParams,
-          PointStruct
-          <span class="kw">from</span> sentence_transformers <span class="kw">import</span> SentenceTransformer
-          <span class="kw">import</span> uuid
+RecursiveCharacterTextSplitter
+<span class="kw">from</span> qdrant_client <span class="kw">import</span> QdrantClient
+<span class="kw">from</span> qdrant_client.models <span class="kw">import</span> Distance, VectorParams,
+PointStruct
+<span class="kw">from</span> sentence_transformers <span class="kw">import</span> SentenceTransformer
+<span class="kw">import</span> uuid
 
-          <span class="cm"># Chunking with RecursiveCharacterTextSplitter</span>
-          splitter = RecursiveCharacterTextSplitter(
-          chunk_size=<span class="num">512</span>,
-          chunk_overlap=<span class="num">102</span>, <span class="cm"># ~20% overlap</span>
-          separators=[<span class="st">"\n\n"</span>, <span class="st">"\n"</span>, <span class="st">". "</span>, <span
-            class="st">" "</span>, <span class="st">""</span>],
-          length_function=len,
-          )
+<span class="cm"># Chunking with RecursiveCharacterTextSplitter</span>
+splitter = RecursiveCharacterTextSplitter(
+chunk_size=<span class="num">512</span>,
+chunk_overlap=<span class="num">102</span>, <span class="cm"># ~20% overlap</span>
+separators=[<span class="st">"\n\n"</span>, <span class="st">"\n"</span>, <span class="st">". "</span>, <span
+class="st">" "</span>, <span class="st">""</span>],
+length_function=len,
+)
 
-          <span class="cm"># Qdrant setup</span>
-          client = QdrantClient(<span class="st">"localhost"</span>, port=<span class="num">6333</span>)
-          client.create_collection(
-          collection_name=<span class="st">"docs"</span>,
-          vectors_config=VectorParams(size=<span class="num">1024</span>, distance=Distance.COSINE),
-          )
+<span class="cm"># Qdrant setup</span>
+client = QdrantClient(<span class="st">"localhost"</span>, port=<span class="num">6333</span>)
+client.create_collection(
+collection_name=<span class="st">"docs"</span>,
+vectors_config=VectorParams(size=<span class="num">1024</span>, distance=Distance.COSINE),
+)
 
-          embed_model = SentenceTransformer(<span class="st">"BAAI/bge-large-en-v1.5"</span>)
+embed_model = SentenceTransformer(<span class="st">"BAAI/bge-large-en-v1.5"</span>)
 
-          <span class="kw">def</span> <span class="fn">index_documents</span>(docs: list[str]):
-          chunks = splitter.create_documents(docs)
-          texts = [c.page_content <span class="kw">for</span> c <span class="kw">in</span> chunks]
-          embeddings = embed_model.encode(texts, normalize_embeddings=<span class="kw">True</span>)
-          points = [
-          PointStruct(id=str(uuid.uuid4()), vector=emb.tolist(),
-          payload={<span class="st">"text"</span>: text})
-          <span class="kw">for</span> emb, text <span class="kw">in</span> zip(embeddings, texts)
-          ]
-          client.upsert(<span class="st">"docs"</span>, points)
+<span class="kw">def</span> <span class="fn">index_documents</span>(docs: list[str]):
+    chunks = splitter.create_documents(docs)
+    texts = [c.page_content <span class="kw">for</span> c <span class="kw">in</span> chunks]
+    embeddings = embed_model.encode(texts, normalize_embeddings=<span class="kw">True</span>)
+    points = [
+    PointStruct(id=str(uuid.uuid4()), vector=emb.tolist(),
+    payload={<span class="st">"text"</span>: text})
+    <span class="kw">for</span> emb, text <span class="kw">in</span> zip(embeddings, texts)
+    ]
+    client.upsert(<span class="st">"docs"</span>, points)
 
-          <span class="kw">def</span> <span class="fn">hybrid_retrieve</span>(query: str, top_k=<span
-            class="num">5</span>):
-          <span class="cm"># Dense retrieval</span>
-          q_emb = embed_model.encode([query], normalize_embeddings=<span class="kw">True</span>)[<span
-            class="num">0</span>]
-          results = client.search(<span class="st">"docs"</span>, q_emb.tolist(), limit=top_k)
-          <span class="kw">return</span> [r.payload[<span class="st">"text"</span>] <span class="kw">for</span> r <span
-            class="kw">in</span> results]
-        </div>
+<span class="kw">def</span> <span class="fn">hybrid_retrieve</span>(query: str, top_k=<span
+    class="num">5</span>):
+        <span class="cm"># Dense retrieval</span>
+        q_emb = embed_model.encode([query], normalize_embeddings=<span class="kw">True</span>)[<span
+        class="num">0</span>]
+        results = client.search(<span class="st">"docs"</span>, q_emb.tolist(), limit=top_k)
+        <span class="kw">return</span> [r.payload[<span class="st">"text"</span>] <span class="kw">for</span> r <span
+        class="kw">in</span> results]
+</div>
 
         <h3 class="subsection">Chunking Strategies</h3>
         <table class="comp-table">
@@ -1999,36 +2027,36 @@
 
         <h4 class="mini-title">Parent-Child Chunking</h4>
         <div class="code-block"><span class="kw">def</span> <span class="fn">build_parent_child_index</span>(document:
-          str):
-          <span class="st">"""Index small child chunks; retrieve parent for context"""</span>
-          parent_splitter = RecursiveCharacterTextSplitter(chunk_size=<span class="num">1024</span>, chunk_overlap=<span
-            class="num">0</span>)
-          child_splitter = RecursiveCharacterTextSplitter(chunk_size=<span class="num">128</span>, chunk_overlap=<span
-            class="num">20</span>)
+    str):
+        <span class="st">"""Index small child chunks; retrieve parent for context"""</span>
+        parent_splitter = RecursiveCharacterTextSplitter(chunk_size=<span class="num">1024</span>, chunk_overlap=<span
+        class="num">0</span>)
+        child_splitter = RecursiveCharacterTextSplitter(chunk_size=<span class="num">128</span>, chunk_overlap=<span
+        class="num">20</span>)
 
-          parents = parent_splitter.create_documents([document])
-          all_children = []
-          parent_store = {}
+        parents = parent_splitter.create_documents([document])
+        all_children = []
+        parent_store = {}
 
-          <span class="kw">for</span> i, parent <span class="kw">in</span> enumerate(parents):
-          parent_id = <span class="st">f"parent_{i}"</span>
-          parent_store[parent_id] = parent.page_content
-          children = child_splitter.create_documents([parent.page_content])
-          <span class="kw">for</span> child <span class="kw">in</span> children:
-          child.metadata[<span class="st">"parent_id"</span>] = parent_id
-          all_children.append(child)
+        <span class="kw">for</span> i, parent <span class="kw">in</span> enumerate(parents):
+            parent_id = <span class="st">f"parent_{i}"</span>
+            parent_store[parent_id] = parent.page_content
+            children = child_splitter.create_documents([parent.page_content])
+            <span class="kw">for</span> child <span class="kw">in</span> children:
+                child.metadata[<span class="st">"parent_id"</span>] = parent_id
+                all_children.append(child)
 
-          <span class="cm"># Index children by embedding, store parent_id in metadata</span>
-          <span class="cm"># At query time: search children → get parent_id → return parent text</span>
-          <span class="kw">return</span> all_children, parent_store
+                <span class="cm"># Index children by embedding, store parent_id in metadata</span>
+                <span class="cm"># At query time: search children → get parent_id → return parent text</span>
+                <span class="kw">return</span> all_children, parent_store
 
-          <span class="kw">def</span> <span class="fn">parent_child_retrieve</span>(query: str, child_results,
-          parent_store):
-          parent_ids = list({r.payload[<span class="st">"parent_id"</span>] <span class="kw">for</span> r <span
-            class="kw">in</span> child_results})
-          <span class="kw">return</span> [parent_store[pid] <span class="kw">for</span> pid <span class="kw">in</span>
-          parent_ids]
-        </div>
+<span class="kw">def</span> <span class="fn">parent_child_retrieve</span>(query: str, child_results,
+    parent_store):
+        parent_ids = list({r.payload[<span class="st">"parent_id"</span>] <span class="kw">for</span> r <span
+        class="kw">in</span> child_results})
+        <span class="kw">return</span> [parent_store[pid] <span class="kw">for</span> pid <span class="kw">in</span>
+        parent_ids]
+</div>
 
         <h3 class="subsection">RAGAS Evaluation Metrics</h3>
         <div class="two-col">
@@ -2050,18 +2078,18 @@
           different embedding than a document containing "Paris is the capital and most populous city of France." HyDE
           closes this gap.</div>
         <div class="code-block"><span class="kw">async def</span> <span class="fn">hyde_retrieve</span>(query: str, llm,
-          embed_model, vectorstore, k=<span class="num">5</span>):
-          <span class="cm"># Step 1: Generate a hypothetical answer (no RAG context)</span>
-          hyde_prompt = <span class="st">f"Write a detailed paragraph that directly answers: {query}"</span>
-          hypothetical_doc = <span class="kw">await</span> llm.agenerate(hyde_prompt)
+    embed_model, vectorstore, k=<span class="num">5</span>):
+        <span class="cm"># Step 1: Generate a hypothetical answer (no RAG context)</span>
+        hyde_prompt = <span class="st">f"Write a detailed paragraph that directly answers: {query}"</span>
+        hypothetical_doc = <span class="kw">await</span> llm.agenerate(hyde_prompt)
 
-          <span class="cm"># Step 2: Embed the hypothetical document (not the query!)</span>
-          hyde_embedding = embed_model.encode(hypothetical_doc, normalize_embeddings=<span class="kw">True</span>)
+        <span class="cm"># Step 2: Embed the hypothetical document (not the query!)</span>
+        hyde_embedding = embed_model.encode(hypothetical_doc, normalize_embeddings=<span class="kw">True</span>)
 
-          <span class="cm"># Step 3: Search with the hypothetical doc's embedding</span>
-          results = vectorstore.similarity_search_by_vector(hyde_embedding, k=k)
-          <span class="kw">return</span> results
-        </div>
+        <span class="cm"># Step 3: Search with the hypothetical doc's embedding</span>
+        results = vectorstore.similarity_search_by_vector(hyde_embedding, k=k)
+        <span class="kw">return</span> results
+</div>
 
         <h3 class="subsection">Self-RAG</h3>
         <div class="insight"><strong>Self-RAG</strong> (Asai et al. 2023): Trains the LLM to generate special reflection
@@ -2077,21 +2105,21 @@
 
         <h3 class="subsection">RAG Fusion with Multi-Query</h3>
         <div class="code-block"><span class="kw">from</span> langchain.retrievers <span class="kw">import</span>
-          MultiQueryRetriever
-          <span class="kw">from</span> langchain_openai <span class="kw">import</span> ChatOpenAI
+MultiQueryRetriever
+<span class="kw">from</span> langchain_openai <span class="kw">import</span> ChatOpenAI
 
-          <span class="cm"># MultiQueryRetriever: generates N rephrasings of the query</span>
-          <span class="cm"># then takes the union of retrieved results (deduplicated)</span>
-          llm = ChatOpenAI(model=<span class="st">"gpt-4o-mini"</span>)
-          multi_retriever = MultiQueryRetriever.from_llm(
-          retriever=vectorstore.as_retriever(search_kwargs={<span class="st">"k"</span>: <span class="num">5</span>}),
-          llm=llm
-          )
-          <span class="cm"># Internally generates 3-5 query variants, retrieves for each,</span>
-          <span class="cm"># then re-ranks combined results with Reciprocal Rank Fusion (RRF)</span>
-          <span class="cm"># RRF score: sum(1 / (k + rank_i)) for each query</span>
-          docs = multi_retriever.invoke(<span class="st">"How does attention mechanism work?"</span>)
-        </div>
+<span class="cm"># MultiQueryRetriever: generates N rephrasings of the query</span>
+<span class="cm"># then takes the union of retrieved results (deduplicated)</span>
+llm = ChatOpenAI(model=<span class="st">"gpt-4o-mini"</span>)
+multi_retriever = MultiQueryRetriever.from_llm(
+retriever=vectorstore.as_retriever(search_kwargs={<span class="st">"k"</span>: <span class="num">5</span>}),
+llm=llm
+)
+<span class="cm"># Internally generates 3-5 query variants, retrieves for each,</span>
+<span class="cm"># then re-ranks combined results with Reciprocal Rank Fusion (RRF)</span>
+<span class="cm"># RRF score: sum(1 / (k + rank_i)) for each query</span>
+docs = multi_retriever.invoke(<span class="st">"How does attention mechanism work?"</span>)
+</div>
 
         <h3 class="subsection">Agentic RAG vs Naive RAG</h3>
         <table class="comp-table">
@@ -2277,53 +2305,53 @@
 
         <h4 class="mini-title">LangGraph State Machine</h4>
         <div class="code-block"><span class="kw">from</span> langgraph.graph <span class="kw">import</span> StateGraph,
-          END
-          <span class="kw">from</span> langgraph.checkpoint.memory <span class="kw">import</span> MemorySaver
-          <span class="kw">from</span> typing <span class="kw">import</span> TypedDict, Annotated
-          <span class="kw">import</span> operator
+END
+<span class="kw">from</span> langgraph.checkpoint.memory <span class="kw">import</span> MemorySaver
+<span class="kw">from</span> typing <span class="kw">import</span> TypedDict, Annotated
+<span class="kw">import</span> operator
 
-          <span class="kw">class</span> <span class="cls">AgentState</span>(TypedDict):
-          messages: Annotated[list, operator.add]
-          retrieved_docs: list[str]
-          answer: str
-          needs_retrieval: bool
+<span class="kw">class</span> <span class="cls">AgentState</span>(TypedDict):
+    messages: Annotated[list, operator.add]
+    retrieved_docs: list[str]
+    answer: str
+    needs_retrieval: bool
 
-          <span class="kw">def</span> <span class="fn">analyze_query</span>(state: AgentState) -> AgentState:
-          <span class="st">"""Decide if retrieval is needed"""</span>
-          last_msg = state[<span class="st">"messages"</span>][-<span class="num">1</span>]
-          <span class="cm"># LLM decides whether to retrieve</span>
-          needs_retrieval = <span class="kw">True</span> <span class="cm"># simplified</span>
-          <span class="kw">return</span> {**state, <span class="st">"needs_retrieval"</span>: needs_retrieval}
+    <span class="kw">def</span> <span class="fn">analyze_query</span>(state: AgentState) -> AgentState:
+        <span class="st">"""Decide if retrieval is needed"""</span>
+        last_msg = state[<span class="st">"messages"</span>][-<span class="num">1</span>]
+        <span class="cm"># LLM decides whether to retrieve</span>
+        needs_retrieval = <span class="kw">True</span> <span class="cm"># simplified</span>
+        <span class="kw">return</span> {**state, <span class="st">"needs_retrieval"</span>: needs_retrieval}
 
-          <span class="kw">def</span> <span class="fn">retrieve</span>(state: AgentState) -> AgentState:
-          query = state[<span class="st">"messages"</span>][-<span class="num">1</span>]
-          docs = hybrid_retrieve(query)
-          <span class="kw">return</span> {**state, <span class="st">"retrieved_docs"</span>: docs}
+    <span class="kw">def</span> <span class="fn">retrieve</span>(state: AgentState) -> AgentState:
+        query = state[<span class="st">"messages"</span>][-<span class="num">1</span>]
+        docs = hybrid_retrieve(query)
+        <span class="kw">return</span> {**state, <span class="st">"retrieved_docs"</span>: docs}
 
-          <span class="kw">def</span> <span class="fn">generate</span>(state: AgentState) -> AgentState:
-          context = <span class="st">"\n"</span>.join(state[<span class="st">"retrieved_docs"</span>])
-          answer = llm.invoke(<span class="st">f"Context: {context}\nQ: {state['messages'][-1]}"</span>)
-          <span class="kw">return</span> {**state, <span class="st">"answer"</span>: answer}
+    <span class="kw">def</span> <span class="fn">generate</span>(state: AgentState) -> AgentState:
+        context = <span class="st">"\n"</span>.join(state[<span class="st">"retrieved_docs"</span>])
+        answer = llm.invoke(<span class="st">f"Context: {context}\nQ: {state['messages'][-1]}"</span>)
+        <span class="kw">return</span> {**state, <span class="st">"answer"</span>: answer}
 
-          <span class="kw">def</span> <span class="fn">should_retrieve</span>(state: AgentState) -> str:
-          <span class="kw">return</span> <span class="st">"retrieve"</span> <span class="kw">if</span> state[<span
-            class="st">"needs_retrieval"</span>] <span class="kw">else</span> <span class="st">"generate"</span>
+    <span class="kw">def</span> <span class="fn">should_retrieve</span>(state: AgentState) -> str:
+        <span class="kw">return</span> <span class="st">"retrieve"</span> <span class="kw">if</span> state[<span
+        class="st">"needs_retrieval"</span>] <span class="kw">else</span> <span class="st">"generate"</span>
 
-          <span class="cm"># Build graph</span>
-          checkpointer = MemorySaver()
-          graph = StateGraph(AgentState)
-          graph.add_node(<span class="st">"analyze"</span>, analyze_query)
-          graph.add_node(<span class="st">"retrieve"</span>, retrieve)
-          graph.add_node(<span class="st">"generate"</span>, generate)
-          graph.set_entry_point(<span class="st">"analyze"</span>)
-          graph.add_conditional_edges(<span class="st">"analyze"</span>, should_retrieve, {
-          <span class="st">"retrieve"</span>: <span class="st">"retrieve"</span>, <span class="st">"generate"</span>:
-          <span class="st">"generate"</span>
-          })
-          graph.add_edge(<span class="st">"retrieve"</span>, <span class="st">"generate"</span>)
-          graph.add_edge(<span class="st">"generate"</span>, END)
-          app = graph.compile(checkpointer=checkpointer)
-        </div>
+        <span class="cm"># Build graph</span>
+        checkpointer = MemorySaver()
+        graph = StateGraph(AgentState)
+        graph.add_node(<span class="st">"analyze"</span>, analyze_query)
+        graph.add_node(<span class="st">"retrieve"</span>, retrieve)
+        graph.add_node(<span class="st">"generate"</span>, generate)
+        graph.set_entry_point(<span class="st">"analyze"</span>)
+        graph.add_conditional_edges(<span class="st">"analyze"</span>, should_retrieve, {
+        <span class="st">"retrieve"</span>: <span class="st">"retrieve"</span>, <span class="st">"generate"</span>:
+            <span class="st">"generate"</span>
+            })
+            graph.add_edge(<span class="st">"retrieve"</span>, <span class="st">"generate"</span>)
+            graph.add_edge(<span class="st">"generate"</span>, END)
+            app = graph.compile(checkpointer=checkpointer)
+</div>
 
         <h3 class="subsection">Multi-Agent Patterns</h3>
         <div class="insight"><strong>Supervisor Pattern</strong>: Central LLM routes subtasks to specialized worker
@@ -2406,43 +2434,43 @@
             query() encodes the query, searches FAISS, returns top-k texts.</div>
           <div class="solution-box">
             <div class="code-block"><span class="kw">import</span> faiss
-              <span class="kw">import</span> numpy <span class="kw">as</span> np
-              <span class="kw">from</span> sentence_transformers <span class="kw">import</span> SentenceTransformer
+<span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> sentence_transformers <span class="kw">import</span> SentenceTransformer
 
-              <span class="kw">class</span> <span class="cls">MiniRAG</span>:
-              <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>,
-              model_name=<span class="st">"BAAI/bge-small-en-v1.5"</span>):
-              <span class="kw">self</span>.model = SentenceTransformer(model_name)
-              <span class="kw">self</span>.dim = <span class="kw">self</span>.model.get_sentence_embedding_dimension()
-              <span class="kw">self</span>.index = faiss.IndexFlatIP(<span class="kw">self</span>.dim) <span
-                class="cm"># inner product = cosine if normalized</span>
-              <span class="kw">self</span>.texts: list[str] = []
+<span class="kw">class</span> <span class="cls">MiniRAG</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>,
+        model_name=<span class="st">"BAAI/bge-small-en-v1.5"</span>):
+            <span class="kw">self</span>.model = SentenceTransformer(model_name)
+            <span class="kw">self</span>.dim = <span class="kw">self</span>.model.get_sentence_embedding_dimension()
+            <span class="kw">self</span>.index = faiss.IndexFlatIP(<span class="kw">self</span>.dim) <span
+            class="cm"># inner product = cosine if normalized</span>
+            <span class="kw">self</span>.texts: list[str] = []
 
-              <span class="kw">def</span> <span class="fn">add_documents</span>(<span class="kw">self</span>, docs:
-              list[str]) -> <span class="kw">None</span>:
-              embeddings = <span class="kw">self</span>.model.encode(docs, normalize_embeddings=<span
-                class="kw">True</span>, show_progress_bar=<span class="kw">False</span>)
-              <span class="kw">self</span>.index.add(np.array(embeddings, dtype=np.float32))
-              <span class="kw">self</span>.texts.extend(docs)
+    <span class="kw">def</span> <span class="fn">add_documents</span>(<span class="kw">self</span>, docs:
+        list[str]) -> <span class="kw">None</span>:
+            embeddings = <span class="kw">self</span>.model.encode(docs, normalize_embeddings=<span
+            class="kw">True</span>, show_progress_bar=<span class="kw">False</span>)
+            <span class="kw">self</span>.index.add(np.array(embeddings, dtype=np.float32))
+            <span class="kw">self</span>.texts.extend(docs)
 
-              <span class="kw">def</span> <span class="fn">query</span>(<span class="kw">self</span>, question: str,
-              top_k: int = <span class="num">3</span>) -> list[dict]:
-              q_emb = <span class="kw">self</span>.model.encode([question], normalize_embeddings=<span
-                class="kw">True</span>)
-              scores, indices = <span class="kw">self</span>.index.search(np.array(q_emb, dtype=np.float32), top_k)
-              <span class="kw">return</span> [
-              {<span class="st">"text"</span>: <span class="kw">self</span>.texts[i], <span class="st">"score"</span>:
-              float(scores[<span class="num">0</span>][j])}
-              <span class="kw">for</span> j, i <span class="kw">in</span> enumerate(indices[<span class="num">0</span>])
-              <span class="kw">if</span> i &lt; len(<span class="kw">self</span>.texts)
-              ]
+    <span class="kw">def</span> <span class="fn">query</span>(<span class="kw">self</span>, question: str,
+        top_k: int = <span class="num">3</span>) -> list[dict]:
+            q_emb = <span class="kw">self</span>.model.encode([question], normalize_embeddings=<span
+            class="kw">True</span>)
+            scores, indices = <span class="kw">self</span>.index.search(np.array(q_emb, dtype=np.float32), top_k)
+            <span class="kw">return</span> [
+            {<span class="st">"text"</span>: <span class="kw">self</span>.texts[i], <span class="st">"score"</span>:
+                float(scores[<span class="num">0</span>][j])}
+                <span class="kw">for</span> j, i <span class="kw">in</span> enumerate(indices[<span class="num">0</span>])
+                <span class="kw">if</span> i &lt; len(<span class="kw">self</span>.texts)
+                ]
 
-              <span class="cm"># Usage</span>
-              rag = MiniRAG()
-              rag.add_documents([<span class="st">"Python is a programming language"</span>, <span class="st">"RAG
+                <span class="cm"># Usage</span>
+                rag = MiniRAG()
+                rag.add_documents([<span class="st">"Python is a programming language"</span>, <span class="st">"RAG
                 combines retrieval with generation"</span>])
-              results = rag.query(<span class="st">"What is RAG?"</span>)
-            </div>
+                results = rag.query(<span class="st">"What is RAG?"</span>)
+</div>
           </div>
         </div>
       </div>
@@ -2464,42 +2492,42 @@
             exponential backoff. Use asyncio.gather with return_exceptions=True.</div>
           <div class="solution-box">
             <div class="code-block"><span class="kw">import</span> asyncio, random
-              <span class="kw">from</span> openai <span class="kw">import</span> AsyncOpenAI, RateLimitError
+<span class="kw">from</span> openai <span class="kw">import</span> AsyncOpenAI, RateLimitError
 
-              <span class="kw">async def</span> <span class="fn">batch_llm_process</span>(
-              prompts: list[str],
-              model: str = <span class="st">"gpt-4o-mini"</span>,
-              max_concurrent: int = <span class="num">10</span>,
-              max_retries: int = <span class="num">4</span>,
-              ) -> list[str | Exception]:
-              client = AsyncOpenAI()
-              sem = asyncio.Semaphore(max_concurrent)
+<span class="kw">async def</span> <span class="fn">batch_llm_process</span>(
+    prompts: list[str],
+    model: str = <span class="st">"gpt-4o-mini"</span>,
+    max_concurrent: int = <span class="num">10</span>,
+    max_retries: int = <span class="num">4</span>,
+    ) -> list[str | Exception]:
+        client = AsyncOpenAI()
+        sem = asyncio.Semaphore(max_concurrent)
 
-              <span class="kw">async def</span> <span class="fn">process_one</span>(prompt: str) -> str:
-              <span class="kw">async with</span> sem:
-              <span class="kw">for</span> attempt <span class="kw">in</span> range(max_retries):
-              <span class="kw">try</span>:
-              resp = <span class="kw">await</span> client.chat.completions.create(
-              model=model,
-              messages=[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span
+<span class="kw">async def</span> <span class="fn">process_one</span>(prompt: str) -> str:
+    <span class="kw">async with</span> sem:
+        <span class="kw">for</span> attempt <span class="kw">in</span> range(max_retries):
+            <span class="kw">try</span>:
+                resp = <span class="kw">await</span> client.chat.completions.create(
+                model=model,
+                messages=[{<span class="st">"role"</span>: <span class="st">"user"</span>, <span
                 class="st">"content"</span>: prompt}],
-              timeout=<span class="num">30</span>,
-              )
-              <span class="kw">return</span> resp.choices[<span class="num">0</span>].message.content
-              <span class="kw">except</span> RateLimitError:
-              delay = (<span class="num">2</span> ** attempt) + random.uniform(<span class="num">0</span>, <span
-                class="num">1</span>)
-              <span class="kw">await</span> asyncio.sleep(delay)
-              <span class="kw">except</span> Exception <span class="kw">as</span> e:
-              <span class="kw">if</span> attempt == max_retries - <span class="num">1</span>: <span
-                class="kw">raise</span>
-              <span class="kw">await</span> asyncio.sleep(<span class="num">1</span>)
-              <span class="kw">raise</span> RuntimeError(<span class="st">f"Max retries exceeded"</span>)
+                timeout=<span class="num">30</span>,
+                )
+                <span class="kw">return</span> resp.choices[<span class="num">0</span>].message.content
+                <span class="kw">except</span> RateLimitError:
+                    delay = (<span class="num">2</span> ** attempt) + random.uniform(<span class="num">0</span>, <span
+                    class="num">1</span>)
+                    <span class="kw">await</span> asyncio.sleep(delay)
+                    <span class="kw">except</span> Exception <span class="kw">as</span> e:
+                        <span class="kw">if</span> attempt == max_retries - <span class="num">1</span>: <span
+                        class="kw">raise</span>
+                        <span class="kw">await</span> asyncio.sleep(<span class="num">1</span>)
+                        <span class="kw">raise</span> RuntimeError(<span class="st">f"Max retries exceeded"</span>)
 
-              tasks = [process_one(p) <span class="kw">for</span> p <span class="kw">in</span> prompts]
-              <span class="kw">return await</span> asyncio.gather(*tasks, return_exceptions=<span
-                class="kw">True</span>)
-            </div>
+                        tasks = [process_one(p) <span class="kw">for</span> p <span class="kw">in</span> prompts]
+                        <span class="kw">return await</span> asyncio.gather(*tasks, return_exceptions=<span
+                        class="kw">True</span>)
+</div>
           </div>
         </div>
       </div>
@@ -2522,38 +2550,38 @@
           <div class="solution-box">
             <div class="code-block"><span class="kw">import</span> asyncio, time
 
-              <span class="kw">class</span> <span class="cls">AsyncTokenBucketRateLimiter</span>:
-              <span class="st">"""Token bucket: rate tokens/second, max burst of capacity tokens"""</span>
-              <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, rate: float,
-              capacity: float):
-              <span class="kw">self</span>.rate = rate
-              <span class="kw">self</span>.capacity = capacity
-              <span class="kw">self</span>.tokens = capacity
-              <span class="kw">self</span>._last = time.monotonic()
-              <span class="kw">self</span>._lock = asyncio.Lock()
+<span class="kw">class</span> <span class="cls">AsyncTokenBucketRateLimiter</span>:
+    <span class="st">"""Token bucket: rate tokens/second, max burst of capacity tokens"""</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, rate: float,
+        capacity: float):
+            <span class="kw">self</span>.rate = rate
+            <span class="kw">self</span>.capacity = capacity
+            <span class="kw">self</span>.tokens = capacity
+            <span class="kw">self</span>._last = time.monotonic()
+            <span class="kw">self</span>._lock = asyncio.Lock()
 
-              <span class="kw">async def</span> <span class="fn">acquire</span>(<span class="kw">self</span>, tokens:
-              float = <span class="num">1</span>) -> <span class="kw">None</span>:
-              <span class="kw">async with self</span>._lock:
-              <span class="kw">while True</span>:
-              now = time.monotonic()
-              elapsed = now - <span class="kw">self</span>._last
-              <span class="kw">self</span>.tokens = min(<span class="kw">self</span>.capacity, <span
-                class="kw">self</span>.tokens + elapsed * <span class="kw">self</span>.rate)
-              <span class="kw">self</span>._last = now
-              <span class="kw">if self</span>.tokens >= tokens:
-              <span class="kw">self</span>.tokens -= tokens
-              <span class="kw">return</span>
-              wait_time = (tokens - <span class="kw">self</span>.tokens) / <span class="kw">self</span>.rate
-              <span class="kw">await</span> asyncio.sleep(wait_time)
+    <span class="kw">async def</span> <span class="fn">acquire</span>(<span class="kw">self</span>, tokens:
+        float = <span class="num">1</span>) -> <span class="kw">None</span>:
+            <span class="kw">async with self</span>._lock:
+                <span class="kw">while True</span>:
+                    now = time.monotonic()
+                    elapsed = now - <span class="kw">self</span>._last
+                    <span class="kw">self</span>.tokens = min(<span class="kw">self</span>.capacity, <span
+                    class="kw">self</span>.tokens + elapsed * <span class="kw">self</span>.rate)
+                    <span class="kw">self</span>._last = now
+                    <span class="kw">if self</span>.tokens >= tokens:
+                        <span class="kw">self</span>.tokens -= tokens
+                        <span class="kw">return</span>
+                        wait_time = (tokens - <span class="kw">self</span>.tokens) / <span class="kw">self</span>.rate
+                        <span class="kw">await</span> asyncio.sleep(wait_time)
 
-              <span class="cm"># Usage: 10 requests/sec, burst of 20</span>
-              limiter = AsyncTokenBucketRateLimiter(rate=<span class="num">10</span>, capacity=<span
-                class="num">20</span>)
-              <span class="kw">async def</span> <span class="fn">make_request</span>(query):
-              <span class="kw">await</span> limiter.acquire()
-              <span class="kw">return await</span> llm_call(query)
-            </div>
+                        <span class="cm"># Usage: 10 requests/sec, burst of 20</span>
+                        limiter = AsyncTokenBucketRateLimiter(rate=<span class="num">10</span>, capacity=<span
+                        class="num">20</span>)
+    <span class="kw">async def</span> <span class="fn">make_request</span>(query):
+        <span class="kw">await</span> limiter.acquire()
+        <span class="kw">return await</span> llm_call(query)
+</div>
           </div>
         </div>
       </div>
@@ -2575,47 +2603,47 @@
             normalized vectors. Check all cached embeddings for similarity > threshold.</div>
           <div class="solution-box">
             <div class="code-block"><span class="kw">from</span> collections <span class="kw">import</span> OrderedDict
-              <span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> numpy <span class="kw">as</span> np
 
-              <span class="kw">class</span> <span class="cls">SemanticCache</span>:
-              <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, embed_fn,
-              capacity=<span class="num">500</span>, threshold=<span class="num">0.93</span>):
-              <span class="kw">self</span>.embed = embed_fn
-              <span class="kw">self</span>.capacity = capacity
-              <span class="kw">self</span>.threshold = threshold
-              <span class="kw">self</span>.cache: OrderedDict[str, tuple] = OrderedDict() <span class="cm"># id → (emb,
-                response)</span>
-              <span class="kw">self</span>.hits = <span class="kw">self</span>.misses = <span class="num">0</span>
+<span class="kw">class</span> <span class="cls">SemanticCache</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, embed_fn,
+        capacity=<span class="num">500</span>, threshold=<span class="num">0.93</span>):
+            <span class="kw">self</span>.embed = embed_fn
+            <span class="kw">self</span>.capacity = capacity
+            <span class="kw">self</span>.threshold = threshold
+            <span class="kw">self</span>.cache: OrderedDict[str, tuple] = OrderedDict() <span class="cm"># id → (emb,
+            response)</span>
+            <span class="kw">self</span>.hits = <span class="kw">self</span>.misses = <span class="num">0</span>
 
-              <span class="kw">def</span> <span class="fn">_cosine</span>(<span class="kw">self</span>, a, b) -> float:
-              <span class="kw">return</span> float(np.dot(a, b)) <span class="cm"># assumes normalized embeddings</span>
+    <span class="kw">def</span> <span class="fn">_cosine</span>(<span class="kw">self</span>, a, b) -> float:
+        <span class="kw">return</span> float(np.dot(a, b)) <span class="cm"># assumes normalized embeddings</span>
 
-              <span class="kw">def</span> <span class="fn">get</span>(<span class="kw">self</span>, query: str):
-              q_emb = np.array(<span class="kw">self</span>.embed(query))
-              q_emb /= np.linalg.norm(q_emb)
-              best_sim, best_resp = <span class="num">0</span>, <span class="kw">None</span>
-              best_key = <span class="kw">None</span>
-              <span class="kw">for</span> key, (emb, resp) <span class="kw">in</span> <span
-                class="kw">self</span>.cache.items():
-              sim = <span class="kw">self</span>._cosine(q_emb, emb)
-              <span class="kw">if</span> sim > best_sim: best_sim, best_resp, best_key = sim, resp, key
-              <span class="kw">if</span> best_sim >= <span class="kw">self</span>.threshold:
-              <span class="kw">self</span>.cache.move_to_end(best_key) <span class="cm"># LRU: mark as recently
+    <span class="kw">def</span> <span class="fn">get</span>(<span class="kw">self</span>, query: str):
+        q_emb = np.array(<span class="kw">self</span>.embed(query))
+        q_emb /= np.linalg.norm(q_emb)
+        best_sim, best_resp = <span class="num">0</span>, <span class="kw">None</span>
+        best_key = <span class="kw">None</span>
+        <span class="kw">for</span> key, (emb, resp) <span class="kw">in</span> <span
+        class="kw">self</span>.cache.items():
+            sim = <span class="kw">self</span>._cosine(q_emb, emb)
+            <span class="kw">if</span> sim > best_sim: best_sim, best_resp, best_key = sim, resp, key
+            <span class="kw">if</span> best_sim >= <span class="kw">self</span>.threshold:
+                <span class="kw">self</span>.cache.move_to_end(best_key) <span class="cm"># LRU: mark as recently
                 used</span>
-              <span class="kw">self</span>.hits += <span class="num">1</span>
-              <span class="kw">return</span> best_resp
-              <span class="kw">self</span>.misses += <span class="num">1</span>
-              <span class="kw">return None</span>
+                <span class="kw">self</span>.hits += <span class="num">1</span>
+                <span class="kw">return</span> best_resp
+                <span class="kw">self</span>.misses += <span class="num">1</span>
+                <span class="kw">return None</span>
 
-              <span class="kw">def</span> <span class="fn">set</span>(<span class="kw">self</span>, query: str,
-              response: str) -> <span class="kw">None</span>:
-              emb = np.array(<span class="kw">self</span>.embed(query)); emb /= np.linalg.norm(emb)
-              <span class="kw">self</span>.cache[query] = (emb, response)
-              <span class="kw">if</span> len(<span class="kw">self</span>.cache) > <span
-                class="kw">self</span>.capacity:
-              <span class="kw">self</span>.cache.popitem(last=<span class="kw">False</span>) <span class="cm"># evict
+    <span class="kw">def</span> <span class="fn">set</span>(<span class="kw">self</span>, query: str,
+        response: str) -> <span class="kw">None</span>:
+            emb = np.array(<span class="kw">self</span>.embed(query)); emb /= np.linalg.norm(emb)
+            <span class="kw">self</span>.cache[query] = (emb, response)
+            <span class="kw">if</span> len(<span class="kw">self</span>.cache) > <span
+            class="kw">self</span>.capacity:
+                <span class="kw">self</span>.cache.popitem(last=<span class="kw">False</span>) <span class="cm"># evict
                 oldest</span>
-            </div>
+</div>
           </div>
         </div>
       </div>
@@ -2637,55 +2665,55 @@
             AsyncOpenAI with stream=True for token-by-token streaming.</div>
           <div class="solution-box">
             <div class="code-block"><span class="kw">import</span> tiktoken, time
-              <span class="kw">from</span> openai <span class="kw">import</span> AsyncOpenAI
-              <span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass, field
+<span class="kw">from</span> openai <span class="kw">import</span> AsyncOpenAI
+<span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass, field
 
-              @dataclass
-              <span class="kw">class</span> <span class="cls">RAGMetrics</span>:
-              chunks_retrieved: int = <span class="num">0</span>
-              chunks_used: int = <span class="num">0</span>
-              context_tokens: int = <span class="num">0</span>
-              output_tokens: int = <span class="num">0</span>
-              latency_ms: float = <span class="num">0.0</span>
+@dataclass
+<span class="kw">class</span> <span class="cls">RAGMetrics</span>:
+    chunks_retrieved: int = <span class="num">0</span>
+    chunks_used: int = <span class="num">0</span>
+    context_tokens: int = <span class="num">0</span>
+    output_tokens: int = <span class="num">0</span>
+    latency_ms: float = <span class="num">0.0</span>
 
-              <span class="kw">async def</span> <span class="fn">streaming_rag</span>(query: str, retriever,
-              token_budget: int = <span class="num">2000</span>):
-              metrics = RAGMetrics()
-              start = time.perf_counter()
-              enc = tiktoken.encoding_for_model(<span class="st">"gpt-4o"</span>)
+    <span class="kw">async def</span> <span class="fn">streaming_rag</span>(query: str, retriever,
+        token_budget: int = <span class="num">2000</span>):
+            metrics = RAGMetrics()
+            start = time.perf_counter()
+            enc = tiktoken.encoding_for_model(<span class="st">"gpt-4o"</span>)
 
-              <span class="cm"># Retrieve more than needed, then trim to budget</span>
-              chunks = retriever(query, top_k=<span class="num">10</span>)
-              metrics.chunks_retrieved = len(chunks)
+            <span class="cm"># Retrieve more than needed, then trim to budget</span>
+            chunks = retriever(query, top_k=<span class="num">10</span>)
+            metrics.chunks_retrieved = len(chunks)
 
-              context_parts, token_count = [], <span class="num">0</span>
-              <span class="kw">for</span> chunk <span class="kw">in</span> chunks:
-              chunk_tokens = len(enc.encode(chunk))
-              <span class="kw">if</span> token_count + chunk_tokens > token_budget: <span class="kw">break</span>
-              context_parts.append(chunk); token_count += chunk_tokens
-              metrics.chunks_used = len(context_parts)
-              metrics.context_tokens = token_count
+            context_parts, token_count = [], <span class="num">0</span>
+            <span class="kw">for</span> chunk <span class="kw">in</span> chunks:
+                chunk_tokens = len(enc.encode(chunk))
+                <span class="kw">if</span> token_count + chunk_tokens > token_budget: <span class="kw">break</span>
+                context_parts.append(chunk); token_count += chunk_tokens
+                metrics.chunks_used = len(context_parts)
+                metrics.context_tokens = token_count
 
-              context = <span class="st">"\n\n---\n\n"</span>.join(context_parts)
-              prompt = <span class="st">f"Context:\n{context}\n\nQuestion: {query}\nAnswer:"</span>
+                context = <span class="st">"\n\n---\n\n"</span>.join(context_parts)
+                prompt = <span class="st">f"Context:\n{context}\n\nQuestion: {query}\nAnswer:"</span>
 
-              client = AsyncOpenAI()
-              output_tokens = <span class="num">0</span>
-              <span class="kw">async with</span> client.chat.completions.stream(
-              model=<span class="st">"gpt-4o-mini"</span>,
-              messages=[{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
+                client = AsyncOpenAI()
+                output_tokens = <span class="num">0</span>
+                <span class="kw">async with</span> client.chat.completions.stream(
+                model=<span class="st">"gpt-4o-mini"</span>,
+                messages=[{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
                 class="st">"content"</span>:prompt}]
-              ) <span class="kw">as</span> stream:
-              <span class="kw">async for</span> chunk <span class="kw">in</span> stream:
-              token = chunk.choices[<span class="num">0</span>].delta.content <span class="kw">or</span> <span
-                class="st">""</span>
-              output_tokens += <span class="num">1</span>
-              <span class="kw">yield</span> token
+                ) <span class="kw">as</span> stream:
+                    <span class="kw">async for</span> chunk <span class="kw">in</span> stream:
+                        token = chunk.choices[<span class="num">0</span>].delta.content <span class="kw">or</span> <span
+                        class="st">""</span>
+                        output_tokens += <span class="num">1</span>
+                        <span class="kw">yield</span> token
 
-              metrics.output_tokens = output_tokens
-              metrics.latency_ms = (time.perf_counter() - start) * <span class="num">1000</span>
-              print(<span class="st">f"RAG metrics: {metrics}"</span>)
-            </div>
+                        metrics.output_tokens = output_tokens
+                        metrics.latency_ms = (time.perf_counter() - start) * <span class="num">1000</span>
+                        print(<span class="st">f"RAG metrics: {metrics}"</span>)
+</div>
           </div>
         </div>
       </div>
@@ -2705,48 +2733,48 @@
             estimate. Track routing decisions for calibration.</div>
           <div class="solution-box">
             <div class="code-block"><span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel
-              <span class="kw">from</span> typing <span class="kw">import</span> Literal
-              <span class="kw">from</span> openai <span class="kw">import</span> AsyncOpenAI
+<span class="kw">from</span> typing <span class="kw">import</span> Literal
+<span class="kw">from</span> openai <span class="kw">import</span> AsyncOpenAI
 
-              <span class="kw">class</span> <span class="cls">RouteDecision</span>(BaseModel):
-              category: Literal[<span class="st">"simple_qa"</span>, <span class="st">"code"</span>, <span
-                class="st">"complex_reasoning"</span>, <span class="st">"safety_critical"</span>]
-              model: str
-              cost_per_1k_tokens: float
-              reasoning: str
+<span class="kw">class</span> <span class="cls">RouteDecision</span>(BaseModel):
+    category: Literal[<span class="st">"simple_qa"</span>, <span class="st">"code"</span>, <span
+    class="st">"complex_reasoning"</span>, <span class="st">"safety_critical"</span>]
+    model: str
+    cost_per_1k_tokens: float
+    reasoning: str
 
-              MODEL_MAP = {
-              <span class="st">"simple_qa"</span>: (<span class="st">"gpt-4o-mini"</span>, <span
-                class="num">0.00015</span>),
-              <span class="st">"code"</span>: (<span class="st">"gpt-4o"</span>, <span class="num">0.005</span>),
-              <span class="st">"complex_reasoning"</span>: (<span class="st">"gpt-4o"</span>, <span
-                class="num">0.005</span>),
-              <span class="st">"safety_critical"</span>: (<span class="st">"claude-3-5-sonnet-20241022"</span>, <span
-                class="num">0.003</span>),
-              }
+    MODEL_MAP = {
+    <span class="st">"simple_qa"</span>: (<span class="st">"gpt-4o-mini"</span>, <span
+    class="num">0.00015</span>),
+    <span class="st">"code"</span>: (<span class="st">"gpt-4o"</span>, <span class="num">0.005</span>),
+    <span class="st">"complex_reasoning"</span>: (<span class="st">"gpt-4o"</span>, <span
+    class="num">0.005</span>),
+    <span class="st">"safety_critical"</span>: (<span class="st">"claude-3-5-sonnet-20241022"</span>, <span
+    class="num">0.003</span>),
+    }
 
-              CLASSIFY_PROMPT = <span class="st">"""Classify this query into exactly one category:
-                - simple_qa: factual questions, definitions, simple lookups
-                - code: programming, debugging, code generation
-                - complex_reasoning: multi-step analysis, comparisons, synthesis
-                - safety_critical: medical, legal, financial, harmful content
+    CLASSIFY_PROMPT = <span class="st">"""Classify this query into exactly one category:
+        - simple_qa: factual questions, definitions, simple lookups
+        - code: programming, debugging, code generation
+        - complex_reasoning: multi-step analysis, comparisons, synthesis
+        - safety_critical: medical, legal, financial, harmful content
 
-                Query: {query}
-                Respond in JSON: {{"category": "...", "reasoning": "..."}}"""</span>
+        Query: {query}
+        Respond in JSON: {{"category": "...", "reasoning": "..."}}"""</span>
 
-              <span class="kw">async def</span> <span class="fn">route_query</span>(query: str) -> RouteDecision:
-              client = AsyncOpenAI()
-              resp = <span class="kw">await</span> client.chat.completions.create(
-              model=<span class="st">"gpt-4o-mini"</span>,
-              messages=[{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
-                class="st">"content"</span>:CLASSIFY_PROMPT.format(query=query)}],
-              response_format={<span class="st">"type"</span>: <span class="st">"json_object"</span>},
-              max_tokens=<span class="num">100</span>,
-              )
-              data = json.loads(resp.choices[<span class="num">0</span>].message.content)
-              model, cost = MODEL_MAP[data[<span class="st">"category"</span>]]
-              <span class="kw">return</span> RouteDecision(model=model, cost_per_1k_tokens=cost, **data)
-            </div>
+    <span class="kw">async def</span> <span class="fn">route_query</span>(query: str) -> RouteDecision:
+        client = AsyncOpenAI()
+        resp = <span class="kw">await</span> client.chat.completions.create(
+        model=<span class="st">"gpt-4o-mini"</span>,
+        messages=[{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
+        class="st">"content"</span>:CLASSIFY_PROMPT.format(query=query)}],
+        response_format={<span class="st">"type"</span>: <span class="st">"json_object"</span>},
+        max_tokens=<span class="num">100</span>,
+        )
+        data = json.loads(resp.choices[<span class="num">0</span>].message.content)
+        model, cost = MODEL_MAP[data[<span class="st">"category"</span>]]
+        <span class="kw">return</span> RouteDecision(model=model, cost_per_1k_tokens=cost, **data)
+</div>
           </div>
         </div>
       </div>
@@ -2765,48 +2793,48 @@
             content\n\n". Set X-Accel-Buffering: no to disable nginx buffering.</div>
           <div class="solution-box">
             <div class="code-block"><span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI
-              <span class="kw">from</span> fastapi.responses <span class="kw">import</span> StreamingResponse
-              <span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel
-              <span class="kw">from</span> openai <span class="kw">import</span> AsyncOpenAI
-              <span class="kw">import</span> json
+<span class="kw">from</span> fastapi.responses <span class="kw">import</span> StreamingResponse
+<span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel
+<span class="kw">from</span> openai <span class="kw">import</span> AsyncOpenAI
+<span class="kw">import</span> json
 
-              app = FastAPI()
+app = FastAPI()
 
-              <span class="kw">class</span> <span class="cls">ChatRequest</span>(BaseModel):
-              message: str
-              session_id: str = <span class="st">"default"</span>
+<span class="kw">class</span> <span class="cls">ChatRequest</span>(BaseModel):
+    message: str
+    session_id: str = <span class="st">"default"</span>
 
-              @app.post(<span class="st">"/chat/stream"</span>)
-              <span class="kw">async def</span> <span class="fn">chat_stream</span>(req: ChatRequest):
-              client = AsyncOpenAI()
+    @app.post(<span class="st">"/chat/stream"</span>)
+    <span class="kw">async def</span> <span class="fn">chat_stream</span>(req: ChatRequest):
+        client = AsyncOpenAI()
 
-              <span class="kw">async def</span> <span class="fn">generate</span>():
-              <span class="kw">try</span>:
-              <span class="kw">async with</span> client.chat.completions.stream(
-              model=<span class="st">"gpt-4o-mini"</span>,
-              messages=[{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
-                class="st">"content"</span>:req.message}],
-              ) <span class="kw">as</span> stream:
-              <span class="kw">async for</span> chunk <span class="kw">in</span> stream:
-              token = chunk.choices[<span class="num">0</span>].delta.content
-              <span class="kw">if</span> token:
-              data = json.dumps({<span class="st">"token"</span>: token, <span class="st">"done"</span>: <span
-                class="kw">False</span>})
-              <span class="kw">yield</span> <span class="st">f"data: {data}\n\n"</span>
-              <span class="kw">yield</span> <span class="st">'data: {"token": "", "done": true}\n\n'</span>
-              <span class="kw">except</span> Exception <span class="kw">as</span> e:
-              <span class="kw">yield</span> <span class="st">f'data: {{"error": "{str(e)}"}}\n\n'</span>
+    <span class="kw">async def</span> <span class="fn">generate</span>():
+        <span class="kw">try</span>:
+            <span class="kw">async with</span> client.chat.completions.stream(
+            model=<span class="st">"gpt-4o-mini"</span>,
+            messages=[{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
+            class="st">"content"</span>:req.message}],
+            ) <span class="kw">as</span> stream:
+                <span class="kw">async for</span> chunk <span class="kw">in</span> stream:
+                    token = chunk.choices[<span class="num">0</span>].delta.content
+                    <span class="kw">if</span> token:
+                        data = json.dumps({<span class="st">"token"</span>: token, <span class="st">"done"</span>: <span
+                        class="kw">False</span>})
+                        <span class="kw">yield</span> <span class="st">f"data: {data}\n\n"</span>
+                        <span class="kw">yield</span> <span class="st">'data: {"token": "", "done": true}\n\n'</span>
+                        <span class="kw">except</span> Exception <span class="kw">as</span> e:
+                            <span class="kw">yield</span> <span class="st">f'data: {{"error": "{str(e)}"}}\n\n'</span>
 
-              <span class="kw">return</span> StreamingResponse(
-              generate(),
-              media_type=<span class="st">"text/event-stream"</span>,
-              headers={
-              <span class="st">"Cache-Control"</span>: <span class="st">"no-cache"</span>,
-              <span class="st">"X-Accel-Buffering"</span>: <span class="st">"no"</span>, <span class="cm"># disable
-                nginx buffering</span>
-              }
-              )
-            </div>
+                            <span class="kw">return</span> StreamingResponse(
+                            generate(),
+                            media_type=<span class="st">"text/event-stream"</span>,
+                            headers={
+                            <span class="st">"Cache-Control"</span>: <span class="st">"no-cache"</span>,
+                            <span class="st">"X-Accel-Buffering"</span>: <span class="st">"no"</span>, <span class="cm"># disable
+                            nginx buffering</span>
+                            }
+                            )
+</div>
           </div>
         </div>
       </div>
@@ -2826,60 +2854,60 @@
             edge). If incomplete, loop back to search. Checkpointer for memory.</div>
           <div class="solution-box">
             <div class="code-block"><span class="kw">from</span> langgraph.graph <span class="kw">import</span>
-              StateGraph, END
-              <span class="kw">from</span> langgraph.checkpoint.memory <span class="kw">import</span> MemorySaver
-              <span class="kw">from</span> typing <span class="kw">import</span> TypedDict, Annotated
-              <span class="kw">import</span> operator
+StateGraph, END
+<span class="kw">from</span> langgraph.checkpoint.memory <span class="kw">import</span> MemorySaver
+<span class="kw">from</span> typing <span class="kw">import</span> TypedDict, Annotated
+<span class="kw">import</span> operator
 
-              <span class="kw">class</span> <span class="cls">ResearchState</span>(TypedDict):
-              query: str
-              search_results: Annotated[list[str], operator.add]
-              summary: str
-              iterations: int
-              is_complete: bool
+<span class="kw">class</span> <span class="cls">ResearchState</span>(TypedDict):
+    query: str
+    search_results: Annotated[list[str], operator.add]
+    summary: str
+    iterations: int
+    is_complete: bool
 
-              <span class="kw">def</span> <span class="fn">plan</span>(state: ResearchState) -> ResearchState:
-              <span class="kw">return</span> {**state, <span class="st">"iterations"</span>: <span class="num">0</span>,
-              <span class="st">"search_results"</span>: []}
+    <span class="kw">def</span> <span class="fn">plan</span>(state: ResearchState) -> ResearchState:
+        <span class="kw">return</span> {**state, <span class="st">"iterations"</span>: <span class="num">0</span>,
+        <span class="st">"search_results"</span>: []}
 
-              <span class="kw">def</span> <span class="fn">search</span>(state: ResearchState) -> ResearchState:
-              <span class="cm"># In production: call Tavily, SerpAPI, or Bing</span>
-              results = web_search(state[<span class="st">"query"</span>])
-              <span class="kw">return</span> {**state, <span class="st">"search_results"</span>: results, <span
-                class="st">"iterations"</span>: state[<span class="st">"iterations"</span>] + <span
-                class="num">1</span>}
+    <span class="kw">def</span> <span class="fn">search</span>(state: ResearchState) -> ResearchState:
+        <span class="cm"># In production: call Tavily, SerpAPI, or Bing</span>
+        results = web_search(state[<span class="st">"query"</span>])
+        <span class="kw">return</span> {**state, <span class="st">"search_results"</span>: results, <span
+        class="st">"iterations"</span>: state[<span class="st">"iterations"</span>] + <span
+        class="num">1</span>}
 
-              <span class="kw">def</span> <span class="fn">summarize</span>(state: ResearchState) -> ResearchState:
-              context = <span class="st">"\n"</span>.join(state[<span class="st">"search_results"</span>])
-              summary = llm.invoke(<span class="st">f"Synthesize: {context}"</span>)
-              <span class="kw">return</span> {**state, <span class="st">"summary"</span>: summary}
+    <span class="kw">def</span> <span class="fn">summarize</span>(state: ResearchState) -> ResearchState:
+        context = <span class="st">"\n"</span>.join(state[<span class="st">"search_results"</span>])
+        summary = llm.invoke(<span class="st">f"Synthesize: {context}"</span>)
+        <span class="kw">return</span> {**state, <span class="st">"summary"</span>: summary}
 
-              <span class="kw">def</span> <span class="fn">check_completeness</span>(state: ResearchState) ->
-              ResearchState:
-              verdict = llm.invoke(<span class="st">f"Is '{state['query']}' fully answered by: {state['summary']}? Reply
-                YES or NO"</span>)
-              <span class="kw">return</span> {**state, <span class="st">"is_complete"</span>: <span
-                class="st">"YES"</span> <span class="kw">in</span> verdict}
+    <span class="kw">def</span> <span class="fn">check_completeness</span>(state: ResearchState) ->
+        ResearchState:
+            verdict = llm.invoke(<span class="st">f"Is '{state['query']}' fully answered by: {state['summary']}? Reply
+            YES or NO"</span>)
+            <span class="kw">return</span> {**state, <span class="st">"is_complete"</span>: <span
+            class="st">"YES"</span> <span class="kw">in</span> verdict}
 
-              <span class="kw">def</span> <span class="fn">should_continue</span>(state: ResearchState) -> str:
-              <span class="kw">if</span> state[<span class="st">"is_complete"</span>] <span class="kw">or</span>
-              state[<span class="st">"iterations"</span>] >= <span class="num">3</span>: <span class="kw">return</span>
-              <span class="st">"end"</span>
-              <span class="kw">return</span> <span class="st">"search"</span>
+    <span class="kw">def</span> <span class="fn">should_continue</span>(state: ResearchState) -> str:
+        <span class="kw">if</span> state[<span class="st">"is_complete"</span>] <span class="kw">or</span>
+        state[<span class="st">"iterations"</span>] >= <span class="num">3</span>: <span class="kw">return</span>
+        <span class="st">"end"</span>
+        <span class="kw">return</span> <span class="st">"search"</span>
 
-              graph = StateGraph(ResearchState)
-              graph.add_node(<span class="st">"plan"</span>, plan)
-              graph.add_node(<span class="st">"search"</span>, search)
-              graph.add_node(<span class="st">"summarize"</span>, summarize)
-              graph.add_node(<span class="st">"check"</span>, check_completeness)
-              graph.set_entry_point(<span class="st">"plan"</span>)
-              graph.add_edge(<span class="st">"plan"</span>, <span class="st">"search"</span>)
-              graph.add_edge(<span class="st">"search"</span>, <span class="st">"summarize"</span>)
-              graph.add_edge(<span class="st">"summarize"</span>, <span class="st">"check"</span>)
-              graph.add_conditional_edges(<span class="st">"check"</span>, should_continue, {<span
-                class="st">"search"</span>:<span class="st">"search"</span>,<span class="st">"end"</span>:END})
-              agent = graph.compile(checkpointer=MemorySaver())
-            </div>
+        graph = StateGraph(ResearchState)
+        graph.add_node(<span class="st">"plan"</span>, plan)
+        graph.add_node(<span class="st">"search"</span>, search)
+        graph.add_node(<span class="st">"summarize"</span>, summarize)
+        graph.add_node(<span class="st">"check"</span>, check_completeness)
+        graph.set_entry_point(<span class="st">"plan"</span>)
+        graph.add_edge(<span class="st">"plan"</span>, <span class="st">"search"</span>)
+        graph.add_edge(<span class="st">"search"</span>, <span class="st">"summarize"</span>)
+        graph.add_edge(<span class="st">"summarize"</span>, <span class="st">"check"</span>)
+        graph.add_conditional_edges(<span class="st">"check"</span>, should_continue, {<span
+        class="st">"search"</span>:<span class="st">"search"</span>,<span class="st">"end"</span>:END})
+        agent = graph.compile(checkpointer=MemorySaver())
+</div>
           </div>
         </div>
       </div>
@@ -2899,46 +2927,46 @@
             claim, ask LLM if context supports it (YES/NO). Score = supported_claims / total_claims.</div>
           <div class="solution-box">
             <div class="code-block"><span class="kw">import</span> json
-              <span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
 
-              client = OpenAI()
+client = OpenAI()
 
-              <span class="kw">def</span> <span class="fn">score_faithfulness</span>(answer: str, context: str) -> dict:
-              <span class="cm"># Step 1: Extract atomic claims</span>
-              claims_resp = client.chat.completions.create(
-              model=<span class="st">"gpt-4o-mini"</span>,
-              messages=[{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
-                class="st">"content"</span>:
-              <span class="st">f"Extract all atomic factual claims from this answer as a JSON array of strings.\nAnswer:
-                {answer}"</span>}],
-              response_format={<span class="st">"type"</span>:<span class="st">"json_object"</span>},
-              )
-              claims = json.loads(claims_resp.choices[<span class="num">0</span>].message.content).get(<span
-                class="st">"claims"</span>, [])
+<span class="kw">def</span> <span class="fn">score_faithfulness</span>(answer: str, context: str) -> dict:
+    <span class="cm"># Step 1: Extract atomic claims</span>
+    claims_resp = client.chat.completions.create(
+    model=<span class="st">"gpt-4o-mini"</span>,
+    messages=[{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
+    class="st">"content"</span>:
+        <span class="st">f"Extract all atomic factual claims from this answer as a JSON array of strings.\nAnswer:
+            {answer}"</span>}],
+            response_format={<span class="st">"type"</span>:<span class="st">"json_object"</span>},
+            )
+            claims = json.loads(claims_resp.choices[<span class="num">0</span>].message.content).get(<span
+            class="st">"claims"</span>, [])
 
-              <span class="kw">if not</span> claims: <span class="kw">return</span> {<span class="st">"score"</span>:
-              <span class="num">1.0</span>, <span class="st">"claims"</span>: []}
+            <span class="kw">if not</span> claims: <span class="kw">return</span> {<span class="st">"score"</span>:
+                <span class="num">1.0</span>, <span class="st">"claims"</span>: []}
 
-              <span class="cm"># Step 2: Verify each claim against context</span>
-              verdicts = []
-              <span class="kw">for</span> claim <span class="kw">in</span> claims:
-              verdict_resp = client.chat.completions.create(
-              model=<span class="st">"gpt-4o-mini"</span>,
-              messages=[{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
-                class="st">"content"</span>:
-              <span class="st">f"Context: {context}\n\nClaim: {claim}\n\nIs this claim directly supported by the
-                context? Reply YES or NO only."</span>}],
-              max_tokens=<span class="num">3</span>,
-              )
-              supported = verdict_resp.choices[<span class="num">0</span>].message.content.strip().upper() == <span
-                class="st">"YES"</span>
-              verdicts.append({<span class="st">"claim"</span>: claim, <span class="st">"supported"</span>: supported})
+                <span class="cm"># Step 2: Verify each claim against context</span>
+                verdicts = []
+                <span class="kw">for</span> claim <span class="kw">in</span> claims:
+                    verdict_resp = client.chat.completions.create(
+                    model=<span class="st">"gpt-4o-mini"</span>,
+                    messages=[{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
+                    class="st">"content"</span>:
+                        <span class="st">f"Context: {context}\n\nClaim: {claim}\n\nIs this claim directly supported by the
+                        context? Reply YES or NO only."</span>}],
+                        max_tokens=<span class="num">3</span>,
+                        )
+                        supported = verdict_resp.choices[<span class="num">0</span>].message.content.strip().upper() == <span
+                        class="st">"YES"</span>
+                        verdicts.append({<span class="st">"claim"</span>: claim, <span class="st">"supported"</span>: supported})
 
-              score = sum(<span class="num">1</span> <span class="kw">for</span> v <span class="kw">in</span> verdicts
-              <span class="kw">if</span> v[<span class="st">"supported"</span>]) / len(verdicts)
-              <span class="kw">return</span> {<span class="st">"score"</span>: round(score, <span class="num">3</span>),
-              <span class="st">"verdicts"</span>: verdicts, <span class="st">"total_claims"</span>: len(verdicts)}
-            </div>
+                        score = sum(<span class="num">1</span> <span class="kw">for</span> v <span class="kw">in</span> verdicts
+                        <span class="kw">if</span> v[<span class="st">"supported"</span>]) / len(verdicts)
+                        <span class="kw">return</span> {<span class="st">"score"</span>: round(score, <span class="num">3</span>),
+                        <span class="st">"verdicts"</span>: verdicts, <span class="st">"total_claims"</span>: len(verdicts)}
+</div>
           </div>
         </div>
       </div>
@@ -2958,53 +2986,53 @@
             tokens). Each child carries parent_id metadata. Store parents separately.</div>
           <div class="solution-box">
             <div class="code-block"><span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass
-              <span class="kw">import</span> tiktoken, uuid
+<span class="kw">import</span> tiktoken, uuid
 
-              @dataclass
-              <span class="kw">class</span> <span class="cls">Chunk</span>:
-              id: str
-              text: str
-              parent_id: str | <span class="kw">None</span>
-              is_parent: bool
-              token_count: int
+@dataclass
+<span class="kw">class</span> <span class="cls">Chunk</span>:
+    id: str
+    text: str
+    parent_id: str | <span class="kw">None</span>
+    is_parent: bool
+    token_count: int
 
-              <span class="kw">class</span> <span class="cls">ParentChildChunker</span>:
-              <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>,
-              parent_size=<span class="num">512</span>, child_size=<span class="num">128</span>, overlap=<span
-                class="num">20</span>):
-              <span class="kw">self</span>.enc = tiktoken.encoding_for_model(<span class="st">"gpt-4o"</span>)
-              <span class="kw">self</span>.parent_size = parent_size
-              <span class="kw">self</span>.child_size = child_size
-              <span class="kw">self</span>.overlap = overlap
+<span class="kw">class</span> <span class="cls">ParentChildChunker</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>,
+        parent_size=<span class="num">512</span>, child_size=<span class="num">128</span>, overlap=<span
+        class="num">20</span>):
+            <span class="kw">self</span>.enc = tiktoken.encoding_for_model(<span class="st">"gpt-4o"</span>)
+            <span class="kw">self</span>.parent_size = parent_size
+            <span class="kw">self</span>.child_size = child_size
+            <span class="kw">self</span>.overlap = overlap
 
-              <span class="kw">def</span> <span class="fn">_split_by_tokens</span>(<span class="kw">self</span>, text:
-              str, size: int, overlap: int) -> list[str]:
-              tokens = <span class="kw">self</span>.enc.encode(text)
-              chunks = []
-              i = <span class="num">0</span>
-              <span class="kw">while</span> i &lt; len(tokens):
-              chunk_tokens = tokens[i:i+size]
-              chunks.append(<span class="kw">self</span>.enc.decode(chunk_tokens))
-              i += size - overlap
-              <span class="kw">return</span> chunks
+    <span class="kw">def</span> <span class="fn">_split_by_tokens</span>(<span class="kw">self</span>, text:
+        str, size: int, overlap: int) -> list[str]:
+            tokens = <span class="kw">self</span>.enc.encode(text)
+            chunks = []
+            i = <span class="num">0</span>
+            <span class="kw">while</span> i &lt; len(tokens):
+                chunk_tokens = tokens[i:i+size]
+                chunks.append(<span class="kw">self</span>.enc.decode(chunk_tokens))
+                i += size - overlap
+                <span class="kw">return</span> chunks
 
-              <span class="kw">def</span> <span class="fn">chunk</span>(<span class="kw">self</span>, document: str) ->
-              tuple[list[Chunk], list[Chunk]]:
-              parents, children = [], []
-              parent_texts = <span class="kw">self</span>._split_by_tokens(document, <span
-                class="kw">self</span>.parent_size, <span class="num">0</span>)
-              <span class="kw">for</span> pt <span class="kw">in</span> parent_texts:
-              pid = str(uuid.uuid4())
-              parents.append(Chunk(id=pid, text=pt, parent_id=<span class="kw">None</span>, is_parent=<span
+    <span class="kw">def</span> <span class="fn">chunk</span>(<span class="kw">self</span>, document: str) ->
+        tuple[list[Chunk], list[Chunk]]:
+            parents, children = [], []
+            parent_texts = <span class="kw">self</span>._split_by_tokens(document, <span
+            class="kw">self</span>.parent_size, <span class="num">0</span>)
+            <span class="kw">for</span> pt <span class="kw">in</span> parent_texts:
+                pid = str(uuid.uuid4())
+                parents.append(Chunk(id=pid, text=pt, parent_id=<span class="kw">None</span>, is_parent=<span
                 class="kw">True</span>,
-              token_count=len(<span class="kw">self</span>.enc.encode(pt))))
-              child_texts = <span class="kw">self</span>._split_by_tokens(pt, <span class="kw">self</span>.child_size,
-              <span class="kw">self</span>.overlap)
-              <span class="kw">for</span> ct <span class="kw">in</span> child_texts:
-              children.append(Chunk(id=str(uuid.uuid4()), text=ct, parent_id=pid,
-              is_parent=<span class="kw">False</span>, token_count=len(<span class="kw">self</span>.enc.encode(ct))))
-              <span class="kw">return</span> parents, children
-            </div>
+                token_count=len(<span class="kw">self</span>.enc.encode(pt))))
+                child_texts = <span class="kw">self</span>._split_by_tokens(pt, <span class="kw">self</span>.child_size,
+                <span class="kw">self</span>.overlap)
+                <span class="kw">for</span> ct <span class="kw">in</span> child_texts:
+                    children.append(Chunk(id=str(uuid.uuid4()), text=ct, parent_id=pid,
+                    is_parent=<span class="kw">False</span>, token_count=len(<span class="kw">self</span>.enc.encode(ct))))
+                    <span class="kw">return</span> parents, children
+</div>
           </div>
         </div>
       </div>
@@ -3024,46 +3052,46 @@
             re-appending the last few characters of previous chunk.</div>
           <div class="solution-box">
             <div class="code-block"><span class="kw">def</span> <span class="fn">recursive_split</span>(text: str,
-              max_size=<span class="num">512</span>, overlap=<span class="num">50</span>,
-              separators=<span class="kw">None</span>) -> list[str]:
-              <span class="kw">if</span> separators <span class="kw">is None</span>:
-              separators = [<span class="st">"\n\n"</span>, <span class="st">"\n"</span>, <span class="st">". "</span>,
-              <span class="st">" "</span>, <span class="st">""</span>]
+    max_size=<span class="num">512</span>, overlap=<span class="num">50</span>,
+    separators=<span class="kw">None</span>) -> list[str]:
+        <span class="kw">if</span> separators <span class="kw">is None</span>:
+            separators = [<span class="st">"\n\n"</span>, <span class="st">"\n"</span>, <span class="st">". "</span>,
+            <span class="st">" "</span>, <span class="st">""</span>]
 
-              <span class="kw">if</span> len(text) &lt;= max_size: <span class="kw">return</span> [text]
+            <span class="kw">if</span> len(text) &lt;= max_size: <span class="kw">return</span> [text]
 
-              sep = <span class="kw">None</span>
-              <span class="kw">for</span> s <span class="kw">in</span> separators:
-              <span class="kw">if</span> s <span class="kw">in</span> text: sep = s; <span class="kw">break</span>
+            sep = <span class="kw">None</span>
+            <span class="kw">for</span> s <span class="kw">in</span> separators:
+                <span class="kw">if</span> s <span class="kw">in</span> text: sep = s; <span class="kw">break</span>
 
-              <span class="kw">if</span> sep <span class="kw">is None</span>:
-              <span class="kw">return</span> [text[i:i+max_size] <span class="kw">for</span> i <span
-                class="kw">in</span> range(<span class="num">0</span>, len(text), max_size - overlap)]
+                <span class="kw">if</span> sep <span class="kw">is None</span>:
+                    <span class="kw">return</span> [text[i:i+max_size] <span class="kw">for</span> i <span
+                    class="kw">in</span> range(<span class="num">0</span>, len(text), max_size - overlap)]
 
-              parts = text.split(sep)
-              chunks, current = [], <span class="st">""</span>
+                    parts = text.split(sep)
+                    chunks, current = [], <span class="st">""</span>
 
-              <span class="kw">for</span> part <span class="kw">in</span> parts:
-              candidate = current + sep + part <span class="kw">if</span> current <span class="kw">else</span> part
-              <span class="kw">if</span> len(candidate) &lt;= max_size:
-              current = candidate
-              <span class="kw">else</span>:
-              <span class="kw">if</span> current:
-              chunks.extend(recursive_split(current, max_size, overlap, separators[<span class="num">1</span>:]))
-              current = part
+                    <span class="kw">for</span> part <span class="kw">in</span> parts:
+                        candidate = current + sep + part <span class="kw">if</span> current <span class="kw">else</span> part
+                        <span class="kw">if</span> len(candidate) &lt;= max_size:
+                            current = candidate
+                        <span class="kw">else</span>:
+                            <span class="kw">if</span> current:
+                                chunks.extend(recursive_split(current, max_size, overlap, separators[<span class="num">1</span>:]))
+                                current = part
 
-              <span class="kw">if</span> current: chunks.extend(recursive_split(current, max_size, overlap,
-              separators[<span class="num">1</span>:]))
+                                <span class="kw">if</span> current: chunks.extend(recursive_split(current, max_size, overlap,
+                                separators[<span class="num">1</span>:]))
 
-              <span class="cm"># Add overlap: prepend end of previous chunk to next chunk</span>
-              overlapped = [chunks[<span class="num">0</span>]]
-              <span class="kw">for</span> i <span class="kw">in</span> range(<span class="num">1</span>, len(chunks)):
-              prev_overlap = chunks[i-<span class="num">1</span>][-overlap:] <span class="kw">if</span>
-              len(chunks[i-<span class="num">1</span>]) > overlap <span class="kw">else</span> chunks[i-<span
-                class="num">1</span>]
-              overlapped.append(prev_overlap + <span class="st">" "</span> + chunks[i])
-              <span class="kw">return</span> overlapped
-            </div>
+                                <span class="cm"># Add overlap: prepend end of previous chunk to next chunk</span>
+                                overlapped = [chunks[<span class="num">0</span>]]
+                                <span class="kw">for</span> i <span class="kw">in</span> range(<span class="num">1</span>, len(chunks)):
+                                    prev_overlap = chunks[i-<span class="num">1</span>][-overlap:] <span class="kw">if</span>
+                                    len(chunks[i-<span class="num">1</span>]) > overlap <span class="kw">else</span> chunks[i-<span
+                                    class="num">1</span>]
+                                    overlapped.append(prev_overlap + <span class="st">" "</span> + chunks[i])
+                                    <span class="kw">return</span> overlapped
+</div>
           </div>
         </div>
       </div>
@@ -3083,39 +3111,39 @@
             keep memory low.</div>
           <div class="solution-box">
             <div class="code-block"><span class="kw">import</span> pandas <span class="kw">as</span> pd
-              <span class="kw">import</span> pyarrow <span class="kw">as</span> pa
-              <span class="kw">import</span> pyarrow.parquet <span class="kw">as</span> pq
+<span class="kw">import</span> pyarrow <span class="kw">as</span> pa
+<span class="kw">import</span> pyarrow.parquet <span class="kw">as</span> pq
 
-              <span class="kw">def</span> <span class="fn">csv_to_partitioned_parquet</span>(
-              csv_path: str,
-              output_dir: str,
-              partition_cols: list[str] = [<span class="st">"date"</span>],
-              chunksize: int = <span class="num">100_000</span>,
-              ):
-              dtype_spec = {<span class="st">"id"</span>: <span class="st">"int32"</span>, <span
-                class="st">"score"</span>: <span class="st">"float32"</span>, <span class="st">"category"</span>: <span
-                class="st">"category"</span>}
-              schema = <span class="kw">None</span>
+<span class="kw">def</span> <span class="fn">csv_to_partitioned_parquet</span>(
+    csv_path: str,
+    output_dir: str,
+    partition_cols: list[str] = [<span class="st">"date"</span>],
+    chunksize: int = <span class="num">100_000</span>,
+    ):
+        dtype_spec = {<span class="st">"id"</span>: <span class="st">"int32"</span>, <span
+        class="st">"score"</span>: <span class="st">"float32"</span>, <span class="st">"category"</span>: <span
+        class="st">"category"</span>}
+        schema = <span class="kw">None</span>
 
-              <span class="kw">for</span> i, chunk <span class="kw">in</span> enumerate(pd.read_csv(csv_path,
-              dtype=dtype_spec, chunksize=chunksize)):
-              <span class="cm"># Parse date and extract partition column</span>
-              chunk[<span class="st">"date"</span>] = pd.to_datetime(chunk[<span
-                class="st">"timestamp"</span>]).dt.date.astype(str)
+        <span class="kw">for</span> i, chunk <span class="kw">in</span> enumerate(pd.read_csv(csv_path,
+        dtype=dtype_spec, chunksize=chunksize)):
+            <span class="cm"># Parse date and extract partition column</span>
+            chunk[<span class="st">"date"</span>] = pd.to_datetime(chunk[<span
+            class="st">"timestamp"</span>]).dt.date.astype(str)
 
-              table = pa.Table.from_pandas(chunk, preserve_index=<span class="kw">False</span>)
-              <span class="kw">if</span> schema <span class="kw">is None</span>: schema = table.schema
+            table = pa.Table.from_pandas(chunk, preserve_index=<span class="kw">False</span>)
+            <span class="kw">if</span> schema <span class="kw">is None</span>: schema = table.schema
 
-              pq.write_to_dataset(
-              table,
-              root_path=output_dir,
-              partition_cols=partition_cols,
-              compression=<span class="st">"snappy"</span>,
-              existing_data_behavior=<span class="st">"overwrite_or_ignore"</span>,
-              )
-              <span class="kw">if</span> i % <span class="num">10</span> == <span class="num">0</span>: print(<span
-                class="st">f"Wrote chunk {i}"</span>)
-            </div>
+            pq.write_to_dataset(
+            table,
+            root_path=output_dir,
+            partition_cols=partition_cols,
+            compression=<span class="st">"snappy"</span>,
+            existing_data_behavior=<span class="st">"overwrite_or_ignore"</span>,
+            )
+            <span class="kw">if</span> i % <span class="num">10</span> == <span class="num">0</span>: print(<span
+            class="st">f"Wrote chunk {i}"</span>)
+</div>
           </div>
         </div>
       </div>
@@ -3136,33 +3164,33 @@
           <div class="solution-box">
             <div class="code-block"><span class="kw">import</span> functools, asyncio, time, random
 
-              <span class="kw">def</span> <span class="fn">retry</span>(max_attempts=<span class="num">3</span>,
-              base_delay=<span class="num">1.0</span>, backoff=<span class="num">2.0</span>, exceptions=(Exception,)):
-              <span class="kw">def</span> <span class="fn">decorator</span>(func):
-              <span class="kw">if</span> asyncio.iscoroutinefunction(func):
-              @functools.wraps(func)
-              <span class="kw">async def</span> <span class="fn">async_wrapper</span>(*args, **kwargs):
-              <span class="kw">for</span> attempt <span class="kw">in</span> range(max_attempts):
-              <span class="kw">try</span>: <span class="kw">return await</span> func(*args, **kwargs)
-              <span class="kw">except</span> exceptions <span class="kw">as</span> e:
-              <span class="kw">if</span> attempt == max_attempts - <span class="num">1</span>: <span
-                class="kw">raise</span>
-              delay = base_delay * (backoff ** attempt) + random.uniform(<span class="num">0</span>, <span
-                class="num">0.1</span>)
-              <span class="kw">await</span> asyncio.sleep(delay)
-              <span class="kw">return</span> async_wrapper
-              <span class="kw">else</span>:
-              @functools.wraps(func)
-              <span class="kw">def</span> <span class="fn">sync_wrapper</span>(*args, **kwargs):
-              <span class="kw">for</span> attempt <span class="kw">in</span> range(max_attempts):
-              <span class="kw">try</span>: <span class="kw">return</span> func(*args, **kwargs)
-              <span class="kw">except</span> exceptions <span class="kw">as</span> e:
-              <span class="kw">if</span> attempt == max_attempts - <span class="num">1</span>: <span
-                class="kw">raise</span>
-              time.sleep(base_delay * (backoff ** attempt))
-              <span class="kw">return</span> sync_wrapper
-              <span class="kw">return</span> decorator
-            </div>
+<span class="kw">def</span> <span class="fn">retry</span>(max_attempts=<span class="num">3</span>,
+    base_delay=<span class="num">1.0</span>, backoff=<span class="num">2.0</span>, exceptions=(Exception,)):
+<span class="kw">def</span> <span class="fn">decorator</span>(func):
+    <span class="kw">if</span> asyncio.iscoroutinefunction(func):
+@functools.wraps(func)
+<span class="kw">async def</span> <span class="fn">async_wrapper</span>(*args, **kwargs):
+    <span class="kw">for</span> attempt <span class="kw">in</span> range(max_attempts):
+        <span class="kw">try</span>: <span class="kw">return await</span> func(*args, **kwargs)
+        <span class="kw">except</span> exceptions <span class="kw">as</span> e:
+            <span class="kw">if</span> attempt == max_attempts - <span class="num">1</span>: <span
+            class="kw">raise</span>
+            delay = base_delay * (backoff ** attempt) + random.uniform(<span class="num">0</span>, <span
+            class="num">0.1</span>)
+            <span class="kw">await</span> asyncio.sleep(delay)
+            <span class="kw">return</span> async_wrapper
+        <span class="kw">else</span>:
+@functools.wraps(func)
+<span class="kw">def</span> <span class="fn">sync_wrapper</span>(*args, **kwargs):
+    <span class="kw">for</span> attempt <span class="kw">in</span> range(max_attempts):
+        <span class="kw">try</span>: <span class="kw">return</span> func(*args, **kwargs)
+        <span class="kw">except</span> exceptions <span class="kw">as</span> e:
+            <span class="kw">if</span> attempt == max_attempts - <span class="num">1</span>: <span
+            class="kw">raise</span>
+            time.sleep(base_delay * (backoff ** attempt))
+            <span class="kw">return</span> sync_wrapper
+            <span class="kw">return</span> decorator
+</div>
           </div>
         </div>
       </div>
@@ -3182,40 +3210,40 @@
             others. Filter out exceptions in post-processing.</div>
           <div class="solution-box">
             <div class="code-block"><span class="kw">import</span> asyncio
-              <span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass
+<span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass
 
-              @dataclass
-              <span class="kw">class</span> <span class="cls">SearchResult</span>:
-              text: str
-              score: float
-              source: str
+@dataclass
+<span class="kw">class</span> <span class="cls">SearchResult</span>:
+    text: str
+    score: float
+    source: str
 
-              <span class="kw">async def</span> <span class="fn">federated_search</span>(query: str, timeout=<span
-                class="num">2.0</span>) -> list[SearchResult]:
-              <span class="kw">async def</span> <span class="fn">search_with_timeout</span>(source_name: str, search_fn,
-              *args):
-              <span class="kw">try</span>:
-              results = <span class="kw">await</span> asyncio.wait_for(search_fn(query, *args), timeout=timeout)
-              <span class="kw">return</span> [{**r, <span class="st">"source"</span>: source_name} <span
+    <span class="kw">async def</span> <span class="fn">federated_search</span>(query: str, timeout=<span
+        class="num">2.0</span>) -> list[SearchResult]:
+    <span class="kw">async def</span> <span class="fn">search_with_timeout</span>(source_name: str, search_fn,
+        *args):
+            <span class="kw">try</span>:
+                results = <span class="kw">await</span> asyncio.wait_for(search_fn(query, *args), timeout=timeout)
+                <span class="kw">return</span> [{**r, <span class="st">"source"</span>: source_name} <span
                 class="kw">for</span> r <span class="kw">in</span> results]
-              <span class="kw">except</span> asyncio.TimeoutError:
-              print(<span class="st">f"Warning: {source_name} timed out"</span>)
-              <span class="kw">return</span> []
-              <span class="kw">except</span> Exception <span class="kw">as</span> e:
-              print(<span class="st">f"Warning: {source_name} failed: {e}"</span>)
-              <span class="kw">return</span> []
+                <span class="kw">except</span> asyncio.TimeoutError:
+                    print(<span class="st">f"Warning: {source_name} timed out"</span>)
+                    <span class="kw">return</span> []
+                    <span class="kw">except</span> Exception <span class="kw">as</span> e:
+                        print(<span class="st">f"Warning: {source_name} failed: {e}"</span>)
+                        <span class="kw">return</span> []
 
-              all_results = <span class="kw">await</span> asyncio.gather(
-              search_with_timeout(<span class="st">"qdrant"</span>, qdrant_search),
-              search_with_timeout(<span class="st">"web"</span>, web_search),
-              search_with_timeout(<span class="st">"sql"</span>, sql_search),
-              )
+                        all_results = <span class="kw">await</span> asyncio.gather(
+                        search_with_timeout(<span class="st">"qdrant"</span>, qdrant_search),
+                        search_with_timeout(<span class="st">"web"</span>, web_search),
+                        search_with_timeout(<span class="st">"sql"</span>, sql_search),
+                        )
 
-              merged = [SearchResult(**r) <span class="kw">for</span> rs <span class="kw">in</span> all_results <span
-                class="kw">for</span> r <span class="kw">in</span> rs]
-              <span class="kw">return</span> sorted(merged, key=<span class="kw">lambda</span> x: x.score, reverse=<span
-                class="kw">True</span>)
-            </div>
+                        merged = [SearchResult(**r) <span class="kw">for</span> rs <span class="kw">in</span> all_results <span
+                        class="kw">for</span> r <span class="kw">in</span> rs]
+                        <span class="kw">return</span> sorted(merged, key=<span class="kw">lambda</span> x: x.score, reverse=<span
+                        class="kw">True</span>)
+</div>
           </div>
         </div>
       </div>
@@ -3235,47 +3263,47 @@
             asking for a corrected response. Limit to 3 retries.</div>
           <div class="solution-box">
             <div class="code-block"><span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel,
-              ValidationError, field_validator
-              <span class="kw">from</span> openai <span class="kw">import</span> OpenAI
-              <span class="kw">import</span> json
+ValidationError, field_validator
+<span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+<span class="kw">import</span> json
 
-              <span class="kw">class</span> <span class="cls">SearchQuery</span>(BaseModel):
-              query: str
-              filters: dict[str, str] = {}
-              top_k: int = <span class="num">5</span>
+<span class="kw">class</span> <span class="cls">SearchQuery</span>(BaseModel):
+    query: str
+    filters: dict[str, str] = {}
+    top_k: int = <span class="num">5</span>
 
-              @field_validator(<span class="st">"top_k"</span>)
-              @classmethod
-              <span class="kw">def</span> <span class="fn">validate_top_k</span>(cls, v):
-              <span class="kw">if not</span> (<span class="num">1</span> &lt;= v &lt;= <span class="num">50</span>):
-              <span class="kw">raise</span> ValueError(<span class="st">"top_k must be 1-50"</span>)
-              <span class="kw">return</span> v
+    @field_validator(<span class="st">"top_k"</span>)
+    @classmethod
+    <span class="kw">def</span> <span class="fn">validate_top_k</span>(cls, v):
+        <span class="kw">if not</span> (<span class="num">1</span> &lt;= v &lt;= <span class="num">50</span>):
+            <span class="kw">raise</span> ValueError(<span class="st">"top_k must be 1-50"</span>)
+            <span class="kw">return</span> v
 
-              <span class="kw">def</span> <span class="fn">structured_llm_call</span>(prompt: str, model_cls,
-              max_retries=<span class="num">3</span>):
-              client = OpenAI()
-              schema = json.dumps(model_cls.model_json_schema())
-              messages = [{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
-                class="st">"content"</span>:
-              <span class="st">f"{prompt}\n\nRespond with valid JSON matching schema: {schema}"}]</span>
+    <span class="kw">def</span> <span class="fn">structured_llm_call</span>(prompt: str, model_cls,
+        max_retries=<span class="num">3</span>):
+            client = OpenAI()
+            schema = json.dumps(model_cls.model_json_schema())
+            messages = [{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
+            class="st">"content"</span>:
+                <span class="st">f"{prompt}\n\nRespond with valid JSON matching schema: {schema}"}]</span>
 
-              <span class="kw">for</span> attempt <span class="kw">in</span> range(max_retries):
-              resp = client.chat.completions.create(
-              model=<span class="st">"gpt-4o-mini"</span>, messages=messages,
-              response_format={<span class="st">"type"</span>:<span class="st">"json_object"</span>}
-              )
-              raw = resp.choices[<span class="num">0</span>].message.content
-              <span class="kw">try</span>:
-              data = json.loads(raw)
-              <span class="kw">return</span> model_cls(**data)
-              <span class="kw">except</span> (ValidationError, json.JSONDecodeError) <span class="kw">as</span> e:
-              messages.append({<span class="st">"role"</span>:<span class="st">"assistant"</span>,<span
-                class="st">"content"</span>:raw})
-              messages.append({<span class="st">"role"</span>:<span class="st">"user"</span>,<span
-                class="st">"content"</span>:
-              <span class="st">f"That response had errors: {e}\nPlease fix and return corrected JSON."</span>})
-              <span class="kw">raise</span> ValueError(<span class="st">f"Failed after {max_retries} attempts"</span>)
-            </div>
+                <span class="kw">for</span> attempt <span class="kw">in</span> range(max_retries):
+                    resp = client.chat.completions.create(
+                    model=<span class="st">"gpt-4o-mini"</span>, messages=messages,
+                    response_format={<span class="st">"type"</span>:<span class="st">"json_object"</span>}
+                    )
+                    raw = resp.choices[<span class="num">0</span>].message.content
+                    <span class="kw">try</span>:
+                        data = json.loads(raw)
+                        <span class="kw">return</span> model_cls(**data)
+                    <span class="kw">except</span> (ValidationError, json.JSONDecodeError) <span class="kw">as</span> e:
+                        messages.append({<span class="st">"role"</span>:<span class="st">"assistant"</span>,<span
+                        class="st">"content"</span>:raw})
+                        messages.append({<span class="st">"role"</span>:<span class="st">"user"</span>,<span
+                        class="st">"content"</span>:
+                            <span class="st">f"That response had errors: {e}\nPlease fix and return corrected JSON."</span>})
+                            <span class="kw">raise</span> ValueError(<span class="st">f"Failed after {max_retries} attempts"</span>)
+</div>
           </div>
         </div>
       </div>
@@ -3536,91 +3564,91 @@
         <h3 class="subsection">Retry with Exponential Backoff</h3>
         <div class="code-block"><span class="kw">import</span> functools, time, random, logging
 
-          <span class="kw">def</span> <span class="fn">retry_with_backoff</span>(max_retries=<span class="num">3</span>,
-          base_delay=<span class="num">1.0</span>, exceptions=(Exception,)):
-          <span class="st">"""Decorator for LLM API calls with exponential backoff + jitter"""</span>
-          <span class="kw">def</span> <span class="fn">decorator</span>(func):
-          @functools.wraps(func) <span class="cm"># preserves __name__, __doc__, __module__</span>
-          <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
-          last_exc = <span class="kw">None</span>
-          <span class="kw">for</span> attempt <span class="kw">in</span> range(max_retries + <span
-            class="num">1</span>):
-          <span class="kw">try</span>:
-          <span class="kw">return</span> func(*args, **kwargs)
-          <span class="kw">except</span> exceptions <span class="kw">as</span> e:
-          last_exc = e
-          <span class="kw">if</span> attempt == max_retries:
-          <span class="kw">break</span>
-          delay = base_delay * (<span class="num">2</span> ** attempt) + random.uniform(<span class="num">0</span>,
-          <span class="num">0.1</span>)
-          logging.warning(<span class="st">f"Attempt {attempt+1} failed: {e}. Retrying in {delay:.2f}s"</span>)
-          time.sleep(delay)
-          <span class="kw">raise</span> last_exc
-          <span class="kw">return</span> wrapper
-          <span class="kw">return</span> decorator
+<span class="kw">def</span> <span class="fn">retry_with_backoff</span>(max_retries=<span class="num">3</span>,
+    base_delay=<span class="num">1.0</span>, exceptions=(Exception,)):
+        <span class="st">"""Decorator for LLM API calls with exponential backoff + jitter"""</span>
+<span class="kw">def</span> <span class="fn">decorator</span>(func):
+@functools.wraps(func) <span class="cm"># preserves __name__, __doc__, __module__</span>
+<span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
+    last_exc = <span class="kw">None</span>
+    <span class="kw">for</span> attempt <span class="kw">in</span> range(max_retries + <span
+    class="num">1</span>):
+        <span class="kw">try</span>:
+            <span class="kw">return</span> func(*args, **kwargs)
+            <span class="kw">except</span> exceptions <span class="kw">as</span> e:
+                last_exc = e
+                <span class="kw">if</span> attempt == max_retries:
+                    <span class="kw">break</span>
+                    delay = base_delay * (<span class="num">2</span> ** attempt) + random.uniform(<span class="num">0</span>,
+                    <span class="num">0.1</span>)
+                    logging.warning(<span class="st">f"Attempt {attempt+1} failed: {e}. Retrying in {delay:.2f}s"</span>)
+                    time.sleep(delay)
+                    <span class="kw">raise</span> last_exc
+                    <span class="kw">return</span> wrapper
+                    <span class="kw">return</span> decorator
 
-          <span class="cm"># Usage: wraps OpenAI RateLimitError, APIError</span>
-          <span class="kw">from</span> openai <span class="kw">import</span> RateLimitError, APIError
-          @retry_with_backoff(max_retries=<span class="num">4</span>, base_delay=<span class="num">2.0</span>,
-          exceptions=(RateLimitError, APIError))
-          <span class="kw">def</span> <span class="fn">call_llm</span>(prompt: str) -> str:
-          <span class="kw">return</span> client.chat.completions.create(
-          model=<span class="st">"gpt-4o"</span>, messages=[{<span class="st">"role"</span>:<span
-            class="st">"user"</span>,<span class="st">"content"</span>:prompt}]
-          ).choices[<span class="num">0</span>].message.content
-        </div>
+                    <span class="cm"># Usage: wraps OpenAI RateLimitError, APIError</span>
+                    <span class="kw">from</span> openai <span class="kw">import</span> RateLimitError, APIError
+@retry_with_backoff(max_retries=<span class="num">4</span>, base_delay=<span class="num">2.0</span>,
+                    exceptions=(RateLimitError, APIError))
+<span class="kw">def</span> <span class="fn">call_llm</span>(prompt: str) -> str:
+    <span class="kw">return</span> client.chat.completions.create(
+    model=<span class="st">"gpt-4o"</span>, messages=[{<span class="st">"role"</span>:<span
+    class="st">"user"</span>,<span class="st">"content"</span>:prompt}]
+    ).choices[<span class="num">0</span>].message.content
+</div>
 
         <h3 class="subsection">Async LRU Cache for Embeddings</h3>
         <div class="code-block"><span class="kw">import</span> asyncio
-          <span class="kw">from</span> functools <span class="kw">import</span> wraps
+<span class="kw">from</span> functools <span class="kw">import</span> wraps
 
-          <span class="kw">def</span> <span class="fn">lru_cache_async</span>(maxsize=<span class="num">512</span>):
-          <span class="st">"""Async-safe LRU cache (functools.lru_cache is not coroutine-aware)"""</span>
-          cache = {}
-          order = []
-          <span class="kw">def</span> <span class="fn">decorator</span>(func):
-          @wraps(func)
-          <span class="kw">async def</span> <span class="fn">wrapper</span>(*args):
-          key = args
-          <span class="kw">if</span> key <span class="kw">in</span> cache:
-          order.remove(key); order.append(key)
-          <span class="kw">return</span> cache[key]
-          result = <span class="kw">await</span> func(*args)
-          cache[key] = result
-          order.append(key)
-          <span class="kw">if</span> len(order) > maxsize:
-          evict = order.pop(<span class="num">0</span>)
-          cache.pop(evict, <span class="kw">None</span>)
-          <span class="kw">return</span> result
-          wrapper.cache_info = <span class="kw">lambda</span>: {<span class="st">"size"</span>: len(cache), <span
+<span class="kw">def</span> <span class="fn">lru_cache_async</span>(maxsize=<span class="num">512</span>):
+    <span class="st">"""Async-safe LRU cache (functools.lru_cache is not coroutine-aware)"""</span>
+    cache = {}
+    order = []
+<span class="kw">def</span> <span class="fn">decorator</span>(func):
+@wraps(func)
+<span class="kw">async def</span> <span class="fn">wrapper</span>(*args):
+    key = args
+    <span class="kw">if</span> key <span class="kw">in</span> cache:
+        order.remove(key); order.append(key)
+        <span class="kw">return</span> cache[key]
+        result = <span class="kw">await</span> func(*args)
+        cache[key] = result
+        order.append(key)
+        <span class="kw">if</span> len(order) > maxsize:
+            evict = order.pop(<span class="num">0</span>)
+            cache.pop(evict, <span class="kw">None</span>)
+            <span class="kw">return</span> result
+            wrapper.cache_info = <span class="kw">lambda</span>: {<span class="st">"size"</span>: len(cache), <span
             class="st">"maxsize"</span>: maxsize}
-          wrapper.cache_clear = <span class="kw">lambda</span>: (cache.clear(), order.clear())
-          <span class="kw">return</span> wrapper
-          <span class="kw">return</span> decorator
+            wrapper.cache_clear = <span class="kw">lambda</span>: (cache.clear(), order.clear())
+            <span class="kw">return</span> wrapper
+            <span class="kw">return</span> decorator
 
-          @lru_cache_async(maxsize=<span class="num">1024</span>)
-          <span class="kw">async def</span> <span class="fn">get_embedding</span>(text: str) -> list[float]:
-          resp = <span class="kw">await</span> async_client.embeddings.create(model=<span
-            class="st">"text-embedding-3-small"</span>, input=text)
-          <span class="kw">return</span> resp.data[<span class="num">0</span>].embedding
-        </div>
+@lru_cache_async(maxsize=<span class="num">1024</span>)
+<span class="kw">async def</span> <span class="fn">get_embedding</span>(text: str) -> list[float]:
+    resp = <span class="kw">await</span> async_client.embeddings.create(model=<span
+    class="st">"text-embedding-3-small"</span>, input=text)
+    <span class="kw">return</span> resp.data[<span class="num">0</span>].embedding
+</div>
 
         <h3 class="subsection">Timed Decorator</h3>
         <div class="code-block"><span class="kw">import</span> time, functools, logging
 
-          <span class="kw">def</span> <span class="fn">timed</span>(logger=<span class="kw">None</span>):
-          <span class="kw">def</span> <span class="fn">decorator</span>(func):
-          @functools.wraps(func)
-          <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
-          start = time.perf_counter()
-          result = func(*args, **kwargs)
-          elapsed = time.perf_counter() - start
-          msg = <span class="st">f"{func.__name__} took {elapsed*1000:.1f}ms"</span>
-          (logger <span class="kw">or</span> logging).info(msg)
-          <span class="kw">return</span> result
-          <span class="kw">return</span> wrapper
-          <span class="kw">return</span> decorator
-        </div>
+<span class="kw">def</span> <span class="fn">timed</span>(logger=<span class="kw">None</span>):
+<span class="kw">def</span> <span class="fn">decorator</span>(func):
+@functools.wraps(func)
+<span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
+    start = time.perf_counter()
+    result = func(*args, **kwargs)
+    elapsed = time.perf_counter() - start
+    msg = <span class="st">f"{func.__name__} took {elapsed*1000:.1f}ms"</span>
+    (logger <span class="kw">or</span> logging).info(msg)
+    <span class="kw">return</span> result
+    <span class="kw">return</span> wrapper
+    <span class="kw">return</span> decorator
+</div>
 
         <div class="insight yellow"><strong>functools.wraps importance</strong>: Without @wraps, decorators replace the
           function's __name__, __doc__, __module__, and __qualname__ with the wrapper's. This breaks logging, debugging,
@@ -3632,75 +3660,75 @@
           descriptor. Called when an attribute is accessed on a class/instance. Used for: validation, lazy loading,
           computed properties, ORM column definitions (SQLAlchemy).</div>
         <div class="code-block"><span class="kw">class</span> <span class="cls">Validated</span>:
-          <span class="st">"""Data descriptor with type validation"""</span>
-          <span class="kw">def</span> <span class="fn">__set_name__</span>(<span class="kw">self</span>, owner, name):
-          <span class="kw">self</span>._name = name
-          <span class="kw">def</span> <span class="fn">__get__</span>(<span class="kw">self</span>, obj, objtype=<span
-            class="kw">None</span>):
-          <span class="kw">if</span> obj <span class="kw">is None</span>: <span class="kw">return self</span> <span
+    <span class="st">"""Data descriptor with type validation"""</span>
+    <span class="kw">def</span> <span class="fn">__set_name__</span>(<span class="kw">self</span>, owner, name):
+        <span class="kw">self</span>._name = name
+    <span class="kw">def</span> <span class="fn">__get__</span>(<span class="kw">self</span>, obj, objtype=<span
+        class="kw">None</span>):
+            <span class="kw">if</span> obj <span class="kw">is None</span>: <span class="kw">return self</span> <span
             class="cm"># class access</span>
-          <span class="kw">return</span> obj.__dict__.get(<span class="kw">self</span>._name)
-          <span class="kw">def</span> <span class="fn">__set__</span>(<span class="kw">self</span>, obj, value):
-          <span class="kw">if not isinstance</span>(value, (int, float)):
-          <span class="kw">raise</span> TypeError(<span class="st">f"{self._name} must be numeric"</span>)
-          obj.__dict__[<span class="kw">self</span>._name] = value
+            <span class="kw">return</span> obj.__dict__.get(<span class="kw">self</span>._name)
+    <span class="kw">def</span> <span class="fn">__set__</span>(<span class="kw">self</span>, obj, value):
+        <span class="kw">if not isinstance</span>(value, (int, float)):
+            <span class="kw">raise</span> TypeError(<span class="st">f"{self._name} must be numeric"</span>)
+            obj.__dict__[<span class="kw">self</span>._name] = value
 
-          <span class="kw">class</span> <span class="cls">Config</span>:
-          temperature = Validated()
-          max_tokens = Validated()
-        </div>
+<span class="kw">class</span> <span class="cls">Config</span>:
+    temperature = Validated()
+    max_tokens = Validated()
+</div>
       </div>
 
       <!-- TAB: Generators -->
       <div id="python-gen" class="tab-content">
         <h3 class="subsection">Generator Pipeline for Document Processing</h3>
         <div class="code-block"><span class="kw">from</span> pathlib <span class="kw">import</span> Path
-          <span class="kw">from</span> typing <span class="kw">import</span> Generator, Iterator
+<span class="kw">from</span> typing <span class="kw">import</span> Generator, Iterator
 
-          <span class="kw">def</span> <span class="fn">stream_documents</span>(directory: str) -> Generator[dict, <span
-            class="kw">None</span>, <span class="kw">None</span>]:
-          <span class="st">"""O(1) memory: yields one document at a time regardless of corpus size"""</span>
-          <span class="kw">for</span> path <span class="kw">in</span> Path(directory).rglob(<span
-            class="st">"*.txt"</span>):
-          <span class="kw">with</span> open(path, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span>
-          f:
-          <span class="kw">yield</span> {<span class="st">"path"</span>: str(path), <span class="st">"content"</span>:
-          f.read(), <span class="st">"size"</span>: path.stat().st_size}
+<span class="kw">def</span> <span class="fn">stream_documents</span>(directory: str) -> Generator[dict, <span
+    class="kw">None</span>, <span class="kw">None</span>]:
+        <span class="st">"""O(1) memory: yields one document at a time regardless of corpus size"""</span>
+        <span class="kw">for</span> path <span class="kw">in</span> Path(directory).rglob(<span
+        class="st">"*.txt"</span>):
+            <span class="kw">with</span> open(path, encoding=<span class="st">"utf-8"</span>) <span class="kw">as</span>
+            f:
+                <span class="kw">yield</span> {<span class="st">"path"</span>: str(path), <span class="st">"content"</span>:
+                    f.read(), <span class="st">"size"</span>: path.stat().st_size}
 
-          <span class="kw">def</span> <span class="fn">chunk_text</span>(docs: Iterator[dict], chunk_size=<span
-            class="num">512</span>) -> Generator[dict, <span class="kw">None</span>, <span class="kw">None</span>]:
-          <span class="st">"""Generator pipeline stage: yields chunks from doc stream"""</span>
-          <span class="kw">for</span> doc <span class="kw">in</span> docs:
-          text = doc[<span class="st">"content"</span>]
-          <span class="kw">for</span> i <span class="kw">in</span> range(<span class="num">0</span>, len(text),
-          chunk_size):
-          <span class="kw">yield</span> {<span class="st">"chunk"</span>: text[i:i+chunk_size], <span
-            class="st">"source"</span>: doc[<span class="st">"path"</span>], <span class="st">"offset"</span>: i}
+<span class="kw">def</span> <span class="fn">chunk_text</span>(docs: Iterator[dict], chunk_size=<span
+    class="num">512</span>) -> Generator[dict, <span class="kw">None</span>, <span class="kw">None</span>]:
+        <span class="st">"""Generator pipeline stage: yields chunks from doc stream"""</span>
+        <span class="kw">for</span> doc <span class="kw">in</span> docs:
+            text = doc[<span class="st">"content"</span>]
+            <span class="kw">for</span> i <span class="kw">in</span> range(<span class="num">0</span>, len(text),
+            chunk_size):
+                <span class="kw">yield</span> {<span class="st">"chunk"</span>: text[i:i+chunk_size], <span
+                class="st">"source"</span>: doc[<span class="st">"path"</span>], <span class="st">"offset"</span>: i}
 
-          <span class="kw">def</span> <span class="fn">batch_generator</span>(items: Iterator, batch_size=<span
-            class="num">32</span>) -> Generator[list, <span class="kw">None</span>, <span class="kw">None</span>]:
-          <span class="st">"""Batches any iterator — critical for efficient API calls"""</span>
-          batch = []
-          <span class="kw">for</span> item <span class="kw">in</span> items:
-          batch.append(item)
-          <span class="kw">if</span> len(batch) >= batch_size:
-          <span class="kw">yield</span> batch; batch = []
-          <span class="kw">if</span> batch:
-          <span class="kw">yield</span> batch
+<span class="kw">def</span> <span class="fn">batch_generator</span>(items: Iterator, batch_size=<span
+    class="num">32</span>) -> Generator[list, <span class="kw">None</span>, <span class="kw">None</span>]:
+        <span class="st">"""Batches any iterator — critical for efficient API calls"""</span>
+        batch = []
+        <span class="kw">for</span> item <span class="kw">in</span> items:
+            batch.append(item)
+            <span class="kw">if</span> len(batch) >= batch_size:
+                <span class="kw">yield</span> batch; batch = []
+                <span class="kw">if</span> batch:
+                    <span class="kw">yield</span> batch
 
-          <span class="cm"># Full pipeline — never loads more than one batch in memory</span>
-          <span class="kw">for</span> batch <span class="kw">in</span> batch_generator(chunk_text(stream_documents(<span
-            class="st">"/docs"</span>)), <span class="num">32</span>):
-          embeddings = embed_model.encode([c[<span class="st">"chunk"</span>] <span class="kw">for</span> c <span
-            class="kw">in</span> batch])
-        </div>
+                    <span class="cm"># Full pipeline — never loads more than one batch in memory</span>
+                    <span class="kw">for</span> batch <span class="kw">in</span> batch_generator(chunk_text(stream_documents(<span
+                    class="st">"/docs"</span>)), <span class="num">32</span>):
+                        embeddings = embed_model.encode([c[<span class="st">"chunk"</span>] <span class="kw">for</span> c <span
+                        class="kw">in</span> batch])
+</div>
 
         <h3 class="subsection">yield from — Generator Delegation</h3>
         <div class="code-block"><span class="kw">def</span> <span class="fn">all_chunks</span>(directories: list[str]):
-          <span class="st">"""yield from delegates to sub-generators transparently"""</span>
-          <span class="kw">for</span> directory <span class="kw">in</span> directories:
-          <span class="kw">yield from</span> chunk_text(stream_documents(directory))
-        </div>
+    <span class="st">"""yield from delegates to sub-generators transparently"""</span>
+    <span class="kw">for</span> directory <span class="kw">in</span> directories:
+        <span class="kw">yield from</span> chunk_text(stream_documents(directory))
+</div>
 
         <div class="insight yellow"><strong>Generators vs Lists for 1M embedding pipeline</strong>: List approach loads
           all 1M texts into RAM (~4GB for 4KB avg). Generator pipeline keeps only current batch (32 × 4KB = 128KB).
@@ -3712,78 +3740,78 @@
       <div id="python-async" class="tab-content">
         <h3 class="subsection">Parallel LLM Calls with Rate Limiting</h3>
         <div class="code-block"><span class="kw">import</span> asyncio
-          <span class="kw">from</span> openai <span class="kw">import</span> AsyncOpenAI
+<span class="kw">from</span> openai <span class="kw">import</span> AsyncOpenAI
 
-          <span class="kw">async def</span> <span class="fn">parallel_llm_calls</span>(prompts: list[str],
-          max_concurrent=<span class="num">10</span>) -> list[str]:
-          <span class="st">"""Process prompts in parallel with semaphore rate limiting"""</span>
-          client = AsyncOpenAI()
-          semaphore = asyncio.Semaphore(max_concurrent) <span class="cm"># limit concurrent API calls</span>
+<span class="kw">async def</span> <span class="fn">parallel_llm_calls</span>(prompts: list[str],
+    max_concurrent=<span class="num">10</span>) -> list[str]:
+        <span class="st">"""Process prompts in parallel with semaphore rate limiting"""</span>
+        client = AsyncOpenAI()
+        semaphore = asyncio.Semaphore(max_concurrent) <span class="cm"># limit concurrent API calls</span>
 
-          <span class="kw">async def</span> <span class="fn">call_with_limit</span>(prompt: str) -> str:
-          <span class="kw">async with</span> semaphore: <span class="cm"># blocks when 10 concurrent calls in
-            flight</span>
-          <span class="kw">for</span> attempt <span class="kw">in</span> range(<span class="num">3</span>):
-          <span class="kw">try</span>:
-          resp = <span class="kw">await</span> client.chat.completions.create(
-          model=<span class="st">"gpt-4o-mini"</span>,
-          messages=[{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
+<span class="kw">async def</span> <span class="fn">call_with_limit</span>(prompt: str) -> str:
+    <span class="kw">async with</span> semaphore: <span class="cm"># blocks when 10 concurrent calls in
+    flight</span>
+    <span class="kw">for</span> attempt <span class="kw">in</span> range(<span class="num">3</span>):
+        <span class="kw">try</span>:
+            resp = <span class="kw">await</span> client.chat.completions.create(
+            model=<span class="st">"gpt-4o-mini"</span>,
+            messages=[{<span class="st">"role"</span>:<span class="st">"user"</span>,<span
             class="st">"content"</span>:prompt}]
-          )
-          <span class="kw">return</span> resp.choices[<span class="num">0</span>].message.content
-          <span class="kw">except</span> Exception <span class="kw">as</span> e:
-          <span class="kw">if</span> <span class="st">"429"</span> <span class="kw">in</span> str(e):
-          <span class="kw">await</span> asyncio.sleep(<span class="num">2</span> ** attempt)
-          <span class="kw">else</span>: <span class="kw">raise</span>
+            )
+            <span class="kw">return</span> resp.choices[<span class="num">0</span>].message.content
+            <span class="kw">except</span> Exception <span class="kw">as</span> e:
+                <span class="kw">if</span> <span class="st">"429"</span> <span class="kw">in</span> str(e):
+                    <span class="kw">await</span> asyncio.sleep(<span class="num">2</span> ** attempt)
+                <span class="kw">else</span>: <span class="kw">raise</span>
 
-          tasks = [call_with_limit(p) <span class="kw">for</span> p <span class="kw">in</span> prompts]
-          <span class="kw">return await</span> asyncio.gather(*tasks, return_exceptions=<span class="kw">True</span>)
-        </div>
+                tasks = [call_with_limit(p) <span class="kw">for</span> p <span class="kw">in</span> prompts]
+                <span class="kw">return await</span> asyncio.gather(*tasks, return_exceptions=<span class="kw">True</span>)
+</div>
 
         <h3 class="subsection">TaskGroup (Python 3.11+)</h3>
         <div class="code-block"><span class="kw">async def</span> <span class="fn">process_with_taskgroup</span>(items:
-          list) -> list:
-          results = []
-          <span class="kw">async with</span> asyncio.TaskGroup() <span class="kw">as</span> tg:
-          tasks = [tg.create_task(process_item(item)) <span class="kw">for</span> item <span class="kw">in</span> items]
-          <span class="cm"># If ANY task raises, TaskGroup cancels all others and re-raises</span>
-          <span class="kw">return</span> [t.result() <span class="kw">for</span> t <span class="kw">in</span> tasks]
-        </div>
+    list) -> list:
+        results = []
+        <span class="kw">async with</span> asyncio.TaskGroup() <span class="kw">as</span> tg:
+            tasks = [tg.create_task(process_item(item)) <span class="kw">for</span> item <span class="kw">in</span> items]
+            <span class="cm"># If ANY task raises, TaskGroup cancels all others and re-raises</span>
+            <span class="kw">return</span> [t.result() <span class="kw">for</span> t <span class="kw">in</span> tasks]
+</div>
 
         <h3 class="subsection">Async Generator for Streaming LLM</h3>
         <div class="code-block"><span class="kw">async def</span> <span class="fn">stream_llm</span>(prompt: str):
-          <span class="st">"""Async generator: yields tokens as they arrive from LLM"""</span>
-          client = AsyncOpenAI()
-          <span class="kw">async with</span> client.chat.completions.stream(
-          model=<span class="st">"gpt-4o"</span>, messages=[{<span class="st">"role"</span>:<span
-            class="st">"user"</span>,<span class="st">"content"</span>:prompt}]
-          ) <span class="kw">as</span> stream:
-          <span class="kw">async for</span> chunk <span class="kw">in</span> stream:
-          <span class="kw">if</span> chunk.choices[<span class="num">0</span>].delta.content:
-          <span class="kw">yield</span> chunk.choices[<span class="num">0</span>].delta.content
+    <span class="st">"""Async generator: yields tokens as they arrive from LLM"""</span>
+    client = AsyncOpenAI()
+    <span class="kw">async with</span> client.chat.completions.stream(
+    model=<span class="st">"gpt-4o"</span>, messages=[{<span class="st">"role"</span>:<span
+    class="st">"user"</span>,<span class="st">"content"</span>:prompt}]
+    ) <span class="kw">as</span> stream:
+        <span class="kw">async for</span> chunk <span class="kw">in</span> stream:
+            <span class="kw">if</span> chunk.choices[<span class="num">0</span>].delta.content:
+                <span class="kw">yield</span> chunk.choices[<span class="num">0</span>].delta.content
 
-          <span class="cm"># Usage in FastAPI SSE endpoint</span>
-          <span class="kw">async for</span> token <span class="kw">in</span> stream_llm(<span class="st">"Explain
-            attention mechanism"</span>):
-          <span class="kw">print</span>(token, end=<span class="st">""</span>, flush=<span class="kw">True</span>)
-        </div>
+                <span class="cm"># Usage in FastAPI SSE endpoint</span>
+                <span class="kw">async for</span> token <span class="kw">in</span> stream_llm(<span class="st">"Explain
+                attention mechanism"</span>):
+                    <span class="kw">print</span>(token, end=<span class="st">""</span>, flush=<span class="kw">True</span>)
+</div>
 
         <h3 class="subsection">Federated Search Fan-out</h3>
         <div class="code-block"><span class="kw">async def</span> <span class="fn">federated_search</span>(query: str,
-          sources: list) -> list:
-          <span class="st">"""Fan-out search to multiple sources simultaneously"""</span>
-          <span class="kw">async def</span> <span class="fn">search_one</span>(source):
-          <span class="kw">try</span>:
-          <span class="kw">return await</span> asyncio.wait_for(source.search(query), timeout=<span
-            class="num">2.0</span>)
-          <span class="kw">except</span> asyncio.TimeoutError:
-          <span class="kw">return</span> []
+    sources: list) -> list:
+        <span class="st">"""Fan-out search to multiple sources simultaneously"""</span>
+<span class="kw">async def</span> <span class="fn">search_one</span>(source):
+    <span class="kw">try</span>:
+        <span class="kw">return await</span> asyncio.wait_for(source.search(query), timeout=<span
+        class="num">2.0</span>)
+        <span class="kw">except</span> asyncio.TimeoutError:
+            <span class="kw">return</span> []
 
-          results = <span class="kw">await</span> asyncio.gather(*[search_one(s) <span class="kw">for</span> s <span
+            results = <span class="kw">await</span> asyncio.gather(*[search_one(s) <span class="kw">for</span> s <span
             class="kw">in</span> sources])
-          <span class="kw">return</span> [r <span class="kw">for</span> rs <span class="kw">in</span> results <span
+            <span class="kw">return</span> [r <span class="kw">for</span> rs <span class="kw">in</span> results <span
             class="kw">for</span> r <span class="kw">in</span> rs] <span class="cm"># flatten</span>
-        </div>
+</div>
 
         <div class="insight red"><strong>asyncio ≠ parallelism</strong>: asyncio is single-threaded cooperative
           multitasking. Multiple coroutines share one CPU core — only one runs at a time. The GIL is irrelevant here (no
@@ -3791,123 +3819,123 @@
             class="inline-code">ProcessPoolExecutor</span> or <span class="inline-code">loop.run_in_executor</span>.
           asyncio excels at I/O-bound workloads: API calls, database queries, file I/O.</div>
         <div class="code-block"><span class="cm"># Blocking CPU call in async context → run in thread pool</span>
-          <span class="kw">import</span> asyncio
-          <span class="kw">from</span> concurrent.futures <span class="kw">import</span> ThreadPoolExecutor
+<span class="kw">import</span> asyncio
+<span class="kw">from</span> concurrent.futures <span class="kw">import</span> ThreadPoolExecutor
 
-          executor = ThreadPoolExecutor(max_workers=<span class="num">4</span>)
+executor = ThreadPoolExecutor(max_workers=<span class="num">4</span>)
 
-          <span class="kw">async def</span> <span class="fn">embed_async</span>(text: str) -> list:
-          loop = asyncio.get_event_loop()
-          <span class="cm"># run_in_executor releases the event loop while waiting</span>
-          <span class="kw">return await</span> loop.run_in_executor(executor, embed_model.encode, text)
-        </div>
+<span class="kw">async def</span> <span class="fn">embed_async</span>(text: str) -> list:
+    loop = asyncio.get_event_loop()
+    <span class="cm"># run_in_executor releases the event loop while waiting</span>
+    <span class="kw">return await</span> loop.run_in_executor(executor, embed_model.encode, text)
+</div>
       </div>
 
       <!-- TAB: Patterns -->
       <div id="python-pat" class="tab-content">
         <h3 class="subsection">FastAPI Lifespan Context Manager</h3>
         <div class="code-block"><span class="kw">from</span> contextlib <span class="kw">import</span>
-          asynccontextmanager
-          <span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI
+asynccontextmanager
+<span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI
 
-          ml_models = {}
+ml_models = {}
 
-          @asynccontextmanager
-          <span class="kw">async def</span> <span class="fn">lifespan</span>(app: FastAPI):
-          <span class="cm"># Startup: load models once (not on every request)</span>
-          ml_models[<span class="st">"embed"</span>] = SentenceTransformer(<span
-            class="st">"BAAI/bge-large-en-v1.5"</span>)
-          ml_models[<span class="st">"qdrant"</span>] = QdrantClient(<span class="st">"localhost"</span>, port=<span
-            class="num">6333</span>)
-          <span class="kw">yield</span>
-          <span class="cm"># Shutdown: cleanup</span>
-          ml_models.clear()
+@asynccontextmanager
+<span class="kw">async def</span> <span class="fn">lifespan</span>(app: FastAPI):
+    <span class="cm"># Startup: load models once (not on every request)</span>
+    ml_models[<span class="st">"embed"</span>] = SentenceTransformer(<span
+    class="st">"BAAI/bge-large-en-v1.5"</span>)
+    ml_models[<span class="st">"qdrant"</span>] = QdrantClient(<span class="st">"localhost"</span>, port=<span
+    class="num">6333</span>)
+    <span class="kw">yield</span>
+    <span class="cm"># Shutdown: cleanup</span>
+    ml_models.clear()
 
-          app = FastAPI(lifespan=lifespan)
+    app = FastAPI(lifespan=lifespan)
 
-          @app.post(<span class="st">"/search"</span>)
-          <span class="kw">async def</span> <span class="fn">search</span>(query: str):
-          embed = ml_models[<span class="st">"embed"</span>] <span class="cm"># pre-loaded, fast</span>
-          q_vec = embed.encode(query, normalize_embeddings=<span class="kw">True</span>)
-          <span class="kw">return</span> ml_models[<span class="st">"qdrant"</span>].search(<span
-            class="st">"docs"</span>, q_vec.tolist(), limit=<span class="num">5</span>)
-        </div>
+@app.post(<span class="st">"/search"</span>)
+<span class="kw">async def</span> <span class="fn">search</span>(query: str):
+    embed = ml_models[<span class="st">"embed"</span>] <span class="cm"># pre-loaded, fast</span>
+    q_vec = embed.encode(query, normalize_embeddings=<span class="kw">True</span>)
+    <span class="kw">return</span> ml_models[<span class="st">"qdrant"</span>].search(<span
+    class="st">"docs"</span>, q_vec.tolist(), limit=<span class="num">5</span>)
+</div>
 
         <h3 class="subsection">Pydantic v2 Patterns</h3>
         <div class="code-block"><span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel,
-          field_validator, model_validator, Field
-          <span class="kw">from</span> typing <span class="kw">import</span> Literal
+field_validator, model_validator, Field
+<span class="kw">from</span> typing <span class="kw">import</span> Literal
 
-          <span class="kw">class</span> <span class="cls">RAGQuery</span>(BaseModel):
-          query: str = Field(min_length=<span class="num">1</span>, max_length=<span class="num">2000</span>)
-          top_k: int = Field(default=<span class="num">5</span>, ge=<span class="num">1</span>, le=<span
-            class="num">20</span>)
-          filters: dict = Field(default_factory=dict)
-          mode: Literal[<span class="st">"dense"</span>, <span class="st">"sparse"</span>, <span
-            class="st">"hybrid"</span>] = <span class="st">"hybrid"</span>
+<span class="kw">class</span> <span class="cls">RAGQuery</span>(BaseModel):
+    query: str = Field(min_length=<span class="num">1</span>, max_length=<span class="num">2000</span>)
+    top_k: int = Field(default=<span class="num">5</span>, ge=<span class="num">1</span>, le=<span
+    class="num">20</span>)
+    filters: dict = Field(default_factory=dict)
+    mode: Literal[<span class="st">"dense"</span>, <span class="st">"sparse"</span>, <span
+    class="st">"hybrid"</span>] = <span class="st">"hybrid"</span>
 
-          @field_validator(<span class="st">"query"</span>)
-          @classmethod
-          <span class="kw">def</span> <span class="fn">clean_query</span>(cls, v: str) -> str:
-          v = v.strip()
-          <span class="kw">if not</span> v: <span class="kw">raise</span> ValueError(<span class="st">"Query cannot be
-            empty after stripping"</span>)
-          <span class="kw">return</span> v
+    @field_validator(<span class="st">"query"</span>)
+    @classmethod
+    <span class="kw">def</span> <span class="fn">clean_query</span>(cls, v: str) -> str:
+        v = v.strip()
+        <span class="kw">if not</span> v: <span class="kw">raise</span> ValueError(<span class="st">"Query cannot be
+        empty after stripping"</span>)
+        <span class="kw">return</span> v
 
-          model_config = {<span class="st">"json_schema_extra"</span>: {<span class="st">"examples"</span>: [{<span
-            class="st">"query"</span>:<span class="st">"How does RAG work?"</span>}]}}
-        </div>
+        model_config = {<span class="st">"json_schema_extra"</span>: {<span class="st">"examples"</span>: [{<span
+        class="st">"query"</span>:<span class="st">"How does RAG work?"</span>}]}}
+</div>
 
         <h3 class="subsection">Thread-Safe Singleton for LLM Client Pool</h3>
         <div class="code-block"><span class="kw">import</span> threading
 
-          <span class="kw">class</span> <span class="cls">LLMClientPool</span>:
-          _instance = <span class="kw">None</span>
-          _lock = threading.Lock()
+<span class="kw">class</span> <span class="cls">LLMClientPool</span>:
+    _instance = <span class="kw">None</span>
+    _lock = threading.Lock()
 
-          <span class="kw">def</span> <span class="fn">__new__</span>(cls):
-          <span class="kw">if</span> cls._instance <span class="kw">is None</span>:
-          <span class="kw">with</span> cls._lock: <span class="cm"># double-checked locking</span>
-          <span class="kw">if</span> cls._instance <span class="kw">is None</span>:
-          instance = <span class="kw">super</span>().__new__(cls)
-          instance.client = AsyncOpenAI()
-          instance.semaphore = asyncio.Semaphore(<span class="num">50</span>)
-          cls._instance = instance
-          <span class="kw">return</span> cls._instance
+    <span class="kw">def</span> <span class="fn">__new__</span>(cls):
+        <span class="kw">if</span> cls._instance <span class="kw">is None</span>:
+            <span class="kw">with</span> cls._lock: <span class="cm"># double-checked locking</span>
+            <span class="kw">if</span> cls._instance <span class="kw">is None</span>:
+                instance = <span class="kw">super</span>().__new__(cls)
+                instance.client = AsyncOpenAI()
+                instance.semaphore = asyncio.Semaphore(<span class="num">50</span>)
+                cls._instance = instance
+                <span class="kw">return</span> cls._instance
 
-          llm_pool = LLMClientPool() <span class="cm"># same instance across all threads</span>
-        </div>
+                llm_pool = LLMClientPool() <span class="cm"># same instance across all threads</span>
+</div>
 
         <h3 class="subsection">FastAPI Streaming SSE Response</h3>
         <div class="code-block"><span class="kw">from</span> fastapi.responses <span class="kw">import</span>
-          StreamingResponse
-          <span class="kw">from</span> fastapi <span class="kw">import</span> BackgroundTasks
+StreamingResponse
+<span class="kw">from</span> fastapi <span class="kw">import</span> BackgroundTasks
 
-          @app.post(<span class="st">"/stream"</span>)
-          <span class="kw">async def</span> <span class="fn">stream_answer</span>(query: RAGQuery, background_tasks:
-          BackgroundTasks):
-          <span class="kw">async def</span> <span class="fn">event_generator</span>():
-          <span class="kw">async for</span> token <span class="kw">in</span> stream_llm(query.query):
-          <span class="kw">yield</span> <span class="st">f"data: {token}\n\n"</span> <span class="cm"># SSE
-            format</span>
-          <span class="kw">yield</span> <span class="st">"data: [DONE]\n\n"</span>
+@app.post(<span class="st">"/stream"</span>)
+<span class="kw">async def</span> <span class="fn">stream_answer</span>(query: RAGQuery, background_tasks:
+    BackgroundTasks):
+<span class="kw">async def</span> <span class="fn">event_generator</span>():
+    <span class="kw">async for</span> token <span class="kw">in</span> stream_llm(query.query):
+        <span class="kw">yield</span> <span class="st">f"data: {token}\n\n"</span> <span class="cm"># SSE
+        format</span>
+        <span class="kw">yield</span> <span class="st">"data: [DONE]\n\n"</span>
 
-          background_tasks.add_task(log_query, query) <span class="cm"># async indexing</span>
-          <span class="kw">return</span> StreamingResponse(
-          event_generator(),
-          media_type=<span class="st">"text/event-stream"</span>,
-          headers={<span class="st">"X-Accel-Buffering"</span>: <span class="st">"no"</span>}
-          )
+        background_tasks.add_task(log_query, query) <span class="cm"># async indexing</span>
+        <span class="kw">return</span> StreamingResponse(
+        event_generator(),
+        media_type=<span class="st">"text/event-stream"</span>,
+        headers={<span class="st">"X-Accel-Buffering"</span>: <span class="st">"no"</span>}
+        )
 
-          <span class="kw">async def</span> <span class="fn">log_query</span>(query: RAGQuery):
-          <span class="st">"""Runs after response is sent — use for async indexing"""</span>
-          <span class="kw">await</span> db.insert_query_log(query.model_dump())
-        </div>
+<span class="kw">async def</span> <span class="fn">log_query</span>(query: RAGQuery):
+    <span class="st">"""Runs after response is sent — use for async indexing"""</span>
+    <span class="kw">await</span> db.insert_query_log(query.model_dump())
+</div>
 
         <div class="insight green"><strong>Protocol classes vs ABC</strong>: Protocols (PEP 544) enable structural
           subtyping — if a class has the right methods, it satisfies the Protocol without explicit inheritance. ABCs
           require explicit registration. Protocols are preferred in AI systems for duck-typed interfaces (any class with
-          a .search() method can be a "Retriever").</div>
+            a .search() method can be a "Retriever").</div>
       </div>
     </section>
 
@@ -3917,8 +3945,9 @@
       <div class="section-subtitle">ML algorithms, evaluation, statistics, and hands-on Pandas challenges.</div>
       <div class="tabs" id="tabs-ds">
         <button class="tab-btn active" onclick="switchTab('ds','algo')">ML Algorithms</button>
-        <button class="tab-btn" onclick="switchTab('ds','eval')">Evaluation & Stats</button>
+        <button class="tab-btn" onclick="switchTab('ds','eval')">Evaluation &amp; Stats</button>
         <button class="tab-btn" onclick="switchTab('ds','pandas')">Pandas Challenges</button>
+        <button class="tab-btn" onclick="switchTab('ds','pdcs');renderPdCs()">🐼 Pandas Cheatsheet</button>
       </div>
 
       <!-- TAB: ML Algorithms -->
@@ -4150,20 +4179,20 @@
                 ("source_col", func)}</span>. For p95 use lambda with np.percentile.</div>
             <div class="solution-box">
               <div class="code-block"><span class="kw">import</span> pandas <span class="kw">as</span> pd
-                <span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">import</span> numpy <span class="kw">as</span> np
 
-                result = df.groupby([<span class="st">"model"</span>, <span class="st">"query_type"</span>]).agg(
-                mean_latency=(<span class="st">"latency_ms"</span>, <span class="st">"mean"</span>),
-                p95_latency=(<span class="st">"latency_ms"</span>, <span class="kw">lambda</span> x: np.percentile(x,
-                <span class="num">95</span>)),
-                success_rate=(<span class="st">"success"</span>, <span class="st">"mean"</span>),
-                count=(<span class="st">"latency_ms"</span>, <span class="st">"count"</span>),
-                ).round(<span class="num">2</span>).reset_index()
+result = df.groupby([<span class="st">"model"</span>, <span class="st">"query_type"</span>]).agg(
+mean_latency=(<span class="st">"latency_ms"</span>, <span class="st">"mean"</span>),
+p95_latency=(<span class="st">"latency_ms"</span>, <span class="kw">lambda</span> x: np.percentile(x,
+<span class="num">95</span>)),
+success_rate=(<span class="st">"success"</span>, <span class="st">"mean"</span>),
+count=(<span class="st">"latency_ms"</span>, <span class="st">"count"</span>),
+).round(<span class="num">2</span>).reset_index()
 
-                <span class="cm"># Sort by p95 latency descending to find worst performers</span>
-                result = result.sort_values(<span class="st">"p95_latency"</span>, ascending=<span
-                  class="kw">False</span>)
-              </div>
+<span class="cm"># Sort by p95 latency descending to find worst performers</span>
+result = result.sort_values(<span class="st">"p95_latency"</span>, ascending=<span
+class="kw">False</span>)
+</div>
             </div>
           </div>
         </div>
@@ -4184,19 +4213,19 @@
                 margins=True, fill_value=0)</span></div>
             <div class="solution-box">
               <div class="code-block">pivot = pd.pivot_table(
-                df,
-                values=<span class="st">"faithfulness"</span>,
-                index=<span class="st">"chunk_strategy"</span>,
-                columns=<span class="st">"embedding_model"</span>,
-                aggfunc=<span class="st">"mean"</span>,
-                margins=<span class="kw">True</span>, <span class="cm"># adds All row/column</span>
-                fill_value=<span class="num">0</span>,
-                ).round(<span class="num">3</span>)
+df,
+values=<span class="st">"faithfulness"</span>,
+index=<span class="st">"chunk_strategy"</span>,
+columns=<span class="st">"embedding_model"</span>,
+aggfunc=<span class="st">"mean"</span>,
+margins=<span class="kw">True</span>, <span class="cm"># adds All row/column</span>
+fill_value=<span class="num">0</span>,
+).round(<span class="num">3</span>)
 
-                <span class="cm"># Highlight top strategy per model</span>
-                styled = pivot.style.highlight_max(axis=<span class="num">0</span>, color=<span
-                  class="st">"lightgreen"</span>)
-              </div>
+<span class="cm"># Highlight top strategy per model</span>
+styled = pivot.style.highlight_max(axis=<span class="num">0</span>, color=<span
+class="st">"lightgreen"</span>)
+</div>
             </div>
           </div>
         </div>
@@ -4216,20 +4245,20 @@
                 class="inline-code">.rolling(7).std()</span>, then boolean mask.</div>
             <div class="solution-box">
               <div class="code-block">df[<span class="st">"timestamp"</span>] = pd.to_datetime(df[<span
-                  class="st">"timestamp"</span>])
-                df = df.set_index(<span class="st">"timestamp"</span>).sort_index()
+class="st">"timestamp"</span>])
+df = df.set_index(<span class="st">"timestamp"</span>).sort_index()
 
-                daily = df[<span class="st">"accuracy"</span>].resample(<span class="st">"D"</span>).mean()
+daily = df[<span class="st">"accuracy"</span>].resample(<span class="st">"D"</span>).mean()
 
-                rolling_mean = daily.rolling(window=<span class="num">7</span>, min_periods=<span
-                  class="num">3</span>).mean()
-                rolling_std = daily.rolling(window=<span class="num">7</span>, min_periods=<span
-                  class="num">3</span>).std()
+rolling_mean = daily.rolling(window=<span class="num">7</span>, min_periods=<span
+class="num">3</span>).mean()
+rolling_std = daily.rolling(window=<span class="num">7</span>, min_periods=<span
+class="num">3</span>).std()
 
-                <span class="cm"># Anomaly: value > 2 std below rolling mean</span>
-                anomalies = daily[daily &lt; (rolling_mean - <span class="num">2</span> * rolling_std)]
-                print(<span class="st">f"Drift detected on {len(anomalies)} days: {anomalies.index.tolist()}"</span>)
-              </div>
+<span class="cm"># Anomaly: value > 2 std below rolling mean</span>
+anomalies = daily[daily &lt; (rolling_mean - <span class="num">2</span> * rolling_std)]
+print(<span class="st">f"Drift detected on {len(anomalies)} days: {anomalies.index.tolist()}"</span>)
+</div>
             </div>
           </div>
         </div>
@@ -4249,27 +4278,27 @@
               the missing value itself (e.g., high earners skip salary field).</div>
             <div class="solution-box">
               <div class="code-block"><span class="kw">from</span> sklearn.impute <span class="kw">import</span>
-                KNNImputer, SimpleImputer
+KNNImputer, SimpleImputer
 
-                <span class="cm"># MCAR → simple mean/median imputation is unbiased</span>
-                simple = SimpleImputer(strategy=<span class="st">"median"</span>)
-                df[<span class="st">"mcar_col"</span>] = simple.fit_transform(df[[<span class="st">"mcar_col"</span>]])
+<span class="cm"># MCAR → simple mean/median imputation is unbiased</span>
+simple = SimpleImputer(strategy=<span class="st">"median"</span>)
+df[<span class="st">"mcar_col"</span>] = simple.fit_transform(df[[<span class="st">"mcar_col"</span>]])
 
-                <span class="cm"># MAR → KNN imputer uses relationships with other columns</span>
-                knn = KNNImputer(n_neighbors=<span class="num">5</span>)
-                df[[<span class="st">"mar_col1"</span>, <span class="st">"mar_col2"</span>]] =
-                knn.fit_transform(df[[<span class="st">"mar_col1"</span>, <span class="st">"mar_col2"</span>]])
+<span class="cm"># MAR → KNN imputer uses relationships with other columns</span>
+knn = KNNImputer(n_neighbors=<span class="num">5</span>)
+df[[<span class="st">"mar_col1"</span>, <span class="st">"mar_col2"</span>]] =
+knn.fit_transform(df[[<span class="st">"mar_col1"</span>, <span class="st">"mar_col2"</span>]])
 
-                <span class="cm"># MAR → groupby transform for group-aware imputation</span>
-                df[<span class="st">"salary"</span>] = df.groupby(<span class="st">"department"</span>)[<span
-                  class="st">"salary"</span>].transform(
-                <span class="kw">lambda</span> x: x.fillna(x.median())
-                )
+<span class="cm"># MAR → groupby transform for group-aware imputation</span>
+df[<span class="st">"salary"</span>] = df.groupby(<span class="st">"department"</span>)[<span
+class="st">"salary"</span>].transform(
+<span class="kw">lambda</span> x: x.fillna(x.median())
+)
 
-                <span class="cm"># MNAR → need domain knowledge, or model the missingness itself</span>
-                df[<span class="st">"has_salary"</span>] = df[<span class="st">"salary"</span>].notna().astype(int)
-                <span class="cm"># indicator feature</span>
-              </div>
+<span class="cm"># MNAR → need domain knowledge, or model the missingness itself</span>
+df[<span class="st">"has_salary"</span>] = df[<span class="st">"salary"</span>].notna().astype(int)
+<span class="cm"># indicator feature</span>
+</div>
             </div>
           </div>
         </div>
@@ -4291,28 +4320,28 @@
             <div class="solution-box">
               <div class="code-block"><span class="kw">import</span> time
 
-                <span class="cm"># SLOW: apply() with lambda — Python loop over every row</span>
-                start = time.perf_counter()
-                df[<span class="st">"tokens_slow"</span>] = df[<span class="st">"text"</span>].apply(
-                <span class="kw">lambda</span> x: x.lower().replace(<span class="st">","</span>, <span
-                  class="st">""</span>).split()
-                )
-                slow_time = time.perf_counter() - start
+<span class="cm"># SLOW: apply() with lambda — Python loop over every row</span>
+start = time.perf_counter()
+df[<span class="st">"tokens_slow"</span>] = df[<span class="st">"text"</span>].apply(
+<span class="kw">lambda</span> x: x.lower().replace(<span class="st">","</span>, <span
+class="st">""</span>).split()
+)
+slow_time = time.perf_counter() - start
 
-                <span class="cm"># FAST: vectorized string operations (C-level, 50-200x faster)</span>
-                start = time.perf_counter()
-                df[<span class="st">"tokens_fast"</span>] = (
-                df[<span class="st">"text"</span>]
-                .str.lower()
-                .str.replace(r<span class="st">"[^\w\s]"</span>, <span class="st">""</span>, regex=<span
-                  class="kw">True</span>)
-                .str.split()
-                )
-                fast_time = time.perf_counter() - start
+<span class="cm"># FAST: vectorized string operations (C-level, 50-200x faster)</span>
+start = time.perf_counter()
+df[<span class="st">"tokens_fast"</span>] = (
+df[<span class="st">"text"</span>]
+.str.lower()
+.str.replace(r<span class="st">"[^\w\s]"</span>, <span class="st">""</span>, regex=<span
+class="kw">True</span>)
+.str.split()
+)
+fast_time = time.perf_counter() - start
 
-                print(<span class="st">f"Speedup: {slow_time/fast_time:.1f}x"</span>) <span class="cm"># typically
-                  50-200x</span>
-              </div>
+print(<span class="st">f"Speedup: {slow_time/fast_time:.1f}x"</span>) <span class="cm"># typically
+50-200x</span>
+</div>
             </div>
           </div>
         </div>
@@ -4333,33 +4362,33 @@
               session boundaries, then <span class="inline-code">cumsum()</span> to create session IDs.</div>
             <div class="solution-box">
               <div class="code-block">df = df.sort_values([<span class="st">"user_id"</span>, <span
-                  class="st">"timestamp"</span>])
-                df[<span class="st">"timestamp"</span>] = pd.to_datetime(df[<span class="st">"timestamp"</span>])
+class="st">"timestamp"</span>])
+df[<span class="st">"timestamp"</span>] = pd.to_datetime(df[<span class="st">"timestamp"</span>])
 
-                <span class="cm"># Time gap from previous event, per user</span>
-                df[<span class="st">"time_gap"</span>] = df.groupby(<span class="st">"user_id"</span>)[<span
-                  class="st">"timestamp"</span>].diff()
+<span class="cm"># Time gap from previous event, per user</span>
+df[<span class="st">"time_gap"</span>] = df.groupby(<span class="st">"user_id"</span>)[<span
+class="st">"timestamp"</span>].diff()
 
-                <span class="cm"># New session if: first event OR gap > 30 minutes</span>
-                df[<span class="st">"is_new_session"</span>] = (
-                df[<span class="st">"time_gap"</span>].isna() |
-                (df[<span class="st">"time_gap"</span>] > pd.Timedelta(minutes=<span class="num">30</span>))
-                )
+<span class="cm"># New session if: first event OR gap > 30 minutes</span>
+df[<span class="st">"is_new_session"</span>] = (
+df[<span class="st">"time_gap"</span>].isna() |
+(df[<span class="st">"time_gap"</span>] > pd.Timedelta(minutes=<span class="num">30</span>))
+)
 
-                <span class="cm"># Cumsum creates monotonically increasing session IDs within user</span>
-                df[<span class="st">"session_id"</span>] = df.groupby(<span class="st">"user_id"</span>)[<span
-                  class="st">"is_new_session"</span>].cumsum()
+<span class="cm"># Cumsum creates monotonically increasing session IDs within user</span>
+df[<span class="st">"session_id"</span>] = df.groupby(<span class="st">"user_id"</span>)[<span
+class="st">"is_new_session"</span>].cumsum()
 
-                <span class="cm"># Compound session ID: user+session</span>
-                df[<span class="st">"global_session_id"</span>] = df[<span class="st">"user_id"</span>].astype(str) +
-                <span class="st">"_"</span> + df[<span class="st">"session_id"</span>].astype(str)
+<span class="cm"># Compound session ID: user+session</span>
+df[<span class="st">"global_session_id"</span>] = df[<span class="st">"user_id"</span>].astype(str) +
+<span class="st">"_"</span> + df[<span class="st">"session_id"</span>].astype(str)
 
-                session_stats = df.groupby(<span class="st">"global_session_id"</span>).agg(
-                events=(<span class="st">"event"</span>, <span class="st">"count"</span>),
-                duration=(<span class="st">"timestamp"</span>, <span class="kw">lambda</span> x: (x.max() -
-                x.min()).total_seconds() / <span class="num">60</span>),
-                )
-              </div>
+session_stats = df.groupby(<span class="st">"global_session_id"</span>).agg(
+events=(<span class="st">"event"</span>, <span class="st">"count"</span>),
+duration=(<span class="st">"timestamp"</span>, <span class="kw">lambda</span> x: (x.max() -
+x.min()).total_seconds() / <span class="num">60</span>),
+)
+</div>
             </div>
           </div>
         </div>
@@ -4378,42 +4407,52 @@
               reduce memory, accumulate results in defaultdict.</div>
             <div class="solution-box">
               <div class="code-block"><span class="kw">import</span> pandas <span class="kw">as</span> pd
-                <span class="kw">from</span> collections <span class="kw">import</span> defaultdict
+<span class="kw">from</span> collections <span class="kw">import</span> defaultdict
 
-                dtype_spec = {
-                <span class="st">"user_id"</span>: <span class="st">"int32"</span>, <span class="cm"># int64 → int32
-                  halves memory</span>
-                <span class="st">"score"</span>: <span class="st">"float32"</span>, <span class="cm"># float64 →
-                  float32</span>
-                <span class="st">"category"</span>: <span class="st">"category"</span>, <span class="cm"># string →
-                  category codes</span>
-                }
+dtype_spec = {
+<span class="st">"user_id"</span>: <span class="st">"int32"</span>, <span class="cm"># int64 → int32
+halves memory</span>
+<span class="st">"score"</span>: <span class="st">"float32"</span>, <span class="cm"># float64 →
+float32</span>
+<span class="st">"category"</span>: <span class="st">"category"</span>, <span class="cm"># string →
+category codes</span>
+}
 
-                agg = defaultdict(list)
-                chunk_iter = pd.read_csv(<span class="st">"big_file.csv"</span>, dtype=dtype_spec, chunksize=<span
-                  class="num">100_000</span>)
+agg = defaultdict(list)
+chunk_iter = pd.read_csv(<span class="st">"big_file.csv"</span>, dtype=dtype_spec, chunksize=<span
+class="num">100_000</span>)
 
-                <span class="kw">for</span> i, chunk <span class="kw">in</span> enumerate(chunk_iter):
-                chunk_stats = chunk.groupby(<span class="st">"category"</span>)[<span
-                  class="st">"score"</span>].agg([<span class="st">"sum"</span>, <span class="st">"count"</span>])
-                <span class="kw">for</span> cat, row <span class="kw">in</span> chunk_stats.iterrows():
-                agg[cat].append(row)
+<span class="kw">for</span> i, chunk <span class="kw">in</span> enumerate(chunk_iter):
+    chunk_stats = chunk.groupby(<span class="st">"category"</span>)[<span
+    class="st">"score"</span>].agg([<span class="st">"sum"</span>, <span class="st">"count"</span>])
+    <span class="kw">for</span> cat, row <span class="kw">in</span> chunk_stats.iterrows():
+        agg[cat].append(row)
 
-                <span class="kw">if</span> i % <span class="num">10</span> == <span class="num">0</span>: print(<span
-                  class="st">f"Processed {i*100_000:,} rows"</span>)
+        <span class="kw">if</span> i % <span class="num">10</span> == <span class="num">0</span>: print(<span
+        class="st">f"Processed {i*100_000:,} rows"</span>)
 
-                <span class="cm"># Combine chunk aggregations</span>
-                final = pd.DataFrame({
-                cat: {<span class="st">"mean_score"</span>: sum(r[<span class="st">"sum"</span>] <span
-                  class="kw">for</span> r <span class="kw">in</span> rows) / sum(r[<span class="st">"count"</span>]
-                <span class="kw">for</span> r <span class="kw">in</span> rows)}
-                <span class="kw">for</span> cat, rows <span class="kw">in</span> agg.items()
-                }).T
+        <span class="cm"># Combine chunk aggregations</span>
+        final = pd.DataFrame({
+        cat: {<span class="st">"mean_score"</span>: sum(r[<span class="st">"sum"</span>] <span
+        class="kw">for</span> r <span class="kw">in</span> rows) / sum(r[<span class="st">"count"</span>]
+        <span class="kw">for</span> r <span class="kw">in</span> rows)}
+        <span class="kw">for</span> cat, rows <span class="kw">in</span> agg.items()
+        }).T
 
-                final.to_parquet(<span class="st">"output.parquet"</span>, compression=<span class="st">"snappy"</span>)
-              </div>
+        final.to_parquet(<span class="st">"output.parquet"</span>, compression=<span class="st">"snappy"</span>)
+</div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- TAB: Pandas Cheatsheet -->
+      <div id="ds-pdcs" class="tab-content">
+        <p style="color:var(--text2);margin-bottom:12px">Interactive Pandas reference — merge, agg, filter, gotchas. Copy-ready code for interviews.</p>
+        <div class="pd-cs-section-tabs" id="pd-cs-section-tabs"></div>
+        <div class="pd-cs-layout">
+          <div class="pd-cs-sidebar" id="pd-cs-sidebar"></div>
+          <div class="pd-cs-main" id="pd-cs-main"></div>
         </div>
       </div>
     </section>
@@ -4671,7 +4710,110 @@
       container.innerHTML = html;
     }
 
+    // ===== PANDAS CHEATSHEET DATA & LOGIC =====
+    const pdCsSections = [
+      {
+        id:'merge', title:'Merging DataFrames', color:'#00b4d8', icon:'⊕',
+        topics:[
+          {title:'Basic merge() — like SQL JOIN',code:`import pandas as pd\n\ndf1 = pd.DataFrame({'id': [1,2,3], 'name': ['Alice','Bob','Charlie']})\ndf2 = pd.DataFrame({'id': [1,2,4], 'score': [90, 85, 78]})\n\n# INNER JOIN — only matching rows\npd.merge(df1, df2, on='id')\n# id  name   score\n#  1  Alice   90\n#  2  Bob     85\n\n# LEFT JOIN — all of df1, NaN where no match\npd.merge(df1, df2, on='id', how='left')\n\n# RIGHT JOIN — all of df2\npd.merge(df1, df2, on='id', how='right')\n\n# OUTER JOIN — all rows from both\npd.merge(df1, df2, on='id', how='outer')`,notes:"Default how='inner'. Always specify 'on' explicitly — avoids merging on unintended common columns."},
+          {title:'Merging on different column names',code:`df1 = pd.DataFrame({'user_id': [1,2], 'name': ['Alice','Bob']})\ndf2 = pd.DataFrame({'uid': [1,2], 'score': [90, 85]})\n\npd.merge(df1, df2, left_on='user_id', right_on='uid')\n# user_id  name  uid  score\n#       1  Alice   1   90\n#       2  Bob     2   85\n\n# Drop the duplicate key column after merging\nresult = pd.merge(df1, df2, left_on='user_id', right_on='uid').drop('uid', axis=1)`,notes:"Use left_on / right_on when column names differ between the two frames."},
+          {title:'Merging on index',code:`df1 = df1.set_index('id')\ndf2 = df2.set_index('id')\n\n# Merge on index\npd.merge(df1, df2, left_index=True, right_index=True)\n\n# Or use join() — shorthand for index-based merge\ndf1.join(df2, how='left')`,notes:"join() is syntactic sugar for merge with left_index=True, right_index=True. Default is left join."},
+          {title:'Handling overlapping column names',code:`df1 = pd.DataFrame({'id':[1,2], 'value':[10,20]})\ndf2 = pd.DataFrame({'id':[1,2], 'value':[100,200]})\n\n# suffixes= avoids ambiguity\npd.merge(df1, df2, on='id', suffixes=('_left', '_right'))\n# id  value_left  value_right\n#  1          10         100\n#  2          20         200`,notes:"Default suffixes are _x and _y. Always rename them to something meaningful."},
+          {title:'concat() — stacking DataFrames',code:`df1 = pd.DataFrame({'id':[1,2], 'val':[10,20]})\ndf2 = pd.DataFrame({'id':[3,4], 'val':[30,40]})\n\n# Stack vertically (row-wise) — like UNION ALL in SQL\npd.concat([df1, df2], ignore_index=True)\n\n# Stack horizontally (column-wise)\npd.concat([df1, df2], axis=1)\n\n# concat respects index by default — reset if needed\npd.concat([df1, df2]).reset_index(drop=True)`,notes:"concat is for stacking; merge is for joining on keys. Don't confuse them."}
+        ]
+      },
+      {
+        id:'agg', title:'Aggregation', color:'#f77f00', icon:'Σ',
+        topics:[
+          {title:'groupby() basics',code:`df = pd.DataFrame({\n    'dept':   ['HR','HR','Eng','Eng','Eng'],\n    'gender': ['M','F','M','F','M'],\n    'salary': [50000, 60000, 90000, 85000, 95000],\n    'bonus':  [5000,  6000,  9000,  8500,  9500]\n})\n\n# Single column groupby\ndf.groupby('dept')['salary'].mean()\n# dept\n# Eng    90000.0\n# HR     55000.0\n\n# Multiple columns\ndf.groupby('dept')[['salary','bonus']].sum()`,notes:"groupby returns a GroupBy object — you need to call an aggregation on it."},
+          {title:'agg() — multiple aggregations at once',code:`# Different agg per column\ndf.groupby('dept').agg({\n    'salary': ['mean', 'max', 'min'],\n    'bonus':  ['sum', 'count']\n})\n\n# Named aggregations (cleaner output — pandas >= 0.25)\ndf.groupby('dept').agg(\n    avg_salary = ('salary', 'mean'),\n    max_bonus  = ('bonus',  'max'),\n    headcount  = ('salary', 'count')\n)`,notes:"Named aggregations (key=('col', 'func')) give you clean, flat column names — prefer this in interviews."},
+          {title:'transform() — keep original shape',code:`# Add group mean as a new column (doesn't collapse rows)\ndf['dept_avg_salary'] = df.groupby('dept')['salary'].transform('mean')\n\n# Useful for: normalisation, filling NaNs with group mean\ndf['salary_norm'] = df['salary'] / df.groupby('dept')['salary'].transform('mean')\n\n# Fill NaN with group mean\ndf['salary'] = df.groupby('dept')['salary'].transform(\n    lambda x: x.fillna(x.mean())\n)`,notes:"transform returns a Series of the same length as the original DataFrame — crucial difference from agg."},
+          {title:'apply() — custom group-level logic',code:`# Custom function per group\ndef top_earner(group):\n    return group.nlargest(1, 'salary')\n\ndf.groupby('dept').apply(top_earner)\n\n# Compute within-group rank\ndf['rank'] = df.groupby('dept')['salary'].rank(ascending=False)\n\n# apply with lambda\ndf.groupby('dept').apply(lambda g: g['salary'].max() - g['salary'].min())`,notes:"apply is flexible but slower than agg/transform. Use agg/transform when possible; fall back to apply for complex logic."},
+          {title:'pivot_table() — 2D aggregation',code:`pd.pivot_table(\n    df,\n    values  = 'salary',\n    index   = 'dept',\n    columns = 'gender',\n    aggfunc = 'mean',\n    fill_value = 0       # replace NaN with 0\n)\n# gender      F        M\n# dept\n# Eng     85000    92500\n# HR      60000    50000\n\n# Multiple aggfuncs\npd.pivot_table(df, values='salary', index='dept',\n               aggfunc=['mean','count'])`,notes:"pivot_table is groupby + reshape in one step. Equivalent to Excel pivot tables."}
+        ]
+      },
+      {
+        id:'filter', title:'Filtering', color:'#06d6a0', icon:'▽',
+        topics:[
+          {title:'Boolean indexing — the foundation',code:`df = pd.DataFrame({\n    'name':   ['Alice','Bob','Charlie','Diana'],\n    'dept':   ['HR','Eng','Eng','HR'],\n    'salary': [50000, 90000, 85000, 62000],\n    'active': [True, True, False, True]\n})\n\n# Single condition\ndf[df['salary'] > 80000]\n\n# Multiple conditions — use & | ~ (NOT 'and' 'or' 'not')\ndf[(df['dept'] == 'Eng') & (df['salary'] > 80000)]\n\n# NOT condition\ndf[~df['active']]\n\n# Common mistake — this raises an error:\n# df[df['salary'] > 80000 and df['dept'] == 'Eng']  ❌`,notes:"Always wrap individual conditions in parentheses when combining. Use & | ~ not and or not."},
+          {title:'query() — SQL-like string syntax',code:`# Equivalent to boolean indexing but more readable\ndf.query('salary > 80000')\ndf.query('dept == \"Eng\" and salary > 80000')\ndf.query('dept in [\"Eng\", \"HR\"] and active == True')\n\n# Reference Python variables with @\nthreshold = 80000\ndf.query('salary > @threshold')\n\n# Works well in method chains\nresult = (df\n    .query('active == True')\n    .query('salary > 60000')\n    .sort_values('salary', ascending=False)\n)`,notes:"query() is great for readability and method chaining. Can't use it for complex Python expressions though."},
+          {title:'isin() / between() / str filters',code:`# isin — filter by list of values\ndf[df['dept'].isin(['Eng', 'Finance'])]\n\n# NOT isin\ndf[~df['dept'].isin(['HR'])]\n\n# between (inclusive on both ends by default)\ndf[df['salary'].between(60000, 90000)]\n\n# String filters\ndf[df['name'].str.startswith('A')]\ndf[df['name'].str.contains('li', case=False)]\ndf[df['name'].str.len() > 4]\n\n# Regex match\ndf[df['name'].str.match(r'^[A-C]')]`,notes:"str accessor methods automatically handle NaN (returns NaN). Add na=False to treat NaN as False."},
+          {title:'filter on groupby result',code:`# Keep only groups where mean salary > 70000\ndf.groupby('dept').filter(lambda g: g['salary'].mean() > 70000)\n# Returns full rows, not aggregated — only drops entire groups\n\n# Keep departments with more than 1 employee\ndf.groupby('dept').filter(lambda g: len(g) > 1)\n\n# Combine with agg: get group stats then filter\ndept_stats = df.groupby('dept')['salary'].agg(['mean','count'])\nbig_depts = dept_stats[dept_stats['count'] > 1].index\ndf[df['dept'].isin(big_depts)]`,notes:"groupby.filter returns rows from the original DataFrame where the group meets the condition — not aggregated output."},
+          {title:'loc[] / iloc[] — label vs position',code:`# loc — label based (inclusive on both ends)\ndf.loc[0:2]                        # rows 0,1,2 by index label\ndf.loc[df['salary'] > 80000, 'name']  # filter + select column\n\n# iloc — position based (exclusive end, like Python slices)\ndf.iloc[0:2]                       # rows 0,1 (not 2)\ndf.iloc[0:3, 1:3]                  # rows 0-2, cols 1-2\n\n# at / iat — single cell access (faster than loc/iloc)\ndf.at[0, 'name']\ndf.iat[0, 0]\n\n# Setting values\ndf.loc[df['dept'] == 'HR', 'salary'] *= 1.1  # give HR a 10% raise`,notes:"loc is label-based and inclusive. iloc is position-based and exclusive (like Python lists). Avoid chained indexing like df['col'][0] — use loc/iloc instead."},
+          {title:'dropna() / fillna() / notna()',code:`# Filter out NaN rows\ndf.dropna()                        # drop any row with NaN\ndf.dropna(subset=['salary'])       # only if salary is NaN\ndf.dropna(thresh=3)                # keep rows with >= 3 non-NaN values\n\n# Keep only rows where salary is NOT null\ndf[df['salary'].notna()]\ndf[df['salary'].isna()]            # opposite\n\n# Fill NaN\ndf['salary'].fillna(0)\ndf['salary'].fillna(df['salary'].mean())\ndf.fillna({'salary': 0, 'bonus': df['bonus'].median()})\n\n# Forward/backward fill (time series)\ndf['salary'].ffill()\ndf['salary'].bfill()`,notes:"dropna() with subset= is very common in interview questions. Always think about what to do with NaN before merging or aggregating."}
+        ]
+      },
+      {
+        id:'gotchas', title:'Interview Gotchas', color:'#e63946', icon:'⚠',
+        topics:[
+          {title:'merge vs join vs concat — when to use what',code:`# merge  → joining on key columns (most common)\npd.merge(df1, df2, on='id')\n\n# join   → index-based merge (shorthand)\ndf1.join(df2)  # equivalent to merge on index\n\n# concat → stacking (no key matching)\npd.concat([df1, df2])           # row-wise (axis=0)\npd.concat([df1, df2], axis=1)   # column-wise`,notes:"Interviewers often ask you to explain the difference. Key: merge uses column keys, join uses index, concat just stacks."},
+          {title:'SettingWithCopyWarning',code:`# BAD — chained indexing, may not modify original df\ndf[df['dept']=='HR']['salary'] = 99999  # ❌ Warning!\n\n# GOOD — use loc\ndf.loc[df['dept'] == 'HR', 'salary'] = 99999  # ✅\n\n# Also: explicitly copy when you want a copy\nsubset = df[df['dept'] == 'HR'].copy()\nsubset['salary'] = 99999  # safe, modifies copy only`,notes:"This warning trips up many candidates. Always use .loc for setting values. Use .copy() when you intentionally want a separate copy."},
+          {title:'agg vs transform vs apply — the key differences',code:`df = pd.DataFrame({'dept':['HR','HR','Eng'], 'sal':[50,60,90]})\n\n# agg — reduces to one row per group\ndf.groupby('dept')['sal'].agg('mean')\n# dept\n# Eng    90\n# HR     55\n\n# transform — same shape as input, group values broadcast\ndf.groupby('dept')['sal'].transform('mean')\n# 0    55.0  (HR mean)\n# 1    55.0  (HR mean)\n# 2    90.0  (Eng mean)\n\n# apply — most flexible, group → anything\ndf.groupby('dept').apply(lambda g: g.nlargest(1, 'sal'))`,notes:"Most common interview question: 'What's the difference between agg and transform?' Answer: agg collapses rows, transform preserves shape."}
+        ]
+      }
+    ];
+    let pdCsActiveSection = 'merge';
+    let pdCsActiveTopic = 0;
+
+    function renderPdCs() {
+      // Section tabs
+      const tabsEl = document.getElementById('pd-cs-section-tabs');
+      tabsEl.innerHTML = pdCsSections.map(s => {
+        const isActive = s.id === pdCsActiveSection;
+        return `<button class="pd-cs-section-tab${isActive?' active':''}" style="${isActive?'background:'+s.color:''}" onclick="pdCsSwitchSection('${s.id}')">`
+          + `<span>${s.icon}</span>${s.title}</button>`;
+      }).join('');
+      // Sidebar
+      const sec = pdCsSections.find(s => s.id === pdCsActiveSection);
+      if (!sec) return;
+      const sidebarEl = document.getElementById('pd-cs-sidebar');
+      sidebarEl.innerHTML = sec.topics.map((t,i) => {
+        const isActive = i === pdCsActiveTopic;
+        return `<button class="pd-cs-sidebar-btn${isActive?' active':''}" style="${isActive?'border-left-color:'+sec.color:''}" onclick="pdCsSwitchTopic(${i})">${t.title}</button>`;
+      }).join('');
+      // Main content
+      const topic = sec.topics[pdCsActiveTopic];
+      if (!topic) return;
+      const mainEl = document.getElementById('pd-cs-main');
+      mainEl.innerHTML = `<div class="pd-cs-topic-title" style="color:${sec.color}">${topic.title}</div>`
+        + `<div class="pd-cs-code-wrap"><div class="pd-cs-code-header"><span>python</span><button class="pd-cs-copy-btn" onclick="pdCsCopy(this)">copy</button></div><pre><code>${escHtml(topic.code)}</code></pre></div>`
+        + `<div class="pd-cs-note"><span style="color:${sec.color};font-weight:600;margin-right:6px">💡</span>${topic.notes}</div>`
+        + `<div class="pd-cs-nav">`
+        + `<button class="pd-cs-nav-btn" onclick="pdCsSwitchTopic(${pdCsActiveTopic-1})" ${pdCsActiveTopic===0?'disabled':''}>← prev</button>`
+        + `<span class="pd-cs-nav-counter">${pdCsActiveTopic+1} / ${sec.topics.length}</span>`
+        + `<button class="pd-cs-nav-btn" onclick="pdCsSwitchTopic(${pdCsActiveTopic+1})" ${pdCsActiveTopic===sec.topics.length-1?'disabled':''} style="${pdCsActiveTopic<sec.topics.length-1?'border-color:'+sec.color+';color:'+sec.color:''}">next →</button>`
+        + `</div>`;
+    }
+    function pdCsSwitchSection(id) { pdCsActiveSection = id; pdCsActiveTopic = 0; renderPdCs(); }
+    function pdCsSwitchTopic(i) { const sec = pdCsSections.find(s=>s.id===pdCsActiveSection); if(!sec||i<0||i>=sec.topics.length) return; pdCsActiveTopic = i; renderPdCs(); }
+    function pdCsCopy(btn) {
+      const code = btn.closest('.pd-cs-code-wrap').querySelector('code').textContent;
+      navigator.clipboard.writeText(code).then(()=>{ btn.textContent='✓ copied'; btn.style.borderColor='var(--accent2)'; btn.style.color='var(--accent2)'; setTimeout(()=>{btn.textContent='copy';btn.style.borderColor='';btn.style.color='';},2000); });
+    }
+    function escHtml(s) { const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+    // ===== DEDENT CODE BLOCKS =====
+    function dedentCodeBlocks() {
+      document.querySelectorAll('.code-block').forEach(block => {
+        const html = block.innerHTML;
+        const lines = html.split('\n');
+        if (lines.length < 2) return;
+        // Find minimum leading whitespace on lines after the first (first line is inline with opening tag)
+        let minIndent = Infinity;
+        for (let i = 1; i < lines.length; i++) {
+          if (lines[i].trim().length === 0) continue;
+          const ws = lines[i].match(/^(\s*)/);
+          if (ws) minIndent = Math.min(minIndent, ws[0].length);
+        }
+        if (minIndent > 0 && isFinite(minIndent)) {
+          const re = new RegExp('^\\s{' + minIndent + '}');
+          block.innerHTML = lines.map((l, i) => i === 0 ? l : l.replace(re, '')).join('\n');
+        }
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+      dedentCodeBlocks();
       renderTriviaBrowse();
       updateAllProgress();
       renderFlashcard();
