@@ -1449,6 +1449,7 @@
         <button class="tab-btn" onclick="switchTab('llm','infer')">Inference Optimization</button>
         <button class="tab-btn" onclick="switchTab('llm','ft')">Fine-tuning</button>
         <button class="tab-btn" onclick="switchTab('llm','gen')">Generation & Sampling</button>
+        <button class="tab-btn" onclick="switchTab('llm','pipeline')">Full Pipeline</button>
       </div>
 
       <!-- TAB: Architecture -->
@@ -2190,6 +2191,310 @@ perplexity = torch.exp(loss)
           <tr><td>Creative writing</td><td>1.0–1.2</td><td>0.95</td><td>0</td><td>High entropy for novelty</td></tr>
           <tr><td>Translation / summarization</td><td>0.0</td><td>1.0</td><td>beam=4</td><td>Beam search for global coherence</td></tr>
         </table>
+      </div>
+
+      <!-- TAB: Full Pipeline -->
+      <div id="llm-pipeline" class="tab-content">
+
+        <!-- ─── STAGE 0: USER INPUT & SYSTEM PROMPT ─── -->
+        <h3 class="subsection">Stage 0 — Prompt Assembly: System + User + History</h3>
+        <div class="insight"><strong>What the model actually sees</strong> is never just your message. Before any math happens, the application concatenates a <em>system prompt</em>, optional conversation history, and the user turn into a single flat sequence of tokens.</div>
+        <div class="two-col">
+          <div>
+            <div class="insight yellow"><strong>System prompt</strong>: A privileged preamble injected by the application developer (not the end-user). It sets the model's persona, rules, output format, and safety constraints. The model has no mechanism to cryptographically distinguish it from user text — separation is purely positional convention enforced by the chat template.</div>
+            <div class="insight green"><strong>Roles in a conversation</strong>:
+              <ul style="padding-left:16px;margin-top:6px;line-height:2">
+                <li><strong>system</strong> — developer-controlled instructions</li>
+                <li><strong>user</strong> — end-user messages</li>
+                <li><strong>assistant</strong> — previous model responses (KV-cached)</li>
+                <li><strong>tool</strong> — tool call results (in agentic loops)</li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <h4 class="mini-title">ChatML Template (GPT-4, Claude-style)</h4>
+            <div class="code-block">&lt;|im_start|&gt;system
+You are a helpful assistant. Answer concisely.
+&lt;|im_end|&gt;
+&lt;|im_start|&gt;user
+What is backpropagation?
+&lt;|im_end|&gt;
+&lt;|im_start|&gt;assistant
+</div>
+            <h4 class="mini-title">LLaMA 3 Template</h4>
+            <div class="code-block">&lt;|begin_of_text|&gt;&lt;|start_header_id|&gt;system&lt;|end_header_id|&gt;
+You are a helpful assistant.&lt;|eot_id|&gt;
+&lt;|start_header_id|&gt;user&lt;|end_header_id|&gt;
+What is backpropagation?&lt;|eot_id|&gt;
+&lt;|start_header_id|&gt;assistant&lt;|end_header_id|&gt;
+</div>
+          </div>
+        </div>
+        <div class="insight red"><strong>Prompt injection risk</strong>: Because there's no hard wall between system and user content at the token level, a malicious user can try to override system instructions by including phrases like "Ignore previous instructions…". Defence: output parsers, input sanitisation, privilege-aware prompting (never echo raw user input into trusted contexts).</div>
+
+        <!-- ─── STAGE 1: TOKENISATION ─── -->
+        <h3 class="subsection">Stage 1 — Tokenisation: Text → Token IDs</h3>
+        <div class="insight">The assembled text string is split into <strong>tokens</strong> — sub-word units — and each token is mapped to an integer ID. The model only ever sees integer IDs; it has no concept of characters or bytes directly.</div>
+        <table class="comp-table">
+          <tr>
+            <th>Algorithm</th>
+            <th>How it works</th>
+            <th>Vocab size (typical)</th>
+            <th>Used in</th>
+          </tr>
+          <tr>
+            <td><strong>BPE</strong> (Byte Pair Encoding)</td>
+            <td>Iteratively merge the most frequent adjacent byte/char pair. Build a merge table. Apply merges greedily at inference.</td>
+            <td>50k–100k</td>
+            <td>GPT-2/3/4, LLaMA, Mistral, Claude</td>
+          </tr>
+          <tr>
+            <td><strong>WordPiece</strong></td>
+            <td>Like BPE but merges maximise likelihood of corpus under unigram LM. Sub-words prefixed with ## except word-start.</td>
+            <td>30k</td>
+            <td>BERT, DistilBERT, RoBERTa</td>
+          </tr>
+          <tr>
+            <td><strong>SentencePiece (Unigram LM)</strong></td>
+            <td>Starts with a large vocabulary and prunes tokens that minimally decrease likelihood. Language-agnostic; works on raw bytes.</td>
+            <td>32k–256k</td>
+            <td>T5, LLaMA-1, Gemma, PaLM</td>
+          </tr>
+          <tr>
+            <td><strong>Tiktoken (byte-level BPE)</strong></td>
+            <td>BPE on raw UTF-8 bytes — no unknown tokens ever. Every byte sequence encodable.</td>
+            <td>100k (cl100k_base)</td>
+            <td>GPT-3.5/4, Codex</td>
+          </tr>
+        </table>
+        <div class="two-col">
+          <div>
+            <div class="insight yellow"><strong>Special tokens</strong>: BOS (beginning-of-sequence), EOS (end-of-sequence), PAD (padding for batches), UNK (unknown — rare in BPE), SEP / CLS (BERT), role-delimiter tokens in chat templates. These are reserved IDs with no natural-language meaning.</div>
+            <div class="insight"><strong>Token count rule of thumb</strong>: 1 token ≈ 4 characters ≈ 0.75 words in English. A 4000-word essay ≈ 5000 tokens. Non-English and code tend to tokenise less efficiently (more tokens per word).</div>
+          </div>
+          <div>
+            <h4 class="mini-title">Tokenise & Decode (Python)</h4>
+            <div class="code-block"><span class="kw">import</span> tiktoken
+enc = tiktoken.get_encoding(<span class="st">"cl100k_base"</span>)
+
+text = <span class="st">"Hello, transformer!"</span>
+ids = enc.encode(text)
+<span class="cm"># [9906, 11, 43349, 0]</span>
+
+decoded = enc.decode(ids)
+<span class="cm"># "Hello, transformer!"</span>
+
+<span class="cm"># HuggingFace tokenizer</span>
+<span class="kw">from</span> transformers <span class="kw">import</span> AutoTokenizer
+tok = AutoTokenizer.from_pretrained(<span class="st">"meta-llama/Llama-3-8B"</span>)
+out = tok(<span class="st">"Hello, transformer!"</span>, return_tensors=<span class="st">"pt"</span>)
+<span class="cm"># out.input_ids: tensor([[...]])</span>
+</div>
+          </div>
+        </div>
+
+        <!-- ─── STAGE 2: EMBEDDING ─── -->
+        <h3 class="subsection">Stage 2 — Embedding Layer: IDs → Vectors</h3>
+        <div class="formula">x<sub>t</sub> = E[token_id<sub>t</sub>] &nbsp;where E ∈ ℝ<sup>vocab_size × d_model</sup></div>
+        <div class="two-col">
+          <div>
+            <div class="insight"><strong>Embedding table</strong>: A learned matrix E. Each row is a d_model-dimensional dense vector for one vocabulary token. A lookup is just an integer-indexed row read — no multiplication needed. For LLaMA-3-8B: vocab=128k, d=4096 → E is 128k × 4096 ≈ 500M parameters just for embeddings.</div>
+            <div class="insight green"><strong>Tied embeddings</strong>: Most LLMs share the embedding matrix E with the LM head (W_lm = Eᵀ). This halves memory, enforces consistency between input and output token representations, and significantly aids training (gradients from the LM head directly update embeddings). Enabled by default in GPT-2, LLaMA, Mistral.</div>
+          </div>
+          <div>
+            <div class="insight yellow"><strong>Embedding scale</strong>: The original Transformer paper multiplies embeddings by √d_model before adding positional encodings. This prevents positional encodings (which have fixed magnitude ~1) from dominating over embeddings when d_model is large.</div>
+            <div class="formula" style="font-size:13px">x = E[id] · √d_model + PE(pos)</div>
+            <div class="insight red"><strong>Context window constraint</strong>: The model can only attend to tokens that fit in its context window (e.g. 128k for LLaMA-3). Tokens beyond this limit are simply not seen — there is no "forgetting" mechanism, only a hard cutoff. KV cache memory scales linearly with context length.</div>
+          </div>
+        </div>
+
+        <!-- ─── STAGE 3: TRANSFORMER BLOCK (detailed) ─── -->
+        <h3 class="subsection">Stage 3 — Inside Every Transformer Block (Layer-by-Layer)</h3>
+        <div class="insight">Each of the N identical blocks (e.g. 32 layers in LLaMA-3-8B) applies the same operations. The hidden state x ∈ ℝ<sup>seq_len × d_model</sup> is refined by each block independently — deeper layers represent increasingly abstract semantic concepts.</div>
+
+        <h4 class="mini-title" style="margin-top:12px">Step 3a — Pre-Layer Normalisation</h4>
+        <div class="formula">x̂ = RMSNorm(x) &nbsp;where RMSNorm(x) = x / RMS(x) · γ &nbsp;and RMS(x) = √( (1/d) Σ xᵢ² )</div>
+        <div class="insight">The hidden state is normalised <em>before</em> each sub-layer (Pre-LN). This stabilises training — gradients flowing back through the residual bypass the normalisation entirely. Post-LN (original paper) requires warmup and careful LR tuning; Pre-LN does not.</div>
+
+        <h4 class="mini-title">Step 3b — Q, K, V Projections</h4>
+        <div class="formula">Q = x̂ · W<sub>Q</sub>, &nbsp; K = x̂ · W<sub>K</sub>, &nbsp; V = x̂ · W<sub>V</sub></div>
+        <div class="formula">W<sub>Q</sub>, W<sub>K</sub>, W<sub>V</sub> ∈ ℝ<sup>d_model × d_model</sup> &nbsp;(for MHA; smaller for MQA/GQA)</div>
+        <div class="insight yellow"><strong>What Q, K, V mean intuitively</strong>:
+          <ul style="padding-left:16px;margin-top:6px;line-height:2">
+            <li><strong>Query (Q)</strong>: "What am I looking for?" — the current token's information need</li>
+            <li><strong>Key (K)</strong>: "What do I contain?" — each token's advertised content for retrieval</li>
+            <li><strong>Value (V)</strong>: "What do I actually provide?" — the content extracted when retrieved</li>
+          </ul>
+          The separation of K and V allows flexible retrieval: a token can have different "advertised identity" (K) vs "delivered content" (V).
+        </div>
+
+        <h4 class="mini-title">Step 3c — Multi-Head Split, Attention, Concat</h4>
+        <div class="formula">head<sub>i</sub> = Attention(Q W<sub>Qi</sub>, K W<sub>Ki</sub>, V W<sub>Vi</sub>) &nbsp;for i = 1..h</div>
+        <div class="formula">MultiHead(Q,K,V) = Concat(head<sub>1</sub>, …, head<sub>h</sub>) · W<sub>O</sub></div>
+        <div class="two-col">
+          <div>
+            <div class="insight"><strong>Why multiple heads?</strong> Each head projects into a lower-dimensional subspace (d_k = d_model / h, e.g. 4096/32 = 128) and attends independently. Different heads specialise: some attend to syntax, others to coreference, others to positional proximity. Concat merges all perspectives; W_O mixes them.</div>
+            <div class="insight green"><strong>Causal (autoregressive) mask</strong>: For decoder-only models, attention scores are masked to −∞ for all future positions before softmax. This ensures position t can only attend to positions ≤ t. Implemented as a lower-triangular boolean matrix. At inference, already-computed KV pairs are cached (KV cache) so only the new token's Q is needed.</div>
+          </div>
+          <div>
+            <h4 class="mini-title">MHA Step-by-Step (single head)</h4>
+            <div class="code-block"><span class="cm"># shapes: (B=batch, H=heads, T=seq_len, D=d_k)</span>
+Q = x @ W_Q   <span class="cm"># (B, T, d_model) → (B, T, d_model)</span>
+Q = Q.view(B, T, H, D).transpose(<span class="num">1</span>,<span class="num">2</span>)  <span class="cm"># (B,H,T,D)</span>
+
+scores = Q @ K.transpose(-<span class="num">2</span>,-<span class="num">1</span>) / D**<span class="num">0.5</span>
+<span class="cm"># causal mask: upper triangle → -inf</span>
+scores = scores.masked_fill(causal_mask, <span class="num">-1e9</span>)
+attn = F.softmax(scores, dim=-<span class="num">1</span>)   <span class="cm"># (B,H,T,T)</span>
+out  = attn @ V                        <span class="cm"># (B,H,T,D)</span>
+<span class="cm"># concat heads</span>
+out = out.transpose(<span class="num">1</span>,<span class="num">2</span>).reshape(B, T, d_model)
+out = out @ W_O                        <span class="cm"># output projection</span>
+</div>
+          </div>
+        </div>
+
+        <h4 class="mini-title">Step 3d — First Residual Connection</h4>
+        <div class="formula">x = x + Dropout(attn_out)</div>
+        <div class="insight"><strong>Residual connections</strong> (He et al., ResNet 2015, adopted by Transformer) allow gradients to bypass any sub-layer entirely via the identity shortcut. With 96 layers (GPT-3), without residuals the gradient would be multiplied 96 times through the sub-layers and vanish. With residuals, a gradient highway exists directly from output back to input embeddings. This is why transformers can be scaled to hundreds of layers.</div>
+
+        <h4 class="mini-title">Step 3e — Feed-Forward Network (FFN)</h4>
+        <div class="formula">FFN(x) = activation(x · W<sub>1</sub> + b<sub>1</sub>) · W<sub>2</sub> + b<sub>2</sub></div>
+        <div class="formula">SwiGLU variant: FFN(x) = (Swish(x·W<sub>1</sub>) ⊙ (x·W<sub>gate</sub>)) · W<sub>2</sub></div>
+        <div class="two-col">
+          <div>
+            <div class="insight"><strong>FFN is position-wise</strong>: The same two-layer MLP is applied independently to each token position. It does not mix information between positions — that happens in attention. The FFN is where the model stores factual associations (key-value memories). Neurons in FFN layers have been shown to fire for specific concepts (e.g. a neuron activating for "capital cities").</div>
+          </div>
+          <div>
+            <div class="insight yellow"><strong>Dimension expansion</strong>: W<sub>1</sub> expands d_model → 4×d_model (e.g. 4096 → 16384). SwiGLU uses 3 matrices but a 2/3 expansion factor to keep parameter count similar. The expansion → non-linearity → projection pattern is the model's "thinking space" per token per layer.</div>
+          </div>
+        </div>
+
+        <h4 class="mini-title">Step 3f — Second Residual Connection</h4>
+        <div class="formula">x = x + Dropout(ffn_out)</div>
+        <div class="insight">After both attention and FFN sub-layers, x contains a richer representation of each token, conditioned on all previous tokens (via causal attention). This refined x is the input to the next block. After all N blocks, x represents the model's final contextualised understanding.</div>
+
+        <!-- ─── STAGE 4: LM HEAD ─── -->
+        <h3 class="subsection">Stage 4 — LM Head & Logits</h3>
+        <div class="formula">logits = Final_LN(x<sub>last_token</sub>) · W<sub>lm</sub><sup>T</sup> &nbsp;&nbsp; (shape: vocab_size)</div>
+        <div class="insight">Only the hidden state of the <em>last token</em> is used during autoregressive decoding. W_lm ∈ ℝ<sup>vocab × d_model</sup> is typically tied to the input embedding matrix (transposed). The result is an unnormalised score (logit) for every vocabulary token — the model's prediction of what token should come next.</div>
+
+        <!-- ─── STAGE 5: SAMPLING → OUTPUT ─── -->
+        <h3 class="subsection">Stage 5 — Sampling → Token → Detokenise → Stream</h3>
+        <div class="insight">The sampled token ID is appended to the input sequence, and the entire process repeats (with the KV cache used to avoid recomputing past attention). This continues until EOS is sampled or max_new_tokens is reached. The output token IDs are decoded back to text by the tokeniser and streamed to the user.</div>
+        <div class="two-col">
+          <div>
+            <div class="insight green"><strong>Prefill phase</strong>: The entire input prompt (system + history + user message) is processed in parallel in a single forward pass. All KV pairs are computed and cached. This is compute-bound (matrix multiplications dominate). Latency ≈ proportional to prompt token count.</div>
+          </div>
+          <div>
+            <div class="insight yellow"><strong>Decode phase</strong>: One token generated per forward pass. Only the new token's Q is computed; K/V come from cache. This phase is memory-bandwidth-bound (loading the model weights and KV cache dominates, not FLOPs). Latency per token is roughly constant regardless of generation length once cache is populated.</div>
+          </div>
+        </div>
+        <div class="insight red"><strong>Time to First Token (TTFT)</strong> is dominated by prefill latency. <strong>Tokens Per Second (TPS)</strong> is dominated by decode bandwidth. These are the two key LLM serving metrics. Long system prompts hurt TTFT; large models hurt TPS.</div>
+
+        <!-- ─── TRAINING PIPELINE ─── -->
+        <h3 class="subsection">Training Pipeline: Pretraining → SFT → RLHF</h3>
+        <table class="comp-table">
+          <tr>
+            <th>Stage</th>
+            <th>Objective</th>
+            <th>Data</th>
+            <th>What the model learns</th>
+          </tr>
+          <tr>
+            <td><strong>1. Pretraining</strong></td>
+            <td>Next-token prediction (causal LM loss)</td>
+            <td>Trillions of tokens (web, books, code, papers)</td>
+            <td>World knowledge, language structure, reasoning patterns</td>
+          </tr>
+          <tr>
+            <td><strong>2. SFT</strong> (Supervised Fine-Tuning)</td>
+            <td>Next-token prediction on curated prompt-response pairs</td>
+            <td>10k–1M human-written demonstrations</td>
+            <td>Instruction following, response formatting, helpfulness</td>
+          </tr>
+          <tr>
+            <td><strong>3. RLHF / DPO</strong></td>
+            <td>Maximise reward / preference-match (see Fine-tuning tab)</td>
+            <td>Human preference comparisons between outputs</td>
+            <td>Alignment: safety, honesty, harmlessness, helpfulness</td>
+          </tr>
+        </table>
+
+        <!-- ─── BACKPROP & OPTIMIZER ─── -->
+        <h3 class="subsection">Backpropagation Through the Transformer</h3>
+        <div class="insight"><strong>Chain rule through residual blocks</strong>: The gradient of the loss w.r.t. the input of block k passes through two paths — via the sub-layer (attention/FFN) and directly via the residual shortcut. The total gradient is their sum:</div>
+        <div class="formula">∂L/∂x<sub>k</sub> = ∂L/∂x<sub>k+1</sub> · (I + ∂f<sub>k</sub>/∂x<sub>k</sub>)</div>
+        <div class="insight green">The identity term <strong>I</strong> (residual shortcut) guarantees that even if ∂f/∂x is tiny (vanishing gradient), a full-strength gradient signal always flows back to earlier layers. This is the mathematical reason residual networks can be hundreds of layers deep.</div>
+        <div class="two-col">
+          <div>
+            <div class="insight yellow"><strong>Gradient checkpointing</strong> (activation recomputation): Instead of storing all layer activations in memory during the forward pass (needed for backprop), discard them and recompute during the backward pass. Saves up to 60% memory at a cost of ~33% more compute. Essential for training large models on limited GPU memory.</div>
+          </div>
+          <div>
+            <div class="insight red"><strong>Gradient clipping</strong>: Clip global gradient norm to a threshold (typically 1.0). Prevents exploding gradients that can arise from attention layers with near-zero softmax denominators. Formula: if ‖g‖ &gt; threshold, then g ← g × (threshold / ‖g‖)</div>
+          </div>
+        </div>
+
+        <h3 class="subsection">Optimizer: AdamW</h3>
+        <div class="formula">m<sub>t</sub> = β<sub>1</sub>m<sub>t-1</sub> + (1−β<sub>1</sub>)g<sub>t</sub> &nbsp;&nbsp; v<sub>t</sub> = β<sub>2</sub>v<sub>t-1</sub> + (1−β<sub>2</sub>)g<sub>t</sub>²</div>
+        <div class="formula">m̂<sub>t</sub> = m<sub>t</sub>/(1−β<sub>1</sub><sup>t</sup>) &nbsp;&nbsp; v̂<sub>t</sub> = v<sub>t</sub>/(1−β<sub>2</sub><sup>t</sup>)</div>
+        <div class="formula">θ<sub>t</sub> = θ<sub>t-1</sub> − lr · m̂<sub>t</sub>/(√v̂<sub>t</sub> + ε) − lr · λ · θ<sub>t-1</sub></div>
+        <table class="comp-table">
+          <tr><th>Hyperparameter</th><th>Typical value</th><th>What it controls</th></tr>
+          <tr><td>lr (learning rate)</td><td>1e-4 to 3e-4 (pretrain); 1e-5 to 2e-5 (SFT)</td><td>Step size magnitude</td></tr>
+          <tr><td>β₁</td><td>0.9</td><td>Exponential decay of first moment (momentum)</td></tr>
+          <tr><td>β₂</td><td>0.95 or 0.999</td><td>Exponential decay of second moment (adaptive LR per param)</td></tr>
+          <tr><td>ε (epsilon)</td><td>1e-8</td><td>Numerical stability; prevents division by zero in √v̂</td></tr>
+          <tr><td>λ (weight_decay)</td><td>0.1</td><td>L2 regularisation — added directly to weights (decoupled from adaptive LR in AdamW)</td></tr>
+          <tr><td>grad_clip</td><td>1.0</td><td>Max global gradient norm before clipping</td></tr>
+        </table>
+        <div class="insight yellow"><strong>Why AdamW over Adam?</strong> In vanilla Adam, weight decay is incorrectly coupled with the adaptive learning rate — parameters with large gradients get less regularisation. AdamW decouples weight decay (apply it directly to weights, not through the gradient update), which is more principled and empirically better for transformers.</div>
+
+        <h3 class="subsection">Learning Rate Schedule</h3>
+        <div class="two-col">
+          <div>
+            <div class="insight"><strong>Warmup phase</strong>: LR linearly increases from ~0 to peak over the first N warmup steps (typically 1–2% of total steps, e.g. 2000 steps for a 100k-step run). Without warmup, the large random gradients at the start of training push the model into bad local minima before the parameter estimates are meaningful.</div>
+            <div class="insight green"><strong>Cosine decay</strong>: After warmup, LR follows a cosine curve decaying to a minimum (typically 10% of peak). Formula: lr(t) = lr_min + 0.5 × (lr_max − lr_min) × (1 + cos(πt/T)). Used in GPT-3, LLaMA, Chinchilla.</div>
+          </div>
+          <div>
+            <div class="code-block"><span class="kw">def</span> <span class="fn">get_lr</span>(step, warmup, total, lr_max, lr_min):
+    <span class="cm"># Linear warmup</span>
+    <span class="kw">if</span> step &lt; warmup:
+        <span class="kw">return</span> lr_max * step / warmup
+    <span class="cm"># Cosine decay</span>
+    <span class="kw">import</span> math
+    progress = (step - warmup) / (total - warmup)
+    cosine = <span class="num">0.5</span> * (<span class="num">1</span> + math.cos(math.pi * progress))
+    <span class="kw">return</span> lr_min + (lr_max - lr_min) * cosine
+
+<span class="cm"># Typical values</span>
+<span class="cm"># warmup=2000, total=100000</span>
+<span class="cm"># lr_max=3e-4, lr_min=3e-5</span>
+</div>
+          </div>
+        </div>
+
+        <!-- ─── COMPLETE PIPELINE SUMMARY ─── -->
+        <h3 class="subsection">Complete Pipeline Summary (Inference)</h3>
+        <table class="comp-table">
+          <tr><th>Step</th><th>Operation</th><th>Input shape</th><th>Output shape</th><th>Key detail</th></tr>
+          <tr><td>1. Prompt assembly</td><td>Concatenate system + history + user + template</td><td>strings</td><td>string</td><td>Chat template adds role delimiter tokens</td></tr>
+          <tr><td>2. Tokenise</td><td>BPE / SentencePiece encode</td><td>string</td><td>(T,) int IDs</td><td>T = total prompt token count</td></tr>
+          <tr><td>3. Embed</td><td>Lookup table E</td><td>(T,)</td><td>(T, d)</td><td>Multiply by √d if sinusoidal PE</td></tr>
+          <tr><td>4. Add PE</td><td>RoPE rotation or sinusoidal add</td><td>(T, d)</td><td>(T, d)</td><td>Injects position information</td></tr>
+          <tr><td>5. × N blocks: LN</td><td>RMSNorm / LayerNorm</td><td>(T, d)</td><td>(T, d)</td><td>Per-token, pre-norm</td></tr>
+          <tr><td>6. × N blocks: Attn</td><td>Q·Kᵀ/√d → softmax → ·V → W_O</td><td>(T, d)</td><td>(T, d)</td><td>Causal mask; KV cached after prefill</td></tr>
+          <tr><td>7. × N blocks: Residual</td><td>x = x + attn_out</td><td>(T, d)</td><td>(T, d)</td><td>Gradient highway</td></tr>
+          <tr><td>8. × N blocks: FFN</td><td>Linear → SwiGLU → Linear</td><td>(T, d)</td><td>(T, d)</td><td>Position-wise; 4× expansion</td></tr>
+          <tr><td>9. × N blocks: Residual</td><td>x = x + ffn_out</td><td>(T, d)</td><td>(T, d)</td><td></td></tr>
+          <tr><td>10. Final LN</td><td>RMSNorm on last token only</td><td>(1, d)</td><td>(1, d)</td><td>Only last position needed at decode</td></tr>
+          <tr><td>11. LM Head</td><td>Linear (tied weights)</td><td>(1, d)</td><td>(1, V)</td><td>V = vocab size (e.g. 128k)</td></tr>
+          <tr><td>12. Temperature</td><td>logits / T</td><td>(1, V)</td><td>(1, V)</td><td>Controls distribution sharpness</td></tr>
+          <tr><td>13. Top-p / Top-k</td><td>Mask low-probability tokens</td><td>(1, V)</td><td>(1, V)</td><td>Filter vocabulary</td></tr>
+          <tr><td>14. Softmax + sample</td><td>multinomial sample</td><td>(1, V)</td><td>scalar token ID</td><td>Or argmax for greedy</td></tr>
+          <tr><td>15. Detokenise</td><td>ID → string piece, stream to user</td><td>int</td><td>string</td><td>Repeat from step 6 (decode only) until EOS</td></tr>
+        </table>
+
       </div>
     </section>
 
