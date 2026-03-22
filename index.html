@@ -1448,6 +1448,7 @@
         <button class="tab-btn" onclick="switchTab('llm','attn')">Attention & Positional</button>
         <button class="tab-btn" onclick="switchTab('llm','infer')">Inference Optimization</button>
         <button class="tab-btn" onclick="switchTab('llm','ft')">Fine-tuning</button>
+        <button class="tab-btn" onclick="switchTab('llm','gen')">Generation & Sampling</button>
       </div>
 
       <!-- TAB: Architecture -->
@@ -1915,6 +1916,279 @@ model.print_trainable_parameters()
             <td>Preference pairs</td>
             <td>Low (1 model)</td>
           </tr>
+        </table>
+      </div>
+
+      <!-- TAB: Generation & Sampling -->
+      <div id="llm-gen" class="tab-content">
+
+        <h3 class="subsection">End-to-End Transformer Forward Pass</h3>
+        <div class="insight"><strong>Full pipeline at inference time</strong>: Input token IDs → Embedding lookup (vocab_size → d_model) → Add positional encoding → N × Transformer blocks → Final LayerNorm → LM Head linear projection (d_model → vocab_size) → <strong>Logits</strong> → Sampling strategy → Next token → repeat.</div>
+        <div class="two-col">
+          <div>
+            <h4 class="mini-title">Step-by-step (decoder-only)</h4>
+            <ol style="padding-left:18px;line-height:2.2">
+              <li><strong>Token → ID:</strong> tokenizer maps text to integer IDs</li>
+              <li><strong>Embedding:</strong> E ∈ ℝ^(vocab×d) lookup → token vectors</li>
+              <li><strong>Positional encoding</strong> added (RoPE / sinusoidal / learned)</li>
+              <li><strong>× N blocks:</strong> x = x + Attn(LN(x)); x = x + FFN(LN(x))</li>
+              <li><strong>Final LN</strong> (pre-norm models)</li>
+              <li><strong>LM Head:</strong> W_lm ∈ ℝ^(d×vocab) → logits ∈ ℝ^vocab</li>
+              <li><strong>Sampling</strong> → next token ID → append → repeat</li>
+            </ol>
+          </div>
+          <div>
+            <h4 class="mini-title">Forward Pass (PyTorch sketch)</h4>
+            <div class="code-block"><span class="kw">def</span> <span class="fn">forward</span>(<span class="kw">self</span>, input_ids):
+    <span class="cm"># input_ids: (batch, seq_len)</span>
+    x = <span class="kw">self</span>.embed(input_ids)          <span class="cm"># → (B, T, d_model)</span>
+    x = x + <span class="kw">self</span>.pos_enc(x)            <span class="cm"># add positional info</span>
+    <span class="kw">for</span> block <span class="kw">in</span> <span class="kw">self</span>.blocks:
+        x = block(x)                      <span class="cm"># N transformer blocks</span>
+    x = <span class="kw">self</span>.final_ln(x)               <span class="cm"># final layer norm</span>
+    logits = <span class="kw">self</span>.lm_head(x)           <span class="cm"># → (B, T, vocab_size)</span>
+    <span class="kw">return</span> logits[:, -<span class="num">1</span>, :]           <span class="cm"># last token logits</span>
+</div>
+          </div>
+        </div>
+
+        <h3 class="subsection">Logits — The Raw Output</h3>
+        <div class="insight"><strong>Logits</strong> are the <em>unnormalized log-probabilities</em> produced by the LM Head linear layer. Shape: <span class="inline-code">(vocab_size,)</span>. They are real-valued scores with no bound — a logit of 5.0 vs 1.0 means the first token is e⁴ ≈ 54× more likely after softmax.</div>
+        <div class="formula">logits = W<sub>lm</sub> · h<sub>last</sub> + b &nbsp;&nbsp;where h<sub>last</sub> ∈ ℝ<sup>d_model</sup>, W<sub>lm</sub> ∈ ℝ<sup>vocab × d_model</sup></div>
+        <div class="formula">p<sub>i</sub> = softmax(logits)<sub>i</sub> = exp(logit<sub>i</sub>) / Σ<sub>j</sub> exp(logit<sub>j</sub>)</div>
+        <div class="insight yellow"><strong>Why work with logits instead of probabilities?</strong> Numerical stability: exp() of large logits overflows in float32. PyTorch's <span class="inline-code">F.cross_entropy</span> internally computes <span class="inline-code">log_softmax</span> from logits using the log-sum-exp trick: log Σ exp(xᵢ) = max(x) + log Σ exp(xᵢ − max(x)), preventing overflow. Never apply softmax before cross_entropy.</div>
+        <div class="insight red"><strong>Logit lens</strong>: Project intermediate layer hidden states through the LM head to see what tokens the model "would predict" at each layer. A diagnostic tool showing how predictions crystallize through depth.</div>
+
+        <h3 class="subsection">Temperature Scaling</h3>
+        <div class="formula">p<sub>i</sub> = exp(logit<sub>i</sub> / T) / Σ<sub>j</sub> exp(logit<sub>j</sub> / T)</div>
+        <div class="insight"><strong>Temperature T</strong> controls the sharpness of the output distribution. It is applied <em>before</em> softmax by dividing all logits by T.</div>
+        <table class="comp-table">
+          <tr><th>T value</th><th>Effect on distribution</th><th>Use case</th></tr>
+          <tr><td>T → 0</td><td>Collapses to argmax (greedy decoding)</td><td>Deterministic / factual Q&A</td></tr>
+          <tr><td>T = 0.1–0.3</td><td>Very sharp — near-greedy with tiny variance</td><td>Code generation, structured output</td></tr>
+          <tr><td>T = 0.7–0.9</td><td>Moderate randomness</td><td>Chat, instruction following (default)</td></tr>
+          <tr><td>T = 1.0</td><td>Raw model distribution unchanged</td><td>Baseline / research</td></tr>
+          <tr><td>T = 1.2–1.5</td><td>Flattened, more surprising tokens sampled</td><td>Creative writing, brainstorming</td></tr>
+          <tr><td>T → ∞</td><td>Uniform distribution — purely random</td><td>Never practical</td></tr>
+        </table>
+        <div class="insight green"><strong>Mathematical intuition</strong>: Dividing by T &lt; 1 amplifies differences between logits (high logits become relatively higher). Dividing by T &gt; 1 compresses differences (logits converge toward zero). This is exactly entropy scaling — lower T → lower entropy distribution.</div>
+        <div class="code-block"><span class="kw">import</span> torch
+<span class="kw">import</span> torch.nn.functional <span class="kw">as</span> F
+
+<span class="kw">def</span> <span class="fn">apply_temperature</span>(logits, temperature=<span class="num">1.0</span>):
+    <span class="kw">if</span> temperature == <span class="num">0</span>:
+        <span class="kw">return</span> torch.argmax(logits, dim=-<span class="num">1</span>)  <span class="cm"># greedy</span>
+    logits = logits / temperature
+    probs = F.softmax(logits, dim=-<span class="num">1</span>)
+    <span class="kw">return</span> torch.multinomial(probs, num_samples=<span class="num">1</span>)
+</div>
+
+        <h3 class="subsection">Top-k Sampling</h3>
+        <div class="formula">V<sub>top-k</sub> = top k tokens by logit value &nbsp;|&nbsp; p<sub>i</sub> = softmax(logits)<sub>i</sub> for i ∈ V<sub>top-k</sub>, else 0</div>
+        <div class="insight"><strong>Top-k</strong> filters the vocabulary to only the k highest-probability tokens before sampling. All other logits are set to −∞ (zeroed after softmax). This prevents the model from ever sampling very low-probability (nonsensical) tokens.</div>
+        <table class="comp-table">
+          <tr><th>k value</th><th>Behavior</th><th>Typical use</th></tr>
+          <tr><td>k = 1</td><td>Greedy decoding — always picks argmax</td><td>Deterministic tasks</td></tr>
+          <tr><td>k = 10–20</td><td>Conservative, focused vocabulary</td><td>Code, factual answers</td></tr>
+          <tr><td>k = 40–50</td><td>Balanced creativity</td><td>General chat (GPT-4 default: 50)</td></tr>
+          <tr><td>k = 0 (disabled)</td><td>Sample from full vocab (use with top-p)</td><td>Combined with nucleus sampling</td></tr>
+        </table>
+        <div class="insight red"><strong>Problem with fixed k</strong>: When the model is confident (peaked distribution), top-50 includes many low-quality tokens. When the model is uncertain (flat distribution), top-50 may be too restrictive. Top-p adapts dynamically to distribution shape.</div>
+        <div class="code-block"><span class="kw">def</span> <span class="fn">top_k_filter</span>(logits, k):
+    <span class="kw">if</span> k == <span class="num">0</span>: <span class="kw">return</span> logits
+    values, _ = torch.topk(logits, k)
+    min_val = values[..., -<span class="num">1</span>].unsqueeze(-<span class="num">1</span>)
+    <span class="kw">return</span> logits.masked_fill(logits &lt; min_val, <span class="num">-float</span>(<span class="st">'inf'</span>))
+</div>
+
+        <h3 class="subsection">Top-p (Nucleus) Sampling</h3>
+        <div class="formula">V<sub>nucleus</sub> = smallest set S s.t. Σ<sub>i∈S</sub> p<sub>i</sub> ≥ p &nbsp;(tokens sorted by probability descending)</div>
+        <div class="insight"><strong>Top-p / Nucleus sampling</strong> (Holtzman et al. 2020): Sort tokens by probability descending. Keep the minimum set of tokens whose cumulative probability mass reaches p. Renormalize over this dynamic set and sample.</div>
+        <div class="two-col">
+          <div>
+            <div class="insight green"><strong>Why nucleus beats top-k</strong>: When the model is confident (one token has p=0.95), nucleus p=0.9 keeps only 1-2 tokens. When uncertain (many tokens near-equal), nucleus keeps many more. The vocabulary size adapts to the model's certainty — top-k cannot do this.</div>
+            <div class="insight yellow"><strong>Typical values</strong>: p=0.9 or p=0.95 for most tasks. Many production systems combine: <span class="inline-code">temperature=0.7, top_p=0.9, top_k=0</span> (nucleus only). OpenAI recommends not altering both temperature and top_p simultaneously.</div>
+          </div>
+          <div>
+            <div class="code-block"><span class="kw">def</span> <span class="fn">top_p_filter</span>(logits, p):
+    probs = F.softmax(logits, dim=-<span class="num">1</span>)
+    sorted_probs, sorted_idx = torch.sort(
+        probs, descending=<span class="kw">True</span>)
+    cumsum = torch.cumsum(sorted_probs, dim=-<span class="num">1</span>)
+    <span class="cm"># remove tokens once cumsum exceeds p</span>
+    remove = cumsum - sorted_probs &gt; p
+    sorted_probs[remove] = <span class="num">0.0</span>
+    sorted_probs /= sorted_probs.sum()
+    <span class="kw">return</span> torch.multinomial(
+        sorted_probs, num_samples=<span class="num">1</span>)
+</div>
+          </div>
+        </div>
+
+        <h3 class="subsection">Min-p Sampling</h3>
+        <div class="formula">threshold = min_p × p<sub>max</sub> &nbsp;|&nbsp; keep token i if p<sub>i</sub> ≥ threshold</div>
+        <div class="insight"><strong>Min-p</strong> (2023, used in Mistral tooling): Instead of a fixed cumulative cutoff, set a <em>relative</em> probability floor — discard any token whose probability is less than <span class="inline-code">min_p × p_top</span> where p_top is the highest-probability token's probability. Automatically tightens the nucleus when the model is confident and widens it when uncertain. Often outperforms top-p on creative tasks with min_p=0.05–0.1.</div>
+
+        <h3 class="subsection">All Sampling Parameters — Quick Reference</h3>
+        <table class="comp-table">
+          <tr>
+            <th>Parameter</th>
+            <th>Range</th>
+            <th>What it controls</th>
+            <th>Default (typical)</th>
+          </tr>
+          <tr>
+            <td><strong>temperature</strong></td>
+            <td>0 → ∞ (practical: 0–2)</td>
+            <td>Sharpness of distribution; scales all logits</td>
+            <td>1.0 (or 0.7 for chat)</td>
+          </tr>
+          <tr>
+            <td><strong>top_k</strong></td>
+            <td>0 (disabled) → vocab_size</td>
+            <td>Hard cap on candidate vocabulary size</td>
+            <td>0 (disabled) or 50</td>
+          </tr>
+          <tr>
+            <td><strong>top_p</strong></td>
+            <td>0 → 1.0</td>
+            <td>Cumulative probability nucleus threshold</td>
+            <td>1.0 (disabled) or 0.9</td>
+          </tr>
+          <tr>
+            <td><strong>min_p</strong></td>
+            <td>0 → 1.0 (practical: 0.01–0.2)</td>
+            <td>Relative probability floor vs top token</td>
+            <td>0.05</td>
+          </tr>
+          <tr>
+            <td><strong>repetition_penalty</strong></td>
+            <td>1.0 (no penalty) → ~2.0</td>
+            <td>Divides logits of previously generated tokens</td>
+            <td>1.0–1.1</td>
+          </tr>
+          <tr>
+            <td><strong>frequency_penalty</strong></td>
+            <td>−2.0 → 2.0 (OpenAI API)</td>
+            <td>Penalizes by token frequency in output so far</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td><strong>presence_penalty</strong></td>
+            <td>−2.0 → 2.0 (OpenAI API)</td>
+            <td>Flat penalty for any token seen so far (once)</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td><strong>max_new_tokens</strong></td>
+            <td>1 → context_length</td>
+            <td>Hard stop on generation length</td>
+            <td>model/task dependent</td>
+          </tr>
+          <tr>
+            <td><strong>num_beams</strong></td>
+            <td>1 (greedy/sample) → ~10</td>
+            <td>Beam search width (disables sampling when &gt;1)</td>
+            <td>1</td>
+          </tr>
+        </table>
+
+        <h3 class="subsection">Decoding Strategies Compared</h3>
+        <table class="comp-table">
+          <tr>
+            <th>Strategy</th>
+            <th>Randomness</th>
+            <th>How</th>
+            <th>Pros</th>
+            <th>Cons</th>
+          </tr>
+          <tr>
+            <td>Greedy</td>
+            <td>None</td>
+            <td>argmax at each step</td>
+            <td>Fast, deterministic</td>
+            <td>Repetitive, misses better sequences</td>
+          </tr>
+          <tr>
+            <td>Beam Search</td>
+            <td>None</td>
+            <td>Keep top-B partial sequences</td>
+            <td>Better global sequence quality</td>
+            <td>Slow (B× compute), generic/boring text</td>
+          </tr>
+          <tr>
+            <td>Sampling (temp)</td>
+            <td>Yes</td>
+            <td>Multinomial from full distribution</td>
+            <td>Diverse, creative</td>
+            <td>Can sample incoherent tokens</td>
+          </tr>
+          <tr>
+            <td>Top-k + Temp</td>
+            <td>Yes</td>
+            <td>Sample from k-restricted vocab</td>
+            <td>Blocks worst tokens</td>
+            <td>Fixed k doesn't adapt to distribution</td>
+          </tr>
+          <tr>
+            <td>Top-p (Nucleus)</td>
+            <td>Yes</td>
+            <td>Sample from dynamic cumulative-p vocab</td>
+            <td>Adapts to model confidence</td>
+            <td>Can still produce rare tokens in flat distributions</td>
+          </tr>
+          <tr>
+            <td>Top-p + Temp</td>
+            <td>Yes</td>
+            <td>Temperature then nucleus filter</td>
+            <td>Best of both — most widely used</td>
+            <td>Two hyperparameters to tune</td>
+          </tr>
+          <tr>
+            <td>Contrastive Search</td>
+            <td>Partial</td>
+            <td>Balance between token prob and degeneration penalty</td>
+            <td>Coherent + non-repetitive long text</td>
+            <td>Higher compute, less widely adopted</td>
+          </tr>
+        </table>
+
+        <h3 class="subsection">Repetition Penalty — Math</h3>
+        <div class="formula">logit'<sub>i</sub> = logit<sub>i</sub> / penalty &nbsp;if token i ∈ generated_tokens &nbsp;(for logit<sub>i</sub> &gt; 0)</div>
+        <div class="formula">logit'<sub>i</sub> = logit<sub>i</sub> × penalty &nbsp;if token i ∈ generated_tokens &nbsp;(for logit<sub>i</sub> &lt; 0)</div>
+        <div class="insight yellow">A penalty of 1.3 means a previously-generated token with logit 4.0 gets divided to ≈3.08, making it ~2.5× less likely. Values 1.1–1.3 are typical. Too high (e.g. 1.8) causes the model to avoid necessary words like "the", breaking coherence.</div>
+
+        <h3 class="subsection">Beam Search — Mathematics</h3>
+        <div class="formula">score(y<sub>1:t</sub>) = Σ<sub>i=1</sub><sup>t</sup> log p(y<sub>i</sub> | y<sub>1:i-1</sub>, x)</div>
+        <div class="insight"><strong>Beam search</strong> maintains B candidate sequences ("beams") at each step. At time t, each beam generates all possible next tokens (vocab_size expansions), creating B×V candidates. Keep top-B by cumulative log-probability score. At EOS, the beam is complete. Return highest-scoring complete beam.</div>
+        <div class="insight red"><strong>Length normalization</strong>: Without it, shorter sequences always score higher (each token adds a negative log-prob). Normalize: score / (length ^ α) where α=0.6–0.7 is standard. Used in Google NMT, T5.</div>
+        <div class="two-col">
+          <div class="insight green"><strong>When to use beam search</strong>: Translation, summarization, structured extraction where there's a "correct" answer. <em>Not</em> for open-ended generation — produces generic, dull text ("the the the").</div>
+          <div class="insight yellow"><strong>Beam search memory</strong>: Requires B × KV-cache entries in parallel — can be 5-10× more memory than greedy. B=4 for translation, B=1 (greedy) for chat.</div>
+        </div>
+
+        <h3 class="subsection">Training: Cross-Entropy Loss on Logits</h3>
+        <div class="formula">L = −(1/T) Σ<sub>t=1</sub><sup>T</sup> log p(y<sub>t</sub> | y<sub>&lt;t</sub>, x) = −(1/T) Σ<sub>t</sub> log softmax(logits<sub>t</sub>)[y<sub>t</sub>]</div>
+        <div class="insight">At training time, the model receives the full input sequence and predicts every next token simultaneously (teacher forcing). The loss is the mean negative log-likelihood of the correct next token over all positions. This is equivalent to cross-entropy between the one-hot target and softmax of logits.</div>
+        <div class="code-block"><span class="cm"># Training loss — never apply softmax manually before this</span>
+loss = F.cross_entropy(
+    logits.view(-<span class="num">1</span>, vocab_size),   <span class="cm"># (B*T, vocab)</span>
+    targets.view(-<span class="num">1</span>),              <span class="cm"># (B*T,) — next token IDs</span>
+    ignore_index=pad_id            <span class="cm"># ignore padding</span>
+)
+<span class="cm"># Perplexity = exp(loss) — lower is better</span>
+perplexity = torch.exp(loss)
+</div>
+
+        <h3 class="subsection">Production Sampling Configurations</h3>
+        <table class="comp-table">
+          <tr><th>Task</th><th>temperature</th><th>top_p</th><th>top_k</th><th>Rationale</th></tr>
+          <tr><td>Factual Q&A / RAG</td><td>0.0–0.1</td><td>1.0</td><td>1</td><td>Deterministic, factual fidelity</td></tr>
+          <tr><td>Code generation</td><td>0.1–0.2</td><td>0.95</td><td>0</td><td>Near-greedy, syntax must be exact</td></tr>
+          <tr><td>Structured output (JSON)</td><td>0.0</td><td>1.0</td><td>1</td><td>Greedy ensures valid schema</td></tr>
+          <tr><td>General chat</td><td>0.7</td><td>0.9</td><td>0</td><td>Natural variation, stays coherent</td></tr>
+          <tr><td>Creative writing</td><td>1.0–1.2</td><td>0.95</td><td>0</td><td>High entropy for novelty</td></tr>
+          <tr><td>Translation / summarization</td><td>0.0</td><td>1.0</td><td>beam=4</td><td>Beam search for global coherence</td></tr>
         </table>
       </div>
     </section>
